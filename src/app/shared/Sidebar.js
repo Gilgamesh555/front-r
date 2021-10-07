@@ -111,10 +111,10 @@ class Sidebar extends Component {
           <li className={ this.isPathActive('/dashboard') ? 'nav-item active' : 'nav-item' }>
             <Link className="nav-link" to="/dashboard">
               <i className="mdi mdi-television menu-icon"></i>
-              <span className="menu-title"><Trans>Dashboard</Trans></span>
+              <span className="menu-title"><Trans>Inicio</Trans></span>
             </Link>
           </li>
-          <li className={ this.isPathActive('/basic-ui') ? 'nav-item active' : 'nav-item' }>
+          {/*<li className={ this.isPathActive('/basic-ui') ? 'nav-item active' : 'nav-item' }>
             <div className={ this.state.basicUiMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('basicUiMenuOpen') } data-toggle="collapse">
               <i className="mdi mdi-crosshairs-gps menu-icon"></i>
               <span className="menu-title"><Trans>Basic UI Elements</Trans></span>
@@ -206,7 +206,7 @@ class Sidebar extends Component {
               <i className="mdi mdi-file-outline menu-icon"></i>
               <span className="menu-title"><Trans>Documentation</Trans></span>
             </a>
-          </li>
+          </li> */}
           <li className={ this.isPathActive('/administracion') ? 'nav-item active' : 'nav-item' }>
             <div className={ this.state.administracionMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('administracionMenuOpen') } data-toggle="collapse">
               <i className="mdi mdi-information-outline menu-icon"></i>

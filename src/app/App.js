@@ -67,6 +67,7 @@ class App extends Component {
       )
     }else{
       if(this.state.isAuth === 'correct'){
+        return(
         <div className="container-scroller">
           { navbarComponent }
           <div className={`container-fluid page-body-wrapper ${this.state.isFullPageLayout === true ? 'full-page-wrapper' : ''}`}>
@@ -80,7 +81,9 @@ class App extends Component {
             </div>
           </div>
         </div>
+        )
       } else {
+        return(
         <div className="container-scroller">
           {/* { navbarComponent } */}
           <div className={`container-fluid page-body-wrapper ${this.state.isFullPageLayout === true ? 'full-page-wrapper' : ''}`}>
@@ -94,27 +97,14 @@ class App extends Component {
             </div>
           </div>
         </div>
+        )
       }
     }
-    return (
-      <div className="container-scroller">
-        { navbarComponent }
-        <div className={`container-fluid page-body-wrapper ${this.state.isFullPageLayout === true ? 'full-page-wrapper' : ''}`}>
-          { sidebarComponent }
-          <div className="main-panel">
-            <div className="content-wrapper">
-              <AppRoutes/>
-              { SettingsPanelComponent }
-            </div>
-            { footerComponent }
-          </div>
-        </div>
-      </div>
-    );
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.location !== prevProps.location) {
+      this.checkToken();
       this.onRouteChanged();
     }
   }

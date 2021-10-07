@@ -899,7 +899,7 @@ export class Dashboard extends Component {
       if(this.state.isAuth === 'correct'){
         return (
           <div>
-            <div className="row proBanner">
+            {/* <div className="row proBanner">
               <div className="col-12">
                 <span className="d-flex align-items-center purchase-popup">
                   <p>Get tons of UI components, Plugins, multiple layouts, 20+ sample pages, and more!</p>
@@ -907,26 +907,26 @@ export class Dashboard extends Component {
                   <i className="mdi mdi-close bannerClose" onClick={this.toggleProBanner}></i>
                 </span>
               </div>
-            </div>
+            </div> */}
             <div className="row page-title-header">
               <div className="col-12">
                 <div className="page-header">
-                  <h4 className="page-title">Dashboard</h4>
+                  <h4 className="page-title">Inicio</h4>
                   <div className="quick-link-wrapper w-100 d-md-flex flex-md-wrap">
                     <ul className="quick-links">
-                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>ICE Market data</a></li>
-                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>Own analysis</a></li>
-                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>Historic market data</a></li>
+                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 1</a></li>
+                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 2</a></li>
+                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 3</a></li>
                     </ul>
                     <ul className="quick-links ml-auto">
-                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>Settings</a></li>
-                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>Analytics</a></li>
-                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>Watchlist</a></li>
+                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 4</a></li>
+                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 5</a></li>
+                      <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 6</a></li>
                     </ul>
                   </div>
                 </div>
               </div>
-              <div className="col-md-12">
+              {/* <div className="col-md-12">
                 <div className="page-header-toolbar">
                   <div className="btn-group toolbar-item" role="group" aria-label="Basic example">
                     <button type="button" className="btn btn-secondary"><i className="mdi mdi-chevron-left"></i></button>
@@ -963,8 +963,9 @@ export class Dashboard extends Component {
                   </div>
                 </div>
               </div>
+             */}
             </div>
-            <div className="row">
+            {/* <div className="row">
               <div className="col-md-12 grid-margin">
                 <div className="card">
                   <div className="card-body">
@@ -1538,7 +1539,7 @@ export class Dashboard extends Component {
                 </div>
               </div>
             </div>
-            
+             */}
           </div> 
         );   
       }else {
