@@ -35,7 +35,7 @@ class Navbar extends Component {
               <i className="mdi mdi-menu"></i>
             </button>
             <ul className="navbar-nav navbar-nav-left header-links align-self-center">
-              {/* <li className="nav-item font-weight-semibold d-none  d-md-flex">Help : +050 2992 709</li>
+              <li className="nav-item font-weight-semibold d-none  d-md-flex">Help : +050 2992 709</li>
               <li className="nav-item dropdown language-dropdown">
               <Dropdown>
                   <Dropdown.Toggle className="nav-link count-indicator p-0 toggle-arrow-hide bg-transparent">
@@ -72,13 +72,13 @@ class Navbar extends Component {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-              </li> */}
+              </li>
             </ul>
-            {/* <form className="ml-auto search-form d-none d-md-block" action="#">
+            <form className="ml-auto search-form d-none d-md-block" action="#">
               <div className="form-group">
                 <input type="search" className="form-control" placeholder="Search Here" />
               </div>
-            </form> */}
+            </form>
             <ul className="navbar-nav navbar-nav-right">
             <li className="nav-item  nav-profile border-0 pl-4">
                 <Dropdown>

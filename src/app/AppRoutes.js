@@ -21,6 +21,8 @@ const Error500 = lazy(() => import('./error-pages/Error500'));
 
 // Administracion
 const Oficina = lazy(() => import('./administracion/Oficina'))
+const Personal = lazy(() => import('./administracion/Personal'))
+const Grupo = lazy(() => import('./administracion/Grupo'))
 
 const Login = lazy(() => import('./user-pages/Login'));
 const Register1 = lazy(() => import('./user-pages/Register'));
@@ -53,6 +55,8 @@ class AppRoutes extends Component {
 
           {/* ADMINISTRACION */}
           <Route path="/administracion/oficinas" component={ Oficina } />
+          <Route path="/administracion/personal" component={ Personal } />
+          <Route path="/administracion/grupos" component={ Grupo } />
 
           <Route exact path="/" component={Login} />
 

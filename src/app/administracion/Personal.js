@@ -1,0 +1,653 @@
+import React, { Component } from 'react';
+import { Form } from 'react-bootstrap';
+import { Link, Redirect } from 'react-router-dom';
+import DatePicker from "react-datepicker";
+
+import axios from 'axios'
+import nodeapi from '../../apis/nodeapi'
+
+export class Personal extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+          isAuth: '',
+          nombre: '',
+          password: '',
+          confirmPassword: '',
+          role: '',
+          username: '',
+          apPaterno: '',
+          apMaterno: '',
+          ci: '',
+          cargo: '',
+          email: '',
+          celular: '',
+          oficinaId: '',
+          estado: '',
+          error: '',
+          id: '',
+          data: null,
+          searchUser: '',
+          oficinas: null,
+          request: 'false',
+        }
+        // Register User
+        this.handleNombre = this.handleNombre.bind(this)
+        this.handlePassword = this.handlePassword.bind(this)
+        this.handleRole = this.handleRole.bind(this)
+        this.handleUsername = this.handleUsername.bind(this)
+        this.handleApPaterno = this.handleApPaterno.bind(this)
+        this.handleApMaterno = this.handleApMaterno.bind(this)
+        this.handleCi = this.handleCi.bind(this)
+        this.handleCargo = this.handleCargo.bind(this)
+        this.handleEmail = this.handleEmail.bind(this)
+        this.handleCelular = this.handleCelular.bind(this)
+        this.handleOficinaId = this.handleOficinaId.bind(this)
+        this.handleConfirmPassword = this.handleConfirmPassword.bind(this)
+
+        // Form Handler
+        this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this)
+        this.handleReset = this.handleReset.bind(this)
+        this.modifyUser = this.modifyUser.bind(this)
+        
+        this.changeEstado = this.changeEstado.bind(this)
+        this.deleteUser = this.deleteUser.bind(this)
+        this.registerUser = this.registerUser.bind(this)
+        this.getOficinas = this.getOficinas.bind(this)  
+    }
+
+    handleNombre(event) {
+      this.setState({nombre: event.target.value})
+    }
+
+    handlePassword(event) {
+      this.setState({password: event.target.value})
+    }
+    
+    handleRole(event) { 
+      this.setState({role: event.target.value})
+    }
+
+    handleUsername(event) {
+      this.setState({username: event.target.value})
+    }
+
+    handleApPaterno(event) {
+      this.setState({apPaterno: event.target.value})
+    }
+
+    handleApMaterno(event) {
+      this.setState({apMaterno: event.target.value})
+    }
+
+    handleCi(event) {
+      this.setState({ci: event.target.value})
+    }
+
+    handleCargo(event) {
+      this.setState({cargo: event.target.value})
+    }
+
+    handleEmail(event) {
+      this.setState({email: event.target.value})
+    }
+
+    handleCelular(event) {
+      this.setState({celular: event.target.value})
+    }
+
+    handleOficinaId(event) {
+      this.setState({oficinaId: event.target.value})
+    }
+    
+    handleConfirmPassword(event) {
+      this.setState({confirmPassword: event.target.value})
+    }
+
+    handleRegisterSubmit(event) {
+      var text =  document.getElementById('card-title-user').textContent
+      if(text === 'Modificar Usuario') {
+        const data = {
+          nombre: this.state.nombre,
+          password: this.state.password,
+          role: this.state.role,
+          username: this.state.username,
+          apPaterno: this.state.apPaterno,
+          apMaterno: this.state.apMaterno,
+          ci: this.state.ci,
+          cargo: this.state.cargo,
+          email: this.state.email,
+          celular: this.state.celular,
+          oficinaId: this.state.oficinaId,
+          estado: this.state.estado,
+          _id: this.state.id
+        }
+        const response = async () => {
+          await axios.put(nodeapi+`users/${data._id}`, data)
+          .then(res => {
+            if(res.data.error){
+              if(res.data.error === 11000){
+                if(res.data.errmsg.includes('email')){
+                  this.setState({error: 'Email Ya en uso'})
+                }else{
+                  this.setState({error: 'Nombre de Usuario Ya en uso'})
+                }
+              }else{
+                this.setState({error: res.data.error})
+              }
+            }else{
+              console.log(res.data.msg)
+              this.setState({request: 'true'})
+            }
+          })
+          .catch(err => console.log(err))
+        }
+        response()
+      } else {
+        const data = {
+          nombre: this.state.nombre,
+          password: this.state.password,
+          role: this.state.role,
+          username: this.state.username,
+          apPaterno: this.state.apPaterno,
+          apMaterno: this.state.apMaterno,
+          ci: this.state.ci,
+          cargo: this.state.cargo,
+          email: this.state.email,
+          celular: this.state.celular,
+          oficinaId: this.state.oficinaId,
+          estado: 'activo',
+        }
+        const response = async () => {
+          await axios.post(nodeapi+'users', data)
+          .then(res => {
+            if(res.data.error){
+              if(res.data.error === 11000){
+                if(res.data.errmsg.includes('email')){
+                  this.setState({error: 'Email Ya en uso'})
+                }else{
+                  this.setState({error: 'Nombre de Usuario Ya en uso'})
+                }
+              }else{
+                this.setState({error: res.data.error})
+              }
+            }else{
+              console.log(res.data.msg)
+              this.setState({request: 'true'})
+            }
+          })
+          .catch(err => console.log(err))
+        }
+        if(this.state.confirmPassword === this.state.password){
+          response()
+        } else {
+          this.setState({error: 'Las contraseñas no coinciden'})
+        }
+      }
+      event.preventDefault()
+    }
+
+    handleReset(event) {
+      document.getElementById('inputRole').value = ''
+      document.getElementById('inputCargo').value = ''
+      document.getElementById('inputNombre').value = ''
+      document.getElementById('inputPassword').value = ''
+      document.getElementById('inputUsername').value = ''
+      document.getElementById('inputApPaterno').value = ''
+      document.getElementById('inputApMaterno').value = ''
+      document.getElementById('inputCi').value = ''
+      document.getElementById('inputCargo').value = ''
+      document.getElementById('inputEmail').value = ''
+      document.getElementById('inputCelular').value = ''
+      document.getElementById('inputOficinaId').value = ''
+
+      event.preventDefault()
+    }
+
+    checkToken() {
+      const token = window.localStorage.getItem('token')
+      if(token) {
+        this.verifytoken()
+      }else{
+        this.props.history.push('/login')
+      }
+    }
+  
+    async verifytoken() {
+      const data = {
+        token: window.localStorage.getItem('token')
+      }
+      if(data.token){
+        await axios.post(nodeapi+'users/verify', data)
+        .then(res => {
+          if(res.data.status === 'ok'){
+            this.setState({isAuth: 'correct'})
+          }else{
+            window.localStorage.removeItem('token')
+            this.setState({isAuth: 'failed'})
+          }
+        })
+        .catch(err => err)
+      }
+    }
+
+    componentDidMount(){
+      this.checkToken()
+      this.getData()
+      this.getOficinas()
+    }
+
+    getData() {
+      const response = async () => {
+        await axios.get(nodeapi+'users')
+        .then(res => this.setState({data: res.data}))
+        .catch(err => console.log(err))
+      }
+      response()
+    }
+
+    //crud
+    modifyUser(event, data) {
+      document.getElementById('inputRole').value = data.role
+      document.getElementById('inputCargo').value = data.cargo
+      document.getElementById('inputNombre').value = data.nombre
+      document.getElementById('inputUsername').value = data.username
+      document.getElementById('inputApPaterno').value = data.apPaterno
+      document.getElementById('inputApMaterno').value = data.apMaterno
+      document.getElementById('inputCi').value = data.ci
+      document.getElementById('inputCargo').value = data.cargo
+      document.getElementById('inputEmail').value = data.email
+      document.getElementById('inputCelular').value = data.celular
+      document.getElementById('inputOficinaId').value = data.oficinaId
+
+      document.getElementById('inputEmail').disabled = true
+      document.getElementById('inputUsername').disabled = true
+      document.getElementById('inputUsername').disabled = true
+
+      document.getElementById('card-title-user').innerHTML = 'Modificar Usuario'
+      document.getElementById('card-title-user').style = 'color: red'
+
+      this.setState({id: data._id, estado: data.estado, nombre: data.nombre, role: data.role, cargo: data.cargo, username: data.username, apPaterno: data.apPaterno, apMaterno: data.apMaterno, ci: data.ci, cargo: data.cargo, email: data.email, celular: data.celular, oficinaId: data.oficinaId})
+      event.preventDefault()
+    }
+
+    changeEstado(event, datax) {
+      const data = {
+        estado: datax.estado === 'activo' ? 'inactivo' : 'activo',
+        _id: datax._id
+      }
+      const response = async () => {
+        await axios.put(nodeapi+`users/${data._id}/estado`, data)
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(err => console.log(err))
+      }
+      response()
+      event.preventDefault()
+      window.location.reload()
+    }
+
+    deleteUser(event ,datax) {
+      const data = {
+        _id: datax._id
+      }
+      const response = async () => {
+        await axios.delete(nodeapi+`users/${data._id}`, data)
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(err => console.log(err))
+      }
+      response()
+      event.preventDefault()
+      window.location.reload()
+    }
+
+    registerUser(event) {
+      document.getElementById('inputRole').value = ''
+      document.getElementById('inputCargo').value = ''
+      document.getElementById('inputNombre').value = ''
+      document.getElementById('inputUsername').value = ''
+      document.getElementById('inputApPaterno').value = ''
+      document.getElementById('inputApMaterno').value = ''
+      document.getElementById('inputCi').value = ''
+      document.getElementById('inputCargo').value = ''
+      document.getElementById('inputEmail').value = ''
+      document.getElementById('inputCelular').value = ''
+      document.getElementById('inputOficinaId').value = ''
+
+      document.getElementById('inputEmail').disabled = false
+      document.getElementById('inputUsername').disabled = false
+      document.getElementById('inputUsername').disabled = false
+
+      document.getElementById('card-title-user').innerHTML = 'Registrar Usuario'
+      document.getElementById('card-title-user').style = 'color: black'
+      event.preventDefault()
+    }
+
+    getOficinas() {
+      const response = async () => {
+        await axios.get(nodeapi+'oficinas')
+        .then(res => this.setState({oficinas: res.data}))
+        .catch(err => console.log(err))
+      }
+      response()
+    }
+
+    render() {
+        const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
+
+        if(this.state.request === 'true') {
+          window.location.reload()
+        }
+
+        if(this.state.isAuth === ''){
+          return null
+        }else{
+          if(this.state.isAuth === 'failed'){
+            return(
+              <Redirect to={{pathname: '/login'}} />
+            )
+          }
+          else{
+            return (
+              <div>
+                  <div className="page-header">
+                      <h3 className="page-title"> Personal </h3>
+                      <nav aria-label="breadcrumb">
+                          <ol className="breadcrumb">
+                          <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
+                          <li className="breadcrumb-item active" aria-current="page">Personal</li>
+                          </ol>
+                      </nav>
+                  </div>
+                  <div className="row">
+                    <div className="col-lg-6 grid-margin stretch-card" style={{marginBottom: '0px'}}>
+                      <div className="form-group" style={{width: '100%'}}>
+                        <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({searchUser: event.target.value})}/>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-lg-12 grid-margin stretch-card">
+                      <div className="card">
+                        <div className="card-body">
+                          <h4 className="card-title">Lista de Personal - Usuarios</h4>
+                          {/* <p className="card-description"> Add className <code>.table-hover</code>
+                          </p> */}
+                          <div className="table-responsive">
+                            <table className="table table-hover">
+                              <thead>
+                                <tr>
+                                  <th>Nombre</th>
+                                  <th>Ap. Paterno</th>
+                                  <th>Ap. Materno</th>
+                                  <th>Usuario</th>
+                                  <th>CI</th>
+                                  <th>Oficina</th>
+                                  <th>Cargo</th>
+                                  <th>Email</th>
+                                  <th>Nro Celular</th>
+                                  <th>Estado</th>
+                                  <th>Acciones</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                  {
+                                    this.state.data !== null ? 
+                                    this.state.data
+                                    .filter((index) => {
+                                      if(this.state.searchUser === ''){
+                                        return index
+                                      }else{
+                                        if(index.nombre.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apPaterno.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apMaterno.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.username.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.cargo.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase())){
+                                          return index
+                                        }
+                                      }
+                                    })
+                                    .map((index, key) => (
+                                      <tr key={key}>
+                                        <td>{index.nombre}</td>
+                                        <td>{index.apPaterno}</td>
+                                        <td>{index.apMaterno}</td>
+                                        <td>{index.username}</td>
+                                        <td>{index.ci}</td>
+                                        <td>{
+                                          this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ? 
+                                          this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
+                                          null
+                                        }</td>
+                                        <td>{index.cargo}</td>
+                                        <td>{index.email}</td>
+                                        <td>{index.celular}</td>
+                                        <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}> 
+                                          {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
+                                        </td>
+                                        <td>
+                                          <a href="!#" onClick={evt => this.modifyUser(evt, index)} className="badge badge-warning" style={{marginRight: '3px'}} >Modificar</a>
+                                          <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Mod Estado</a>
+                                          <a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>
+                                        </td>
+                                      </tr>
+                                    ))
+                                    : null
+                                  }
+                                {/* <tr>
+                                  <td>Messsy</td>
+                                  <td>Flash</td>
+                                  <td className="text-danger"> 21.06% <i className="mdi mdi-arrow-down"></i></td>
+                                  <td><label className="badge badge-warning">In progress</label></td>
+                                </tr>
+                                <tr>
+                                  <td>John</td>
+                                  <td>Premier</td>
+                                  <td className="text-danger"> 35.00% <i className="mdi mdi-arrow-down"></i></td>
+                                  <td><label className="badge badge-info">Fixed</label></td>
+                                </tr>
+                                <tr>
+                                  <td>Peter</td>
+                                  <td>After effects</td>
+                                  <td className="text-success"> 82.00% <i className="mdi mdi-arrow-up"></i></td>
+                                  <td><label className="badge badge-success">Completed</label></td>
+                                </tr>
+                                <tr>
+                                  <td>Dave</td>
+                                  <td>53275535</td>
+                                  <td className="text-success"> Activo <i className="mdi mdi-arrow-up"></i></td>
+                                  <td><label className="badge badge-warning">In progress</label></td>
+                                </tr> */}
+                                <tr>
+                                  <td>
+                                  <a href="!#" onClick={evt => this.registerUser(evt)} className="badge badge-success" style={{marginRight: '3px', color: 'whitesmoke'}}>Registrar Nuevo</a>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-9 grid-margin stretch-card">
+                      <div className="card">
+                        <div className="card-body">
+                          <h4 className="card-title" id="card-title-user">Registrar Usuario</h4>
+                          <form className="form-sample">
+                            <p className="card-description"> Informacion Personal </p>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Nombre(s)</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control  type="text" id="inputNombre" placeholder="Nombre" required onChange={this.handleNombre}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Apellido Paterno</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control type="text" id="inputApPaterno" placeholder="Ap. paterno" required onChange={this.handleApPaterno}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Apellido Materno</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control type="text" id="inputApMaterno" placeholder="Ap Materno" required onChange={this.handleApMaterno}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">CI</label>
+                                  <div className="col-sm-9">
+                                    <Form.Control type="text" placeholder="Ej: 123456pt" required id="inputCi" onChange={this.handleCi}/>
+                                    {/* <select className="form-control">
+                                      <option>Male</option>
+                                      <option>Female</option>
+                                    </select> */}
+                                  </div>
+                                </Form.Group>
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Oficina</label>
+                                  <div className="col-sm-9">
+                                    <select className="form-control" required id="inputOficinaId" onChange={this.handleOficinaId}>
+                                      <option hidden value=''>Escoga una Opcion</option>
+                                      {
+                                        this.state.oficinas !== null ? 
+                                          this.state.oficinas.map((index, key) => (
+                                            <option value={index._id} key={key}>{index.nombre}</option>
+                                          ))
+                                        : <option>Cargando...</option>
+                                      }
+                                    </select>
+                                  </div>
+                                  </Form.Group>
+                              </div>
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Cargo</label>
+                                  <div className="col-sm-9">
+                                    <Form.Control type="text" placeholder="Cargo" id="inputCargo" required onChange={this.handleCargo}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                            </div>
+                            <div className="row">
+                              {/* <div className="col-md-6">
+                                <Form.Group className="row" id="inputRole" onChange={this.handleRole}>
+                                  <label className="col-sm-3 col-form-label">Rol en Sistema</label>
+                                  <div className="col-sm-4">
+                                  <div className="form-check">
+                                    <label className="form-check-label">
+                                      <input type="radio" className="form-check-input" name="ExampleRadio4" id="membershipRadios1" defaultChecked value='usuario'/> Usuario 
+                                      <i className="input-helper"></i>
+                                    </label>
+                                  </div>
+                                  </div>
+                                  <div className="col-sm-5">
+                                  <div className="form-check">
+                                    <label className="form-check-label">
+                                      <input type="radio" className="form-check-input" name="ExampleRadio4" id="membershipRadios2" value='admin'/> Administrador 
+                                      <i className="input-helper"></i>
+                                    </label>
+                                  </div>
+                                  </div>
+                                </Form.Group>
+                              </div> */}
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Rol en Sistema</label>
+                                  <div className="col-sm-9">
+                                    <select className="form-control" required id="inputRole" onChange={this.handleRole}>
+                                      <option hidden value=''>Escoga una Opcion</option>
+                                      <option value='usuario'>Usuario</option>
+                                      <option value='admin'>Administrador</option>
+                                    </select>
+                                  </div>
+                                  </Form.Group>
+                              </div>
+                            </div>
+                            <p className="card-description"> Datos de Usuario </p>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Email</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control type="email" placeholder="tuemail@example.com" id="inputEmail" required onChange={this.handleEmail}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Nro de Celular</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control type="text" placeholder="XXXX-XXXX" required id="inputCelular" onChange={this.handleCelular}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Nombre de Usuario</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control type="text" placeholder="Nombre de Usuario" id="inputUsername" required onChange={this.handleUsername}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                              <div className="col-md-6">
+                                {/* <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Contraseña</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control type="text"/>
+                                  </div>
+                                </Form.Group> */}
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Contraseña</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control type="password" placeholder="Contraseña" id="inputPassword" required onChange={this.handlePassword}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Confirmar Contraseña</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control type="password" placeholder="Repite la contraseña" id="inputConfirmPassword" required onChange={this.handleConfirmPassword}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                              <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
+                              <button className="btn btn-light" onClick={this.handleReset}>Borrar Datos</button>
+                              {
+                                this.state.error !== '' ? <label style={{color: 'red', fontSize: '0.875rem'}}>{this.state.error}</label> : null
+                              }
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            )
+          }
+        }
+    }
+}
+
+export default Personal
