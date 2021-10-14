@@ -1,40 +1,42 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+// import DatePicker from "react-datepicker";
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 
-export class Oficina extends Component {
+export class Auxiliar extends Component {
     constructor(props) {
         super(props)
         this.state = {
           isAuth: '',
           nombre: '',
           codigo: '',
+          estado: '',
+          descripcion: '',
+          grupoId: '',
           error: '',
           id: '',
-          estado: '',
           data: null,
-          searchOficina: '',
+          grupos: null,
+          searchAuxiliar: '',
+          request: 'false',
         }
-        this.handleCodigo = this.handleCodigo.bind(this)
+        // Register User
         this.handleNombre = this.handleNombre.bind(this)
+        this.handleCodigo = this.handleCodigo.bind(this)
+        this.handleDescripcion = this.handleDescripcion.bind(this)
+        this.handleGrupoId = this.handleGrupoId.bind(this)
+
+        // Form Handler
         this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this)
         this.handleReset = this.handleReset.bind(this)
-        this.modifyOficina = this.modifyOficina.bind(this)
+        this.modifyAuxiliar = this.modifyAuxiliar.bind(this)
+        
         this.changeEstado = this.changeEstado.bind(this)
-        this.deleteOficina = this.deleteOficina.bind(this)
-        this.registerOficina = this.registerOficina.bind(this)
-    }
-
-    checkToken() {
-      const token = window.localStorage.getItem('token')
-      if(token) {
-        this.verifytoken()
-      }else{
-        this.props.history.push('/login')
-      }
+        this.deleteAuxiliar = this.deleteAuxiliar.bind(this)
+        this.registerAuxiliar = this.registerAuxiliar.bind(this)
     }
 
     handleNombre(event) {
@@ -45,19 +47,43 @@ export class Oficina extends Component {
       this.setState({codigo: event.target.value})
     }
 
+    handleDescripcion(event) {
+      this.setState({descripcion: event.target.value})
+    }
+
+    handleGrupoId(event) {
+      this.setState({grupoId: event.target.value})
+    }
+
     handleRegisterSubmit(event) {
-      var text =  document.getElementById('card-title-oficina').textContent
-      if(text === 'Modificar Oficina') {
+      var text =  document.getElementById('card-title-auxiliar').textContent
+      if(text === 'Modificar Auxiliar') {
         const data = {
           nombre: this.state.nombre,
           codigo: this.state.codigo,
+          descripcion: this.state.descripcion,
+          grupoId: this.state.grupoId,
+          _id: this.state.id,
           estado: this.state.estado,
-          _id: this.state.id
         }
+        console.log(data)
         const response = async () => {
-          await axios.put(nodeapi+`oficinas/${data._id}`, data)
+          await axios.put(nodeapi+`auxiliares/${data._id}`, data)
           .then(res => {
-            console.log(res.data)
+            if(res.data.error){
+              if(res.data.error === 11000){
+                if(res.data.errmsg.includes('codigo')){
+                  this.setState({error: 'Codigo Ya en uso'})
+                }else{
+                  this.setState({error: 'Nombre de Usuario Ya en uso'})
+                }
+              }else{
+                this.setState({error: res.data.error})
+              }
+            }else{
+              console.log(res.data.msg)
+              this.setState({request: 'true'})
+            }
           })
           .catch(err => console.log(err))
         }
@@ -66,28 +92,55 @@ export class Oficina extends Component {
         const data = {
           nombre: this.state.nombre,
           codigo: this.state.codigo,
+          descripcion: this.state.descripcion,
+          grupoId: this.state.grupoId,
           estado: 'activo',
         }
         const response = async () => {
-          await axios.post(nodeapi+'oficinas', data)
+          await axios.post(nodeapi+'auxiliares', data)
           .then(res => {
             if(res.data.error){
-              this.setState({error: res.data.error})
+              if(res.data.error === 11000){
+                if(res.data.errmsg.includes('codigo')){
+                  this.setState({error: 'Codigo Ya en uso'})
+                }else{
+                  this.setState({error: 'Nombre de Grupo Ya en uso'})
+                }
+              }else{
+                this.setState({error: res.data.error})
+              }
             }else{
               console.log(res.data.msg)
+              this.setState({request: 'true'})
             }
           })
           .catch(err => console.log(err))
         }
-        response()
+        if(this.state.confirmPassword === this.state.password){
+          response()
+        } else {
+          this.setState({error: 'Las contraseñas no coinciden'})
+        }
       }
-      // event.preventDefault()
+      event.preventDefault()
     }
 
     handleReset(event) {
-      document.getElementById('inputNombre').value = ''
       document.getElementById('inputCodigo').value = ''
+      document.getElementById('inputNombre').value = ''
+      document.getElementById('inputDescripcion').value = ''
+      document.getElementById('inputGrupoId').value = ''
+
       event.preventDefault()
+    }
+
+    checkToken() {
+      const token = window.localStorage.getItem('token')
+      if(token) {
+        this.verifytoken()
+      }else{
+        this.props.history.push('/login')
+      }
     }
   
     async verifytoken() {
@@ -111,11 +164,12 @@ export class Oficina extends Component {
     componentDidMount(){
       this.checkToken()
       this.getData()
+      this.getGrupos()
     }
 
     getData() {
       const response = async () => {
-        await axios.get(nodeapi+'oficinas')
+        await axios.get(nodeapi+'auxiliares')
         .then(res => this.setState({data: res.data}))
         .catch(err => console.log(err))
       }
@@ -123,24 +177,26 @@ export class Oficina extends Component {
     }
 
     //crud
-    modifyOficina(event, data) {
-      document.getElementById('inputNombre').value = data.nombre
+    modifyAuxiliar(event, data) {
       document.getElementById('inputCodigo').value = data.codigo
-      document.getElementById('card-title-oficina').innerHTML = 'Modificar Oficina'
-      document.getElementById('card-title-oficina').style = 'color: red'
-      this.setState({id: data._id, estado: data.estado, nombre: data.nombre, codigo: data.codigo})
+      document.getElementById('inputNombre').value = data.nombre
+      document.getElementById('inputDescripcion').value = data.nombre
+      document.getElementById('inputGrupoId').value = data.grupoId
+
+      document.getElementById('card-title-auxiliar').innerHTML = 'Modificar Auxiliar'
+      document.getElementById('card-title-auxiliar').style = 'color: red'
+
+      this.setState({id: data._id, estado: data.estado, nombre: data.nombre, codigo: data.codigo, descripcion: data.descripcion, grupoId: data.grupoId})
       event.preventDefault()
     }
 
     changeEstado(event, datax) {
       const data = {
-        nombre: datax.nombre,
-        codigo: datax.codigo,
         estado: datax.estado === 'activo' ? 'inactivo' : 'activo',
         _id: datax._id
       }
       const response = async () => {
-        await axios.put(nodeapi+`oficinas/${data._id}`, data)
+        await axios.put(nodeapi+`auxiliares/${data._id}/estado`, data)
         .then(res => {
           console.log(res.data)
         })
@@ -151,15 +207,12 @@ export class Oficina extends Component {
       window.location.reload()
     }
 
-    deleteOficina(event ,datax) {
+    deleteAuxiliar(event ,datax) {
       const data = {
-        nombre: datax.nombre,
-        codigo: datax.codigo,
-        estado: datax.estado,
-        _id: datax._id,
+        _id: datax._id
       }
       const response = async () => {
-        await axios.delete(nodeapi+`oficinas/${data._id}`, data)
+        await axios.delete(nodeapi+`auxiliares/${data._id}`, data)
         .then(res => {
           console.log(res.data)
         })
@@ -170,16 +223,31 @@ export class Oficina extends Component {
       window.location.reload()
     }
 
-    registerOficina(event) {
+    registerAuxiliar(event) {
       document.getElementById('inputNombre').value = ''
       document.getElementById('inputCodigo').value = ''
-      document.getElementById('card-title-oficina').innerHTML = 'Registrar Oficina'
-      document.getElementById('card-title-oficina').style = 'color: black'
+      document.getElementById('inputDescripcion').value = ''
+      document.getElementById('inputGrupoId').value = ''
+
+      document.getElementById('card-title-auxiliar').innerHTML = 'Registrar Auxiliar'
+      document.getElementById('card-title-auxiliar').style = 'color: black'
       event.preventDefault()
+    }
+    getGrupos() {
+        const response = async () => {
+        await axios.get(nodeapi+'grupos')
+        .then(res => this.setState({grupos: res.data}))
+        .catch(err => console.log(err))
+        }
+        response()
     }
 
     render() {
         // const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
+
+        if(this.state.request === 'true') {
+          window.location.reload()
+        }
 
         if(this.state.isAuth === ''){
           return null
@@ -193,26 +261,26 @@ export class Oficina extends Component {
             return (
               <div>
                   <div className="page-header">
-                      <h3 className="page-title"> Oficinas </h3>
+                      <h3 className="page-title"> Auxiliares </h3>
                       <nav aria-label="breadcrumb">
                           <ol className="breadcrumb">
                           <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
-                          <li className="breadcrumb-item active" aria-current="page">Oficinas</li>
+                          <li className="breadcrumb-item active" aria-current="page">Auxiliares</li>
                           </ol>
                       </nav>
                   </div>
                   <div className="row">
                     <div className="col-lg-6 grid-margin stretch-card" style={{marginBottom: '0px'}}>
                       <div className="form-group" style={{width: '100%'}}>
-                        <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({searchOficina: event.target.value})}/>
+                        <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({searchAuxiliar: event.target.value})}/>
                       </div>
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-lg-6 grid-margin stretch-card">
+                    <div className="col-lg-12 grid-margin stretch-card">
                       <div className="card">
                         <div className="card-body">
-                          <h4 className="card-title">INFORMACION</h4>
+                          <h4 className="card-title">Lista de Grupos</h4>
                           {/* <p className="card-description"> Add className <code>.table-hover</code>
                           </p> */}
                           <div className="table-responsive">
@@ -221,6 +289,8 @@ export class Oficina extends Component {
                                 <tr>
                                   <th>Nombre</th>
                                   <th>Codigo</th>
+                                  <th>Grupo</th>
+                                  <th>Descripcion</th>
                                   <th>Estado</th>
                                   <th>Acciones</th>
                                 </tr>
@@ -230,10 +300,10 @@ export class Oficina extends Component {
                                     this.state.data !== null ? 
                                     this.state.data
                                     .filter((index) => {
-                                      if(this.state.searchOficina === ''){
+                                      if(this.state.searchAuxiliar === ''){
                                         return index
                                       }else{
-                                        if(index.nombre.toLowerCase().includes(this.state.searchOficina.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchOficina.toLocaleLowerCase())){
+                                        if(index.nombre.toLowerCase().includes(this.state.searchAuxiliar.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchAuxiliar.toLocaleLowerCase())){
                                           return index
                                         }
                                       }
@@ -243,45 +313,29 @@ export class Oficina extends Component {
                                       <tr key={key}>
                                         <td>{index.nombre}</td>
                                         <td>{index.codigo}</td>
+                                        <td>
+                                        {
+                                          this.state.grupos !== null && this.state.grupos.find(item => item._id === index.grupoId) !== undefined ? 
+                                          this.state.grupos.find(item => item._id === index.grupoId).nombre :
+                                          null
+                                        }
+                                        </td>
+                                        <td style={{whiteSpace: 'normal',maxWidth: '300px'}}>{index.descripcion}</td>
                                         <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}> 
                                           {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                         </td>
                                         <td>
-                                          <a href="!#" onClick={evt => this.modifyOficina(evt, index)} className="badge badge-warning" style={{marginRight: '3px'}} >Modificar</a>
+                                          <a href="!#" onClick={evt => this.modifyAuxiliar(evt, index)} className="badge badge-warning" style={{marginRight: '3px'}} >Modificar</a>
                                           <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Mod Estado</a>
-                                          <a href="!#" onClick={evt => this.deleteOficina(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>
+                                          <a href="!#" onClick={evt => this.deleteAuxiliar(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>
                                         </td>
                                       </tr>
                                     ))
                                     : null
                                   }
-                                {/* <tr>
-                                  <td>Messsy</td>
-                                  <td>Flash</td>
-                                  <td className="text-danger"> 21.06% <i className="mdi mdi-arrow-down"></i></td>
-                                  <td><label className="badge badge-warning">In progress</label></td>
-                                </tr>
-                                <tr>
-                                  <td>John</td>
-                                  <td>Premier</td>
-                                  <td className="text-danger"> 35.00% <i className="mdi mdi-arrow-down"></i></td>
-                                  <td><label className="badge badge-info">Fixed</label></td>
-                                </tr>
-                                <tr>
-                                  <td>Peter</td>
-                                  <td>After effects</td>
-                                  <td className="text-success"> 82.00% <i className="mdi mdi-arrow-up"></i></td>
-                                  <td><label className="badge badge-success">Completed</label></td>
-                                </tr>
-                                <tr>
-                                  <td>Dave</td>
-                                  <td>53275535</td>
-                                  <td className="text-success"> Activo <i className="mdi mdi-arrow-up"></i></td>
-                                  <td><label className="badge badge-warning">In progress</label></td>
-                                </tr> */}
                                 <tr>
                                   <td>
-                                  <a href="!#" onClick={evt => this.registerOficina(evt)} className="badge badge-success" style={{marginRight: '3px', color: 'white'}}>Registrar Nuevo</a>
+                                  <a href="!#" onClick={evt => this.registerAuxiliar(evt)} className="badge badge-success" style={{marginRight: '3px', color: 'whitesmoke'}}>Registrar Nuevo</a>
                                   </td>
                                 </tr>
                               </tbody>
@@ -290,29 +344,41 @@ export class Oficina extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className="col-md-6 grid-margin stretch-card">
+                  </div>
+                  <div className="row">
+                  <div className="col-md-6 grid-margin stretch-card">
                       <div className="card">
                         <div className="card-body">
-                          <h4 className="card-title" id="card-title-oficina">Registrar Oficina</h4>
+                          <h4 className="card-title" id="card-title-auxiliar">Registrar Auxiliar</h4>
                           <p className="card-description">Todos los campos son requeridos</p>
                           <form className="forms-sample">
                             <Form.Group>
-                              <label htmlFor="exampleInputUsername1">Nombre de Oficina</label>
-                              <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Oficina" size="lg" required/>
+                              <label htmlFor="exampleInputUsername1">Nombre de Auxiliar</label>
+                              <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Auxiliar" size="lg" required/>
                             </Form.Group>
                             <Form.Group>
                               <label htmlFor="exampleInputEmail1">Codigo</label>
                               <Form.Control onChange={this.handleCodigo} type="Codigo" className="form-control" id="inputCodigo" placeholder="Codigo" required/>
                             </Form.Group>
-                            {/* <div className="form-check">
-                              <label className="form-check-label text-muted">
-                                <input type="checkbox" className="form-check-input"/>
-                                <i className="input-helper"></i>
-                                Remember me
-                              </label>
-                            </div> */}
+                            <Form.Group>
+                                <label>Grupo</label>
+                                <select className="form-control" required id="inputGrupoId" onChange={this.handleGrupoId}>
+                                    <option hidden value=''>Escoga una Opcion</option>
+                                    {
+                                    this.state.grupos !== null ? 
+                                        this.state.grupos.map((index, key) => (
+                                        <option value={index._id} key={key}>{index.nombre}</option>
+                                        ))
+                                    : <option>Cargando...</option>
+                                    }
+                                </select>
+                            </Form.Group>
+                            <Form.Group>
+                              <label htmlFor="exampleTextarea1">Descripcion</label>
+                              <textarea className="form-control" id="inputDescripcion" onChange={this.handleDescripcion} rows="4" placeholder="Descripcion Corta del Auxiliar" required></textarea>
+                            </Form.Group>
                             <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
-                            <button className="btn btn-light" onClick={this.handleReset}>Borrar Datos</button>
+                            <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
                             {
                               this.state.error !== '' ? <label style={{color: 'red', fontSize: '0.875rem'}}>{this.state.error}</label> : null
                             }
@@ -321,6 +387,7 @@ export class Oficina extends Component {
                       </div>
                     </div>
                   </div>
+
               </div>
             )
           }
@@ -328,4 +395,4 @@ export class Oficina extends Component {
     }
 }
 
-export default Oficina
+export default Auxiliar

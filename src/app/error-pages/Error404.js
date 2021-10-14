@@ -14,13 +14,13 @@ export class Error404 extends Component {
                   <h1 className="display-1 mb-0">404</h1>
                 </div>
                 <div className="col-lg-6 error-page-divider text-lg-left pl-lg-4">
-                  <h2>SORRY!</h2>
-                  <h3 className="font-weight-light">The page you’re looking for was not found.</h3>
+                  <h2>Lo SENTIMOS!</h2>
+                  <h3 className="font-weight-light">La Pagina que Estas buscando No existe o fue Eliminada.</h3>
                 </div>
               </div>
               <div className="row mt-5">
                 <div className="col-12 text-center mt-xl-2">
-                  <Link className="text-white font-weight-medium" to={{pathname: `${from.pathname}`, state: {isAuth: 'correct'}}}>Back to home</Link>
+                  <Link className="text-white font-weight-medium" to={{pathname: `${from.pathname}`, state: {isAuth: 'correct'}}}>Volver a Inicio</Link>
                 </div>
               </div>
             </div>

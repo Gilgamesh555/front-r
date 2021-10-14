@@ -108,6 +108,11 @@ export class Login extends Component {
                         {/* <Link className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" to="/dashboard">Iniciar Sesion</Link> */}
                         <Button className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" onClick={this.handleSubmit} type="submit">Iniciar Sesion</Button>
                       </div>
+                      {
+                        this.state.isAuth === 'failed' ?
+                        <p style={{color: 'red'}}>Nombre de Usuario o Contraseña Incorrectos</p>
+                        : null
+                      }
                       {/* <div className="my-2 d-flex justify-content-between align-items-center">
                         <div className="form-check">
                           <label className="form-check-label text-muted">

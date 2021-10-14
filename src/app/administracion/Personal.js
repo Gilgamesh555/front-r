@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
-import { Link, Redirect } from 'react-router-dom';
-import DatePicker from "react-datepicker";
+import { Redirect } from 'react-router-dom';
+// import DatePicker from "react-datepicker";
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
@@ -267,7 +267,7 @@ export class Personal extends Component {
       document.getElementById('card-title-user').innerHTML = 'Modificar Usuario'
       document.getElementById('card-title-user').style = 'color: red'
 
-      this.setState({id: data._id, estado: data.estado, nombre: data.nombre, role: data.role, cargo: data.cargo, username: data.username, apPaterno: data.apPaterno, apMaterno: data.apMaterno, ci: data.ci, cargo: data.cargo, email: data.email, celular: data.celular, oficinaId: data.oficinaId})
+      this.setState({id: data._id, estado: data.estado, nombre: data.nombre, role: data.role, cargo: data.cargo, username: data.username, apPaterno: data.apPaterno, apMaterno: data.apMaterno, ci: data.ci, email: data.email, celular: data.celular, oficinaId: data.oficinaId})
       event.preventDefault()
     }
 
@@ -336,7 +336,7 @@ export class Personal extends Component {
     }
 
     render() {
-        const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
+        // const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
 
         if(this.state.request === 'true') {
           window.location.reload()
@@ -405,6 +405,7 @@ export class Personal extends Component {
                                           return index
                                         }
                                       }
+                                      return null
                                     })
                                     .map((index, key) => (
                                       <tr key={key}>

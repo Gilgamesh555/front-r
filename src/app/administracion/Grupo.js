@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
-import { Link, Redirect } from 'react-router-dom';
-import DatePicker from "react-datepicker";
+import { Redirect } from 'react-router-dom';
+// import DatePicker from "react-datepicker";
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
@@ -56,8 +56,8 @@ export class Grupo extends Component {
           .then(res => {
             if(res.data.error){
               if(res.data.error === 11000){
-                if(res.data.errmsg.includes('email')){
-                  this.setState({error: 'Email Ya en uso'})
+                if(res.data.errmsg.includes('codigo')){
+                  this.setState({error: 'Codigo Ya en uso'})
                 }else{
                   this.setState({error: 'Nombre de Usuario Ya en uso'})
                 }
@@ -210,7 +210,7 @@ export class Grupo extends Component {
     }
 
     render() {
-        const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
+        // const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
 
         if(this.state.request === 'true') {
           window.location.reload()
@@ -272,6 +272,7 @@ export class Grupo extends Component {
                                           return index
                                         }
                                       }
+                                      return null
                                     })
                                     .map((index, key) => (
                                       <tr key={key}>
