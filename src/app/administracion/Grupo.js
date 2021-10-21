@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+import { ProgressBar } from 'react-bootstrap'
 // import DatePicker from "react-datepicker";
 
 import axios from 'axios'
@@ -11,18 +12,24 @@ export class Grupo extends Component {
         super(props)
         this.state = {
           isAuth: '',
+          isAdmin: '',
           nombre: '',
           codigo: '',
+          coe: '',
+          vida: '',
           estado: '',
           error: '',
           id: '',
           data: null,
           searchGrupo: '',
           request: 'false',
+          auxiliares: null,
         }
         // Register User
         this.handleNombre = this.handleNombre.bind(this)
         this.handleCodigo = this.handleCodigo.bind(this)
+        this.handleVida = this.handleVida.bind(this)
+        this.handleCoe = this.handleCoe.bind(this)
 
         // Form Handler
         this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this)
@@ -42,6 +49,14 @@ export class Grupo extends Component {
       this.setState({codigo: event.target.value})
     }
 
+    handleCoe(event) {
+      this.setState({coe: event.target.value})
+    }
+
+    handleVida(event) {
+      this.setState({vida: event.target.value})
+    }
+
     handleRegisterSubmit(event) {
       var text =  document.getElementById('card-title-grupo').textContent
       if(text === 'Modificar Grupo') {
@@ -49,6 +64,8 @@ export class Grupo extends Component {
           nombre: this.state.nombre,
           codigo: this.state.codigo,
           estado: this.state.estado,
+          coe: this.state.coe,
+          vida: this.state.vida,
           _id: this.state.id
         }
         const response = async () => {
@@ -76,6 +93,8 @@ export class Grupo extends Component {
         const data = {
           nombre: this.state.nombre,
           codigo: this.state.codigo,
+          coe: this.state.coe,
+          vida: this.state.vida,
           estado: 'activo',
         }
         const response = async () => {
@@ -108,8 +127,10 @@ export class Grupo extends Component {
     }
 
     handleReset(event) {
-      document.getElementById('inputCodigo').value = ''
+      // document.getElementById('inputCodigo').value = ''
       document.getElementById('inputNombre').value = ''
+      document.getElementById('inputVida').value = ''
+      document.getElementById('inputCoe').value = ''
 
       event.preventDefault()
     }
@@ -131,7 +152,14 @@ export class Grupo extends Component {
         await axios.post(nodeapi+'users/verify', data)
         .then(res => {
           if(res.data.status === 'ok'){
-            this.setState({isAuth: 'correct'})
+            const role = this.decodeToken(data.token).role
+            if(role !== undefined && role === 'admin'){
+              this.setState({isAuth: 'correct'})
+              this.setState({isAdmin: 'correct'})
+            }else{
+              this.setState({isAdmin: 'failed'})
+              this.props.history.push('/login')
+            }
           }else{
             window.localStorage.removeItem('token')
             this.setState({isAuth: 'failed'})
@@ -141,9 +169,20 @@ export class Grupo extends Component {
       }
     }
 
+    decodeToken(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
+    }
+
     componentDidMount(){
       this.checkToken()
       this.getData()
+      this.getAuxiliares()
     }
 
     getData() {
@@ -157,13 +196,15 @@ export class Grupo extends Component {
 
     //crud
     modifyGrupo(event, data) {
-      document.getElementById('inputCodigo').value = data.codigo
+      // document.getElementById('inputCodigo').value = data.codigo
       document.getElementById('inputNombre').value = data.nombre
+      document.getElementById('inputVida').value = data.vida
+      document.getElementById('inputCoe').value = data.coe
 
       document.getElementById('card-title-grupo').innerHTML = 'Modificar Grupo'
       document.getElementById('card-title-grupo').style = 'color: red'
 
-      this.setState({id: data._id, estado: data.estado, nombre: data.nombre, codigo: data.codigo})
+      this.setState({id: data._id, estado: data.estado, nombre: data.nombre, codigo: data.codigo, vida: data.vida, coe: data.coe})
       event.preventDefault()
     }
 
@@ -202,11 +243,26 @@ export class Grupo extends Component {
 
     registerGrupo(event) {
       document.getElementById('inputNombre').value = ''
-      document.getElementById('inputCodigo').value = ''
+      document.getElementById('inputVida').value = ''
+      document.getElementById('inputCoe').value = ''
+      // document.getElementById('inputCodigo').value = ''
 
       document.getElementById('card-title-grupo').innerHTML = 'Registrar Usuario'
       document.getElementById('card-title-grupo').style = 'color: black'
       event.preventDefault()
+    }
+
+    getAuxiliares() {
+      const response = async () => {
+        await axios.get(nodeapi+`auxiliares`)
+        .then(res => {
+          this.setState({auxiliares: res.data})
+        })
+        .catch(err => console.log(err))
+      }
+      
+      response()
+      
     }
 
     render() {
@@ -225,6 +281,9 @@ export class Grupo extends Component {
             )
           }
           else{
+            if(this.state.isAdmin === ''){
+              return null
+            }
             return (
               <div>
                   <div className="page-header">
@@ -256,6 +315,8 @@ export class Grupo extends Component {
                                 <tr>
                                   <th>Nombre</th>
                                   <th>Codigo</th>
+                                  <th>Vida</th>
+                                  <th>Cantidad</th>
                                   <th>Estado</th>
                                   <th>Acciones</th>
                                 </tr>
@@ -278,6 +339,18 @@ export class Grupo extends Component {
                                       <tr key={key}>
                                         <td>{index.nombre}</td>
                                         <td>{index.codigo}</td>
+                                        <td>{index.vida}</td>
+                                        <td>
+                                        {
+                                          this.state.auxiliares !== null && this.state.auxiliares.filter(item => item.grupoId === index._id).length !== undefined ?
+                                          <> 
+                                          <ProgressBar variant="success" max={50} style={{minWidth: '100px'}} now={this.state.auxiliares.filter(item => item.grupoId === index._id).length}/>
+                                          <label style={{float: 'right', color: '#19d895', fontSize: '13px'}}>{this.state.auxiliares.filter(item => item.grupoId === index._id).length}</label>
+                                          </>
+                                          :
+                                          null
+                                        }
+                                        </td>
                                         <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}> 
                                           {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                         </td>
@@ -311,10 +384,28 @@ export class Grupo extends Component {
                               <label htmlFor="exampleInputUsername1">Nombre de Grupo</label>
                               <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Oficina" size="lg" required/>
                             </Form.Group>
-                            <Form.Group>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">VIDA</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control type="number" placeholder="En años" step="any" id="inputVida" required onChange={this.handleVida}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">COE</label>
+                                  <div className="col-sm-9">
+                                  <Form.Control type="number" placeholder="0% - 100%" step="1" min={1} max={100} id="inputCoe" required onChange={this.handleCoe}/>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                            </div>
+                            {/* <Form.Group>
                               <label htmlFor="exampleInputEmail1">Codigo</label>
                               <Form.Control onChange={this.handleCodigo} type="Codigo" className="form-control" id="inputCodigo" placeholder="Codigo" required/>
-                            </Form.Group>
+                            </Form.Group> */}
                             <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
                             <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
                             {

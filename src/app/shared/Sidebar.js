@@ -4,10 +4,22 @@ import { Collapse } from 'react-bootstrap';
 import { Dropdown } from 'react-bootstrap';
 import { Trans } from 'react-i18next';
 
+import axios from 'axios'
+import nodeapi from '../../apis/nodeapi'
+
 import image1 from '../../assets/images/faces/face8.jpg'
 
 class Sidebar extends Component {
-  state = {};
+
+  constructor(props) {
+    super(props)
+    this.stat = {
+      isAdmin: '',
+    }
+  }
+
+  state = {
+  };
 
   toggleMenuState(menuState) {
     if (this.state[menuState]) {
@@ -44,6 +56,7 @@ class Sidebar extends Component {
       {path:'/user-pages', state: 'userPagesMenuOpen'},
       {path:'/error-pages', state: 'errorPagesMenuOpen'},
       {path:'/administracion', state: 'administracionMenuOpen'},
+      {path:'/vistas', state: 'vistasMenuOpen'},
     ];
 
     dropdownPaths.forEach((obj => {
@@ -53,6 +66,72 @@ class Sidebar extends Component {
     }));
  
   } 
+
+  checkToken() {
+    const token = window.localStorage.getItem('token')
+    if(token) {
+      this.verifytoken()
+    }else{
+      this.props.history.push('/login')
+    }
+  }
+
+  async verifytoken() {
+    const data = {
+      token: window.localStorage.getItem('token')
+    }
+    if(data.token){
+      await axios.post(nodeapi+'users/verify', data)
+      .then(res => {
+        if(res.data.status === 'ok'){
+          const role = this.decodeToken(data.token).role
+          console.log(role)
+          if(role !== undefined && role === 'usuario'){
+            document.getElementById('liAdmin').style = 'display: none'
+            this.setStat({isAdmin: 'correct'})
+          }else{
+            this.setStat({isAdmin: 'failed'})
+            this.props.history.push('/login')
+          }
+        }else{
+          window.localStorage.removeItem('token')
+          this.setStat({isAdmin: 'failed'})
+        }
+      })
+      .catch(err => err)
+    }
+  }
+
+  decodeToken(token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+  }
+
+  componentDidMount() {
+    this.checkToken()
+    this.onRouteChanged();
+    // add className 'hover-open' to sidebar navitem while hover in sidebar-icon-only menu
+    const body = document.querySelector('body');
+    document.querySelectorAll('.sidebar .nav-item').forEach((el) => {
+      
+      el.addEventListener('mouseover', function() {
+        if(body.classList.contains('sidebar-icon-only')) {
+          el.classList.add('hover-open');
+        }
+      });
+      el.addEventListener('mouseout', function() {
+        if(body.classList.contains('sidebar-icon-only')) {
+          el.classList.remove('hover-open');
+        }
+      });
+    });
+  }
+
   render () {
     return (
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
@@ -77,7 +156,7 @@ class Sidebar extends Component {
                     
                   </div>
                 </Dropdown.Toggle>
-                <Dropdown.Menu className="preview-list navbar-dropdown">
+                {/* <Dropdown.Menu className="preview-list navbar-dropdown">
                   <Dropdown.Item className="dropdown-item p-0 preview-item d-flex align-items-center" href="!#" onClick={evt =>evt.preventDefault()}>
                     <div className="d-flex">
                       <div className="py-3 px-4 d-flex align-items-center justify-content-center">
@@ -103,7 +182,7 @@ class Sidebar extends Component {
                   <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center text-small" onClick={evt =>evt.preventDefault()}>
                     <Trans>Sign Out</Trans>
                   </Dropdown.Item>
-                </Dropdown.Menu>
+                </Dropdown.Menu> */}
               </Dropdown>
             </div>
           </li>
@@ -207,7 +286,7 @@ class Sidebar extends Component {
               <span className="menu-title"><Trans>Documentation</Trans></span>
             </a>
           </li> */}
-          <li className={ this.isPathActive('/administracion') ? 'nav-item active' : 'nav-item' }>
+          <li className={ this.isPathActive('/administracion') ? 'nav-item active' : 'nav-item' } id="liAdmin">
             <div className={ this.state.administracionMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('administracionMenuOpen') } data-toggle="collapse">
               <i className="mdi mdi-information-outline menu-icon"></i>
               <span className="menu-title"><Trans>Administracion</Trans></span>
@@ -219,8 +298,26 @@ class Sidebar extends Component {
                 <li className="nav-item"> <Link className={ this.isPathActive('/administracion/personal') ? 'nav-link active' : 'nav-link' } to="/administracion/personal">Personal</Link></li>
                 <li className="nav-item"> <Link className={ this.isPathActive('/administracion/grupos') ? 'nav-link active' : 'nav-link' } to="/administracion/grupos">Grupos</Link></li>
                 <li className="nav-item"> <Link className={ this.isPathActive('/administracion/auxiliares') ? 'nav-link active' : 'nav-link' } to="/administracion/auxiliares">Auxiliares</Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/administracion/activos') ? 'nav-link active' : 'nav-link' } to="/administracion/activos">Activos</Link></li>
                 <li className="nav-item"> <Link className={ this.isPathActive('/administracion/ufv') ? 'nav-link active' : 'nav-link' } to="/administracion/ufv">UFV</Link></li>
+                <li className="nav-item"> <Link className={ this.isPathActive('/administracion/activos') ? 'nav-link active' : 'nav-link' } to="/administracion/activos">Activos</Link></li>
+                {/* <li className="nav-item"> <Link className={ this.isPathActive('/error-pages/error-500') ? 'nav-link active' : 'nav-link' } to="/error-pages/error-500">500</Link></li> */}
+              </ul>
+            </Collapse>
+          </li>
+          <li className={ this.isPathActive('/vistas') ? 'nav-item active' : 'nav-item' } id="liVistas">
+            <div className={ this.state.vistasMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('vistasMenuOpen') } data-toggle="collapse">
+              <i className="mdi mdi-information-outline menu-icon"></i>
+              <span className="menu-title"><Trans>Vistas</Trans></span>
+              <i className="menu-arrow"></i>
+            </div>
+            <Collapse in={ this.state.vistasMenuOpen }>
+              <ul className="nav flex-column sub-menu">
+                <li className="nav-item"> <Link className={ this.isPathActive('/visas/oficinas') ? 'nav-link active' : 'nav-link' } to="/vistas/oficinas">Oficinas</Link></li>
+                <li className="nav-item"> <Link className={ this.isPathActive('/vistas/personal') ? 'nav-link active' : 'nav-link' } to="/vistas/personal">Personal</Link></li>
+                <li className="nav-item"> <Link className={ this.isPathActive('/vistas/grupos') ? 'nav-link active' : 'nav-link' } to="/vistas/grupos">Grupos</Link></li>
+                <li className="nav-item"> <Link className={ this.isPathActive('/vistas/auxiliares') ? 'nav-link active' : 'nav-link' } to="/vistas/auxiliares">Auxiliares</Link></li>
+                <li className="nav-item"> <Link className={ this.isPathActive('/vistas/ufv') ? 'nav-link active' : 'nav-link' } to="/vistas/ufv">UFV</Link></li>
+                <li className="nav-item"> <Link className={ this.isPathActive('/vistas/activos') ? 'nav-link active' : 'nav-link' } to="/vistas/activos">Activos</Link></li>
                 {/* <li className="nav-item"> <Link className={ this.isPathActive('/error-pages/error-500') ? 'nav-link active' : 'nav-link' } to="/error-pages/error-500">500</Link></li> */}
               </ul>
             </Collapse>
@@ -232,25 +329,6 @@ class Sidebar extends Component {
 
   isPathActive(path) {
     return this.props.location.pathname.startsWith(path);
-  }
-
-  componentDidMount() {
-    this.onRouteChanged();
-    // add className 'hover-open' to sidebar navitem while hover in sidebar-icon-only menu
-    const body = document.querySelector('body');
-    document.querySelectorAll('.sidebar .nav-item').forEach((el) => {
-      
-      el.addEventListener('mouseover', function() {
-        if(body.classList.contains('sidebar-icon-only')) {
-          el.classList.add('hover-open');
-        }
-      });
-      el.addEventListener('mouseout', function() {
-        if(body.classList.contains('sidebar-icon-only')) {
-          el.classList.remove('hover-open');
-        }
-      });
-    });
   }
 
 }

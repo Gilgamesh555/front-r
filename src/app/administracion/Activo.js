@@ -12,6 +12,7 @@ export class Personal extends Component {
         super(props)
         this.state = {
           isAuth: '',
+          isAdmin: '',
           codigo: '',
           fechaIncorporacion: '',
           fechaRegistro: '',
@@ -40,6 +41,12 @@ export class Personal extends Component {
 					request: 'false',
           auxiliarQr: '',
           responsableQr: '',
+          isDeprecate: false,
+          activoDeprecate: '',
+          deprecateValue: null,
+          isUpdate: false,
+          activoUpdate: '',
+          updateValue: null,
         }
         // Register User
         this.handleCodigo = this.handleCodigo.bind(this)
@@ -67,6 +74,8 @@ export class Personal extends Component {
         this.registerActivo = this.registerActivo.bind(this)
         this.getOficinas = this.getOficinas.bind(this)  
 				this.generateQR = this.generateQR.bind(this)
+        this.deprecateActivo = this.deprecateActivo.bind(this)
+        this.updateAcivo = this.updateAcivo.bind(this)
     }
 
     handleCodigo(event) {
@@ -75,6 +84,27 @@ export class Personal extends Component {
 
     handleFechaIncorporacion(event) {
       this.setState({fechaIncorporacion: event.target.value})
+      this.getUfvDate(event.target.value)
+    }
+
+    getUfvDate(date) {
+      const data = {
+        fecha: date,
+      }
+      const response = async () => {
+				await axios.post(nodeapi+`ufv/date`, data)
+				.then(res => {
+          if(res.data !== null) {
+            document.getElementById('inputUfvId').value = res.data.valor
+            this.setState({ufvId: res.data._id})
+          }else{
+            document.getElementById('inputUfvId').value = 'Seleccione Una fecha Valida'
+            this.setState({ufvId: ''})
+          }
+				})
+				.catch(err => console.log(err))
+			}
+			response()
     }
     
     handleFechaRegistro(event) { 
@@ -88,6 +118,18 @@ export class Personal extends Component {
     handleGrupoId(event) {
       this.setState({grupoId: event.target.value})
 			document.getElementById('inputAuxiliarId').value = ''
+      const data = {
+        _id: event.target.value,
+      }
+      const response = async () => {
+				await axios.get(nodeapi+`grupos/${data._id}`)
+				.then(res => {
+          document.getElementById('inputCoe').value = res.data.coe
+          document.getElementById('inputVida').value = res.data.vida
+				})
+				.catch(err => console.log(err))
+			}
+			response()
     }
 
     handleAuxiliarId(event) {
@@ -156,7 +198,7 @@ export class Personal extends Component {
           estado: this.state.estado,
 					_id: this.state.id
         }
-				console.log(data)
+				// console.log(data)
         const response = async () => {
           await axios.put(nodeapi+`activos/${data._id}`, data)
           .then(res => {
@@ -196,6 +238,7 @@ export class Personal extends Component {
           descripcion: this.state.descripcion,
           estado: 'activo',
         }
+        // console.log(data)
         const response = async () => {
           await axios.post(nodeapi+'activos', data)
           .then(res => {
@@ -227,8 +270,8 @@ export class Personal extends Component {
 
     handleReset(event) {
       document.getElementById('inputCodigo').value = ''
-      document.getElementById('inputCargo').value = ''
-			document.getElementById('inputUfvId').value = ''
+      document.getElementById('inputCargo').value = 'Seleccione Un Responsable'
+			document.getElementById('inputUfvId').value = 'Seleccione Una Fecha de Incorporacion Valida'
 			document.getElementById('inputGrupoId').value = ''
 			document.getElementById('inputAuxiliarId').value = ''
 			document.getElementById('inputOficinaId').value = ''
@@ -239,6 +282,7 @@ export class Personal extends Component {
 			document.getElementById('inputDescripcion').value = ''
       document.getElementById('inputVida').value = ''
       document.getElementById('inputCoe').value = ''
+      document.getElementById('inputFechaIncorporacion').value = ''
 
       event.preventDefault()
     }
@@ -260,7 +304,14 @@ export class Personal extends Component {
         await axios.post(nodeapi+'users/verify', data)
         .then(res => {
           if(res.data.status === 'ok'){
-            this.setState({isAuth: 'correct'})
+            const role = this.decodeToken(data.token).role
+            if(role !== undefined && role === 'admin'){
+              this.setState({isAuth: 'correct'})
+              this.setState({isAdmin: 'correct'})
+            }else{
+              this.setState({isAdmin: 'failed'})
+              this.props.history.push('/login')
+            }
           }else{
             window.localStorage.removeItem('token')
             this.setState({isAuth: 'failed'})
@@ -268,6 +319,16 @@ export class Personal extends Component {
         })
         .catch(err => err)
       }
+    }
+
+    decodeToken(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
     }
 
     componentDidMount(){
@@ -301,8 +362,10 @@ export class Personal extends Component {
 			document.getElementById('inputCostoInicial').value = data.costoInicial
 			document.getElementById('inputObservaciones').value = data.observaciones
 			document.getElementById('inputDescripcion').value = data.descripcion
-      document.getElementById('inputVida').value = data.vida
-      document.getElementById('inputCoe').value = data.coe
+      // document.getElementById('inputVida').value = data.vida
+      // document.getElementById('inputCoe').value = data.coe
+
+      this.getUfvDate(data.fechaIncorporacion)
 
 			var now = new Date(data.fechaRegistro);
 			now.setMinutes(now.getDate());
@@ -317,7 +380,7 @@ export class Personal extends Component {
       document.getElementById('card-title-activo').innerHTML = 'Modificar Activo'
       document.getElementById('card-title-activo').style = 'color: red'
 
-      this.setState({id: data._id, estado: data.estado, codigo: data.codigo, cargo: data.cargo, ufvId: data.ufvId, grupoId: data.grupoId, auxiliarId: data.auxiliarId, oficinaId: data.oficinaId, usuarioId: data.usuarioId, estadoActivo: data.estadoActivo, costoInicial: data.costoInicial, observaciones: data.observaciones, descripcion: data.descripcion, vida: data.vida, coe: data.coe}, function() {
+      this.setState({id: data._id, estado: data.estado, codigo: data.codigo, cargo: data.cargo, ufvId: data.ufvId, grupoId: data.grupoId, auxiliarId: data.auxiliarId, oficinaId: data.oficinaId, usuarioId: data.usuarioId, estadoActivo: data.estadoActivo, costoInicial: data.costoInicial, observaciones: data.observaciones, descripcion: data.descripcion, vida: data.vida, coe: data.coe, fechaIncorporacion: data.fechaIncorporacion, fechaRegistro: data.fechaRegistro}, function() {
 				document.getElementById('inputUsuarioId').value = data.usuarioId
 				document.getElementById('inputAuxiliarId').value = data.auxiliarId
 			})
@@ -360,28 +423,32 @@ export class Personal extends Component {
 		generateQR(event, data) {
       // Auxiliar - Responsable Descripcion
 
-      const response = async () => {
-        await axios.get(nodeapi+'auxiliares/'+data.auxiliarId)
-        .then(res => this.setState({auxiliarQr: res.data}, function() {
-          const responseR = async () => {
-            await axios.get(nodeapi+'users/'+data.usuarioId)
-            .then(res => this.setState({responsableQr: res.data},  function() {
-              this.setState({qrCode: `Codigo: ${data.codigo}. Estado: ${data.estadoActivo}. Descripcion: ${data.descripcion}. Auxiliar: ${this.state.auxiliarQr.nombre}. Responsable: ${this.state.responsableQr.nombre}.`})
-            }))
-            .catch(err => console.log(err))
-          }
-          responseR()
-        }))
-        .catch(err => console.log(err))
+      if(this.state.qrCode !== ''){
+        this.setState({qrCode: ''})
+      }else {
+        const response = async () => {
+          await axios.get(nodeapi+'auxiliares/'+data.auxiliarId)
+          .then(res => this.setState({auxiliarQr: res.data}, function() {
+            const responseR = async () => {
+              await axios.get(nodeapi+'users/'+data.usuarioId)
+              .then(res => this.setState({responsableQr: res.data},  function() {
+                this.setState({qrCode: `Codigo: ${data.codigo}. Estado: ${data.estadoActivo}. Descripcion: ${data.descripcion}. Auxiliar: ${this.state.auxiliarQr.nombre}. Responsable: ${this.state.responsableQr.nombre}.`})
+              }))
+              .catch(err => console.log(err))
+            }
+            responseR()
+          }))
+          .catch(err => console.log(err))
+        }
+        response()
       }
-      response()
 			event.preventDefault()
 		}
 
     registerActivo(event) {
       document.getElementById('inputCodigo').value = ''
       document.getElementById('inputCargo').value = ''
-			// document.getElementById('inputUfvId').value = ''
+      document.getElementById('inputUfvId').value = 'Seleccione Una Fecha de Incorporacion Valida'
 			document.getElementById('inputGrupoId').value = ''
 			document.getElementById('inputAuxiliarId').value = ''
 			document.getElementById('inputOficinaId').value = ''
@@ -448,6 +515,96 @@ export class Personal extends Component {
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         var date = now.toISOString().slice(0,10);
         this.setState({fechaIncorporacion: date, fechaRegistro: date})
+        const data = {
+          fecha: date,
+        }
+        const response = async () => {
+          await axios.post(nodeapi+`ufv/date`, data)
+          .then(res => {
+            if(res.data !== null) {
+              document.getElementById('inputUfvId').value = res.data.valor
+              this.setState({ufvId: res.data._id})
+            }
+          })
+          .catch(err => console.log(err))
+        }
+        response()
+        //put Ufv in date if exists
+
+    }
+
+    deprecateActivo(evt, data) {
+      if(this.state.isDeprecate === true) {
+        this.setState({isDeprecate: false})
+      }else{
+        this.setState({isDeprecate: true, activoDeprecate: data})
+      }
+      evt.preventDefault()
+    }
+
+    deprecateValor() {
+      var valor = this.state.activoDeprecate.costoInicial
+      valor = parseFloat(valor)
+      const data = {
+        _id: this.state.activoDeprecate.grupoId
+      }
+      const response = async () => {
+				await axios.get(nodeapi+`grupos/${data._id}`)
+				.then(res => {
+          var coe = parseInt(res.data.coe)
+          coe = coe / 100
+          valor = valor * coe
+          this.setState({deprecateValue: valor})
+				})
+				.catch(err => console.log(err))
+			}
+			response()
+    }
+
+    updateAcivo(evt ,data) {
+      //updateValue
+      if(this.state.isUpdate === true) {
+        this.setState({isUpdate: false})
+      }else{
+        this.setState({isUpdate: true, activoUpdate: data})
+      }
+      evt.preventDefault()
+    }
+
+    updateValor() {
+      var valor = this.state.activoUpdate.costoInicial
+      valor = parseFloat(valor)
+      var now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      var date = now.toISOString().slice(0,10);
+      const data = {
+        fecha: date,
+      }
+      const response = async () => {
+        await axios.post(nodeapi+`ufv/date`, data)
+        .then(res => {
+          if(res.data !== null) {
+            const ufvF = parseFloat(res.data.valor)
+            const resp = async() => {
+              const data = {
+                fecha: this.state.activoUpdate.fechaIncorporacion
+              }
+              await axios.post(nodeapi+`ufv/date`, data)
+              .then(res => {
+                if(res.data !== null) {
+                  const ufvI = parseFloat(res.data.valor)
+                  valor = valor * (ufvF / ufvI -1)
+                  this.setState({updateValue: valor})
+                }
+              })
+              .catch(err => console.log(err))
+            }
+            resp()
+          }
+        })
+        .catch(err => console.log(err))
+      }
+      response()
     }
 
     render() {
@@ -471,6 +628,9 @@ export class Personal extends Component {
             )
           }
           else{
+            if(this.state.isAdmin === ''){
+              return null
+            }
             return (
               <div>
                   <div className="page-header">
@@ -501,8 +661,8 @@ export class Personal extends Component {
                               <thead>
                                 <tr>
                                   <th>Codigo</th>
-                                  <th>Fecha Incorporacion</th>
-                                  <th>Fecha Registro</th>
+                                  {/* <th>Fecha Incorporacion</th>
+                                  <th>Fecha Registro</th> */}
                                   <th>UFV</th>
                                   <th>Grupo</th>
                                   <th>Auxiliar</th>
@@ -511,6 +671,7 @@ export class Personal extends Component {
                                   <th>Estado Activo</th>
                                   <th>Costo Inicial</th>
 																	<th>Estado</th>
+                                  <th>Otros</th>
 																	<th>Acciones</th>
                                 </tr>
                               </thead>
@@ -522,7 +683,7 @@ export class Personal extends Component {
                                       if(this.state.searchUser === ''){
                                         return index
                                       }else{
-                                        if(index.nombre.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apPaterno.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apMaterno.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.username.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.cargo.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase())){
+                                        if(index.codigo.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.costoInicial.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase())){
                                           return index
                                         }
                                       }
@@ -531,8 +692,8 @@ export class Personal extends Component {
                                     .map((index, key) => (
                                       <tr key={key}>
                                         <td>{index.codigo}</td>
-                                        <td>{index.fechaIncorporacion}</td>
-                                        <td>{index.fechaRegistro}</td>
+                                        {/* <td>{index.fechaIncorporacion}</td>
+                                        <td>{index.fechaRegistro}</td> */}
                                         <td>{
                                           this.state.ufvs !== null && this.state.ufvs.find(item => item._id === index.ufvId) !== undefined ? 
                                           this.state.ufvs.find(item => item._id === index.ufvId).valor :
@@ -562,6 +723,10 @@ export class Personal extends Component {
 																				<td>{index.costoInicial}</td>
                                         <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}> 
                                           {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
+                                        </td>
+                                        <td>
+                                          <a href="!#" onClick={evt => this.deprecateActivo(evt, index)} className="badge badge-dark" style={{marginRight: '3px'}}>Depreciar</a>
+                                          <a href="!#" onClick={evt => this.updateAcivo(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Actualizar</a> 
                                         </td>
                                         <td>
 																					<a href="!#" onClick={evt => this.generateQR(evt, index)} className="badge badge-dark" style={{marginRight: '3px'}}>QR</a>
@@ -609,6 +774,34 @@ export class Personal extends Component {
                       </div>
                     </div>
                   </div>
+                  {
+                    this.state.isUpdate === true ?
+                    <div className="col-lg-6 grid-margin stretch-card">
+											<div className="card">
+												<div className="card-body">
+													<h4 className="card-title">Activo Actualizado</h4>
+                          <div className="row">
+                            <label>El Valor de Actualizacion Es  =  {this.updateValor()} {this.state.updateValue !== null ? this.state.updateValue : null} Bs.</label>
+                          </div>
+												</div>
+											</div>
+										</div>:
+                    null
+                  }
+                  {
+                    this.state.isDeprecate === true ?
+                    <div className="col-lg-6 grid-margin stretch-card">
+											<div className="card">
+												<div className="card-body">
+													<h4 className="card-title">Activo Depreciado</h4>
+                          <div className="row">
+                            <label>El Valor de Depreciacion Es  =  {this.deprecateValor()} {this.state.deprecateValue !== null ? this.state.deprecateValue : null} Bs.</label>
+                          </div>
+												</div>
+											</div>
+										</div>:
+                    null
+                  }
 									{
 										this.state.qrCode !== '' ?
 										<div className="col-lg-4 grid-margin stretch-card">
@@ -633,7 +826,7 @@ export class Personal extends Component {
                                 <Form.Group className="row">
                                   <label className="col-sm-3 col-form-label">Codigo</label>
                                   <div className="col-sm-9">
-                                  <Form.Control  type="text" id="inputCodigo" placeholder="Nombre" required onChange={this.handleCodigo}/>
+                                  <Form.Control  type="text" id="inputCodigo" placeholder="Escoja Grupo y Auxiliar. El codigo se Generara autom." required onChange={this.handleCodigo} disabled/>
                                   </div>
                                 </Form.Group>
                               </div>
@@ -651,7 +844,8 @@ export class Personal extends Component {
                                 <Form.Group className="row">
                                   <label className="col-sm-3 col-form-label">UFV</label>
                                   <div className="col-sm-9">
-                                    <select className="form-control" required id="inputUfvId" onChange={this.handleUfvId}>
+                                    <Form.Control type="text" placeholder="Seleccione Una Fecha de Incorporacion Valida" id="inputUfvId" required disabled/>
+                                    {/* <select className="form-control" required id="inputUfvId" onChange={this.handleUfvId}>
                                         <option hidden value=''>Escoga una Opcion</option>
                                         {
                                             this.state.ufvs !== null ? 
@@ -660,7 +854,7 @@ export class Personal extends Component {
                                             ))
                                             : <option>Cargando...</option>
                                         }
-                                    </select>
+                                    </select> */}
                                   </div>
                                 </Form.Group>
                               </div>
@@ -791,7 +985,7 @@ export class Personal extends Component {
                                   <div className="col-sm-9">
                                   <Form.Control type="text" placeholder="Seleccione un Responsable" id="inputCargo" required disabled/>
                                   </div>
-                                  </Form.Group>
+                                </Form.Group>
                               </div>
                             </div>
                             <p className="card-description"> Datos de Activo </p>
@@ -808,7 +1002,7 @@ export class Personal extends Component {
                                 <Form.Group className="row">
                                   <label className="col-sm-3 col-form-label">VIDA</label>
                                   <div className="col-sm-9">
-                                  <Form.Control type="number" placeholder="En años" step="any" id="inputVida" required onChange={this.handleVida}/>
+                                  <Form.Control type="number" placeholder="En años" step="any" id="inputVida" required onChange={this.handleVida} disabled/>
                                   </div>
                                 </Form.Group>
                               </div>
@@ -816,7 +1010,7 @@ export class Personal extends Component {
                                 <Form.Group className="row">
                                   <label className="col-sm-3 col-form-label">COE</label>
                                   <div className="col-sm-9">
-                                  <Form.Control type="number" placeholder="0% - 100%" step="1" min={1} max={100} id="inputCoe" required onChange={this.handleCoe}/>
+                                  <Form.Control type="number" placeholder="0% - 100%" step="1" min={1} max={100} id="inputCoe" required onChange={this.handleCoe} disabled/>
                                   </div>
                                 </Form.Group>
                               </div>

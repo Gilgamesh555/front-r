@@ -11,13 +11,14 @@ export class Ufv extends Component {
         super(props)
         this.state = {
           isAuth: '',
+          isAdmin: '',
           fecha: '',
           valor: '',
           estado: '',
           error: '',
           id: '',
           data: null,
-          searchGrupo: '',
+          searchUfv: '',
           request: 'false',
         }
         // Register User
@@ -30,8 +31,8 @@ export class Ufv extends Component {
         this.modifyValor = this.modifyValor.bind(this)
         
         this.changeEstado = this.changeEstado.bind(this)
-        this.deleteGrupo = this.deleteGrupo.bind(this)
-        this.registerGrupo = this.registerGrupo.bind(this)
+        this.deleteUfv = this.deleteUfv.bind(this)
+        this.registerUfv = this.registerUfv.bind(this)
     }
 
     handleFecha(event) {
@@ -43,7 +44,7 @@ export class Ufv extends Component {
     }
 
     handleRegisterSubmit(event) {
-      var text =  document.getElementById('card-title-grupo').textContent
+      var text =  document.getElementById('card-title-ufv').textContent
       if(text === 'Modificar Valor') {
         const data = {
           fecha: this.state.fecha,
@@ -109,7 +110,7 @@ export class Ufv extends Component {
     }
 
     handleReset(event) {
-      // document.getElementById('inputFecha').value = ''
+      document.getElementById('inputFecha').value = this.state.fecha
       document.getElementById('inputValor').value = ''
 
       event.preventDefault()
@@ -132,7 +133,14 @@ export class Ufv extends Component {
         await axios.post(nodeapi+'users/verify', data)
         .then(res => {
           if(res.data.status === 'ok'){
-            this.setState({isAuth: 'correct'})
+            const role = this.decodeToken(data.token).role
+            if(role !== undefined && role === 'admin'){
+              this.setState({isAuth: 'correct'})
+              this.setState({isAdmin: 'correct'})
+            }else{
+              this.setState({isAdmin: 'failed'})
+              this.props.history.push('/login')
+            }
           }else{
             window.localStorage.removeItem('token')
             this.setState({isAuth: 'failed'})
@@ -140,6 +148,16 @@ export class Ufv extends Component {
         })
         .catch(err => err)
       }
+    }
+
+    decodeToken(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
     }
 
     componentDidMount(){
@@ -162,8 +180,8 @@ export class Ufv extends Component {
       document.getElementById('inputFecha').value = data.fecha
       document.getElementById('inputValor').value = data.valor
 
-      document.getElementById('card-title-grupo').innerHTML = 'Modificar Valor'
-      document.getElementById('card-title-grupo').style = 'color: red'
+      document.getElementById('card-title-ufv').innerHTML = 'Modificar Valor'
+      document.getElementById('card-title-ufv').style = 'color: red'
 
       this.setState({id: data._id, estado: data.estado, nombre: data.nombre, codigo: data.codigo})
       event.preventDefault()
@@ -175,7 +193,7 @@ export class Ufv extends Component {
         _id: datax._id
       }
       const response = async () => {
-        await axios.put(nodeapi+`grupos/${data._id}/estado`, data)
+        await axios.put(nodeapi+`ufv/${data._id}/estado`, data)
         .then(res => {
           console.log(res.data)
         })
@@ -186,12 +204,12 @@ export class Ufv extends Component {
       window.location.reload()
     }
 
-    deleteGrupo(event ,datax) {
+    deleteUfv(event ,datax) {
       const data = {
         _id: datax._id
       }
       const response = async () => {
-        await axios.delete(nodeapi+`grupos/${data._id}`, data)
+        await axios.delete(nodeapi+`ufv/${data._id}`, data)
         .then(res => {
           console.log(res.data)
         })
@@ -202,12 +220,12 @@ export class Ufv extends Component {
       window.location.reload()
     }
 
-    registerGrupo(event) {
-      document.getElementById('inputNombre').value = ''
-      document.getElementById('inputCodigo').value = ''
+    registerUfv(event) {
+      document.getElementById('inputValor').value = ''
+      document.getElementById('inputFecha').value = this.state.fecha
 
-      document.getElementById('card-title-grupo').innerHTML = 'Registrar Usuario'
-      document.getElementById('card-title-grupo').style = 'color: black'
+      document.getElementById('card-title-ufv').innerHTML = 'Registrar Usuario'
+      document.getElementById('card-title-ufv').style = 'color: black'
       event.preventDefault()
     }
 
@@ -234,6 +252,9 @@ export class Ufv extends Component {
             )
           }
           else{
+            if(this.state.isAdmin === ''){
+              return null
+            }
             return (
               <div>
                   <div className="page-header">
@@ -248,7 +269,7 @@ export class Ufv extends Component {
                   <div className="row">
                     <div className="col-lg-6 grid-margin stretch-card" style={{marginBottom: '0px'}}>
                       <div className="form-group" style={{width: '100%'}}>
-                        <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({searchGrupo: event.target.value})}/>
+                        <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({searchUfv: event.target.value})}/>
                       </div>
                     </div>
                   </div>
@@ -273,10 +294,10 @@ export class Ufv extends Component {
                                     this.state.data !== null ? 
                                     this.state.data
                                     .filter((index) => {
-                                      if(this.state.searchGrupo === ''){
+                                      if(this.state.searchUfv === ''){
                                         return index
                                       }else{
-                                        if(index.nombre.toLowerCase().includes(this.state.searchGrupo.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchGrupo.toLocaleLowerCase())){
+                                        if(index.fecha.toLowerCase().includes(this.state.searchUfv.toLocaleLowerCase()) || index.valor.toLowerCase().includes(this.state.searchUfv.toLocaleLowerCase())){
                                           return index
                                         }
                                       }
@@ -289,7 +310,7 @@ export class Ufv extends Component {
                                         <td>
                                           <a href="!#" onClick={evt => this.modifyValor(evt, index)} className="badge badge-warning" style={{marginRight: '3px'}} >Modificar</a>
                                           {/* <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Mod Estado</a> */}
-                                          <a href="!#" onClick={evt => this.deleteGrupo(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>
+                                          <a href="!#" onClick={evt => this.deleteUfv(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>
                                         </td>
                                       </tr>
                                     ))
@@ -297,7 +318,7 @@ export class Ufv extends Component {
                                   }
                                 <tr>
                                   <td>
-                                  <a href="!#" onClick={evt => this.registerGrupo(evt)} className="badge badge-success" style={{marginRight: '3px', color: 'whitesmoke'}}>Registrar Nuevo</a>
+                                  <a href="!#" onClick={evt => this.registerUfv(evt)} className="badge badge-success" style={{marginRight: '3px', color: 'whitesmoke'}}>Registrar Nuevo</a>
                                   </td>
                                 </tr>
                               </tbody>
@@ -309,12 +330,12 @@ export class Ufv extends Component {
                     <div className="col-md-6 grid-margin stretch-card">
                       <div className="card">
                         <div className="card-body">
-                          <h4 className="card-title" id="card-title-grupo">Registrar UFV</h4>
+                          <h4 className="card-title" id="card-title-ufv">Registrar UFV</h4>
                           <p className="card-description">Todos los campos son requeridos</p>
                           <form className="forms-sample">
                             <Form.Group>
                               <label htmlFor="exampleInputUsername1">Fecha</label>
-                              <Form.Control onChange={this.handleFecha} type="date" id="inputFecha" defaultValue={this.state.fecha} placeholder="Nombre de Oficina" size="lg" required disabled/>
+                              <Form.Control onChange={this.handleFecha} type="date" id="inputFecha" defaultValue={this.state.fecha} placeholder="Nombre de Oficina" size="lg" required/>
                             </Form.Group>
                             <Form.Group>
                               <label htmlFor="exampleInputEmail1">Valor</label>

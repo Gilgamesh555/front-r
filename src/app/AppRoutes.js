@@ -27,6 +27,13 @@ const Auxiliar = lazy(() => import('./administracion/Auxiliar'))
 const Activo = lazy(() => import('./administracion/Activo'))
 const Ufv = lazy(() => import('./administracion/Ufv'))
 
+const vistaOficina = lazy(() => import('./vistas/Oficina'))
+const vistaPersonal = lazy(() => import('./vistas/Personal'))
+const vistaGrupo = lazy(() => import('./vistas/Grupo'))
+const vistaAuxiliar = lazy(() => import('./vistas/Auxiliar'))
+const vistaActivo = lazy(() => import('./vistas/Activo'))
+const vistaUfv = lazy(() => import('./vistas/Ufv'))
+
 const Login = lazy(() => import('./user-pages/Login')); 
 const Register1 = lazy(() => import('./user-pages/Register'));
 
@@ -63,6 +70,14 @@ class AppRoutes extends Component {
           <Route path="/administracion/auxiliares" component={ Auxiliar } />
           <Route path="/administracion/activos" component={ Activo } />
           <Route path="/administracion/ufv" component={ Ufv } />
+
+          {/* VISTAS */}
+          <Route path="/vistas/oficinas" component={ vistaOficina } />
+          <Route path="/vistas/personal" component={ vistaPersonal } />
+          <Route path="/vistas/grupos" component={ vistaGrupo } />
+          <Route path="/vistas/auxiliares" component={ vistaAuxiliar } />
+          <Route path="/vistas/activos" component={ vistaActivo } />
+          <Route path="/vistas/ufv" component={ vistaUfv } />
 
           <Route exact path="/" component={Login} />
 

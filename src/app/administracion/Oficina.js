@@ -10,6 +10,7 @@ export class Oficina extends Component {
         super(props)
         this.state = {
           isAuth: '',
+          isAdmin: '',
           nombre: '',
           codigo: '',
           error: '',
@@ -98,7 +99,14 @@ export class Oficina extends Component {
         await axios.post(nodeapi+'users/verify', data)
         .then(res => {
           if(res.data.status === 'ok'){
-            this.setState({isAuth: 'correct'})
+            const role = this.decodeToken(data.token).role
+            if(role !== undefined && role === 'admin'){
+              this.setState({isAuth: 'correct'})
+              this.setState({isAdmin: 'correct'})
+            }else{
+              this.setState({isAdmin: 'failed'})
+              this.props.history.push('/login')
+            }
           }else{
             window.localStorage.removeItem('token')
             this.setState({isAuth: 'failed'})
@@ -106,6 +114,16 @@ export class Oficina extends Component {
         })
         .catch(err => err)
       }
+    }
+
+    decodeToken(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
     }
 
     componentDidMount(){
@@ -190,6 +208,9 @@ export class Oficina extends Component {
             )
           }
           else{
+            if(this.state.isAdmin === ''){
+              return null
+            }
             return (
               <div>
                   <div className="page-header">

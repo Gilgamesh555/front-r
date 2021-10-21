@@ -11,6 +11,7 @@ export class Auxiliar extends Component {
         super(props)
         this.state = {
           isAuth: '',
+          isAdmin: '',
           nombre: '',
           codigo: '',
           estado: '',
@@ -61,7 +62,7 @@ export class Auxiliar extends Component {
         const data = {
           nombre: this.state.nombre,
           codigo: this.state.codigo,
-          descripcion: this.state.descripcion,
+          // descripcion: this.state.descripcion,
           grupoId: this.state.grupoId,
           _id: this.state.id,
           estado: this.state.estado,
@@ -91,8 +92,8 @@ export class Auxiliar extends Component {
       } else {
         const data = {
           nombre: this.state.nombre,
-          codigo: this.state.codigo,
-          descripcion: this.state.descripcion,
+          // codigo: this.state.codigo,
+          // descripcion: this.state.descripcion,
           grupoId: this.state.grupoId,
           estado: 'activo',
         }
@@ -126,9 +127,9 @@ export class Auxiliar extends Component {
     }
 
     handleReset(event) {
-      document.getElementById('inputCodigo').value = ''
+      // document.getElementById('inputCodigo').value = ''
       document.getElementById('inputNombre').value = ''
-      document.getElementById('inputDescripcion').value = ''
+      // document.getElementById('inputDescripcion').value = ''
       document.getElementById('inputGrupoId').value = ''
 
       event.preventDefault()
@@ -151,7 +152,14 @@ export class Auxiliar extends Component {
         await axios.post(nodeapi+'users/verify', data)
         .then(res => {
           if(res.data.status === 'ok'){
-            this.setState({isAuth: 'correct'})
+            const role = this.decodeToken(data.token).role
+            if(role !== undefined && role === 'admin'){
+              this.setState({isAuth: 'correct'})
+              this.setState({isAdmin: 'correct'})
+            }else{
+              this.setState({isAdmin: 'failed'})
+              this.props.history.push('/login')
+            }
           }else{
             window.localStorage.removeItem('token')
             this.setState({isAuth: 'failed'})
@@ -159,6 +167,16 @@ export class Auxiliar extends Component {
         })
         .catch(err => err)
       }
+    }
+    
+    decodeToken(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
     }
 
     componentDidMount(){
@@ -178,15 +196,15 @@ export class Auxiliar extends Component {
 
     //crud
     modifyAuxiliar(event, data) {
-      document.getElementById('inputCodigo').value = data.codigo
+      // document.getElementById('inputCodigo').value = data.codigo
       document.getElementById('inputNombre').value = data.nombre
-      document.getElementById('inputDescripcion').value = data.nombre
+      // document.getElementById('inputDescripcion').value = data.nombre
       document.getElementById('inputGrupoId').value = data.grupoId
 
       document.getElementById('card-title-auxiliar').innerHTML = 'Modificar Auxiliar'
       document.getElementById('card-title-auxiliar').style = 'color: red'
 
-      this.setState({id: data._id, estado: data.estado, nombre: data.nombre, codigo: data.codigo, descripcion: data.descripcion, grupoId: data.grupoId})
+      this.setState({id: data._id, estado: data.estado, nombre: data.nombre, codigo: data.codigo, grupoId: data.grupoId})
       event.preventDefault()
     }
 
@@ -225,8 +243,8 @@ export class Auxiliar extends Component {
 
     registerAuxiliar(event) {
       document.getElementById('inputNombre').value = ''
-      document.getElementById('inputCodigo').value = ''
-      document.getElementById('inputDescripcion').value = ''
+      // document.getElementById('inputCodigo').value = ''
+      // document.getElementById('inputDescripcion').value = ''
       document.getElementById('inputGrupoId').value = ''
 
       document.getElementById('card-title-auxiliar').innerHTML = 'Registrar Auxiliar'
@@ -258,6 +276,9 @@ export class Auxiliar extends Component {
             )
           }
           else{
+            if(this.state.isAdmin === ''){
+              return null
+            }
             return (
               <div>
                   <div className="page-header">
@@ -290,7 +311,7 @@ export class Auxiliar extends Component {
                                   <th>Nombre</th>
                                   <th>Codigo</th>
                                   <th>Grupo</th>
-                                  <th>Descripcion</th>
+                                  {/* <th>Descripcion</th> */}
                                   <th>Estado</th>
                                   <th>Acciones</th>
                                 </tr>
@@ -320,7 +341,7 @@ export class Auxiliar extends Component {
                                           null
                                         }
                                         </td>
-                                        <td style={{whiteSpace: 'normal',maxWidth: '300px'}}>{index.descripcion}</td>
+                                        {/* <td style={{whiteSpace: 'normal',maxWidth: '300px'}}>{index.descripcion}</td> */}
                                         <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}> 
                                           {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                         </td>
@@ -356,10 +377,10 @@ export class Auxiliar extends Component {
                               <label htmlFor="exampleInputUsername1">Nombre de Auxiliar</label>
                               <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Auxiliar" size="lg" required/>
                             </Form.Group>
-                            <Form.Group>
+                            {/* <Form.Group>
                               <label htmlFor="exampleInputEmail1">Codigo</label>
                               <Form.Control onChange={this.handleCodigo} type="Codigo" className="form-control" id="inputCodigo" placeholder="Codigo" required/>
-                            </Form.Group>
+                            </Form.Group> */}
                             <Form.Group>
                                 <label>Grupo</label>
                                 <select className="form-control" required id="inputGrupoId" onChange={this.handleGrupoId}>
@@ -373,10 +394,10 @@ export class Auxiliar extends Component {
                                     }
                                 </select>
                             </Form.Group>
-                            <Form.Group>
+                            {/* <Form.Group>
                               <label htmlFor="exampleTextarea1">Descripcion</label>
                               <textarea className="form-control" id="inputDescripcion" onChange={this.handleDescripcion} rows="4" placeholder="Descripcion Corta del Auxiliar" required></textarea>
-                            </Form.Group>
+                            </Form.Group> */}
                             <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
                             <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
                             {
