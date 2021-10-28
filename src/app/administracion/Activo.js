@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, Modal, Button } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 // import DatePicker from "react-datepicker";
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
-import QRCode from "react-qr-code";
+import nodeimg from '../../apis/nodeimg'
+// import QRCode from "react-qr-code";
+import QRCode from 'qrcode.react'
+
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import DepreciacionReport from '../reportes/DepreciacionReport'
+import ActualizacionReport from '../reportes/ActualizacionReport'
+import QrReport from '../reportes/QrReport'
 
 export class Personal extends Component {
     constructor(props) {
@@ -27,6 +34,8 @@ export class Personal extends Component {
           descripcion: '',
           coe: '',
           vida: '',
+          imagePath: '',
+          image: '',
           estado: '',
           error: '',
           id: '',
@@ -47,6 +56,8 @@ export class Personal extends Component {
           isUpdate: false,
           activoUpdate: '',
           updateValue: null,
+          show: false,
+          modalActivo: null,
         }
         // Register User
         this.handleCodigo = this.handleCodigo.bind(this)
@@ -76,6 +87,7 @@ export class Personal extends Component {
 				this.generateQR = this.generateQR.bind(this)
         this.deprecateActivo = this.deprecateActivo.bind(this)
         this.updateAcivo = this.updateAcivo.bind(this)
+        this.handleImagePath = this.handleImagePath.bind(this)
     }
 
     handleCodigo(event) {
@@ -138,7 +150,7 @@ export class Personal extends Component {
 
     handleOficinaId(event) {
       this.setState({oficinaId: event.target.value})
-			document.getElementById('inputUsuarioId').value = ''
+			// document.getElementById('inputUsuarioId').value = ''
     }
 
     handleUsuarioId(event) {
@@ -177,6 +189,17 @@ export class Personal extends Component {
       this.setState({vida: event.target.value})
     }
 
+    handleImagePath(event){
+      this.setState({imagePath: event.target.files[0]})
+      var file = event.target.files[0]
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+
+      reader.onloadend = function(e) {
+        this.setState({image: [reader.result]})
+      }.bind(this)
+    }
+
     handleRegisterSubmit(event) {
       var text =  document.getElementById('card-title-activo').textContent
       if(text === 'Modificar Activo') {
@@ -196,11 +219,18 @@ export class Personal extends Component {
           vida: this.state.vida,
           coe: this.state.coe,
           estado: this.state.estado,
-					_id: this.state.id
+					_id: this.state.id,
+          imagePath: this.state.imagePath,
         }
-				// console.log(data)
+
+        var form_data = new FormData()
+
+        for(var key in data) {
+          form_data.append(key, data[key])
+        }
+
         const response = async () => {
-          await axios.put(nodeapi+`activos/${data._id}`, data)
+          await axios.put(nodeapi+`activos/${data._id}`, form_data)
           .then(res => {
             if(res.data.error){
               if(res.data.error === 11000){
@@ -237,10 +267,17 @@ export class Personal extends Component {
           coe: this.state.coe,
           descripcion: this.state.descripcion,
           estado: 'activo',
+          imagePath: this.state.imagePath,
         }
-        // console.log(data)
+
+        var form_data = new FormData()
+
+        for(var key in data) {
+          form_data.append(key, data[key])
+        }
+
         const response = async () => {
-          await axios.post(nodeapi+'activos', data)
+          await axios.post(nodeapi+'activos', form_data)
           .then(res => {
             if(res.data.error){
               if(res.data.error === 11000){
@@ -283,6 +320,7 @@ export class Personal extends Component {
       document.getElementById('inputVida').value = ''
       document.getElementById('inputCoe').value = ''
       document.getElementById('inputFechaIncorporacion').value = ''
+      document.getElementById('imgContainer').src = 'https://www.kenyons.com/wp-content/uploads/2017/04/default-image.jpg'
 
       event.preventDefault()
     }
@@ -353,6 +391,7 @@ export class Personal extends Component {
 
     //crud
     modifyActivo(event, data) {
+      document.getElementById('imgContainer').src = nodeimg + data.imagePath 
       document.getElementById('inputCodigo').value = data.codigo
       document.getElementById('inputCargo').value = ''
 			// document.getElementById('inputUfvId').value = data.ufvId
@@ -459,6 +498,7 @@ export class Personal extends Component {
 			document.getElementById('inputDescripcion').value = ''
       document.getElementById('inputVida').value = ''
       document.getElementById('inputCoe').value = ''
+      document.getElementById('imgContainer').src = 'https://www.kenyons.com/wp-content/uploads/2017/04/default-image.jpg'
 
       document.getElementById('card-title-activo').innerHTML = 'Registrar Usuario'
       document.getElementById('card-title-activo').style = 'color: black'
@@ -606,6 +646,20 @@ export class Personal extends Component {
       }
       response()
     }
+    
+    setModalInfo(evt, data) {
+      this.setState({modalActivo: data})
+      this.setState({show: true})
+      evt.preventDefault()
+    }
+    
+    setModalInfoClose() {
+      this.setState({show: false})
+    }
+
+    getResponsable(user) {
+      return `${user.nombre} ${user.apPaterno} ${user.apMaterno}`
+    }
 
     render() {
         // const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
@@ -663,7 +717,7 @@ export class Personal extends Component {
                                   <th>Codigo</th>
                                   {/* <th>Fecha Incorporacion</th>
                                   <th>Fecha Registro</th> */}
-                                  <th>UFV</th>
+                                  {/* <th>UFV</th> */}
                                   <th>Grupo</th>
                                   <th>Auxiliar</th>
                                   <th>Oficina</th>
@@ -694,11 +748,11 @@ export class Personal extends Component {
                                         <td>{index.codigo}</td>
                                         {/* <td>{index.fechaIncorporacion}</td>
                                         <td>{index.fechaRegistro}</td> */}
-                                        <td>{
+                                        {/* <td>{
                                           this.state.ufvs !== null && this.state.ufvs.find(item => item._id === index.ufvId) !== undefined ? 
                                           this.state.ufvs.find(item => item._id === index.ufvId).valor :
                                           null
-                                        }</td>
+                                        }</td> */}
 																				<td>{
                                           this.state.grupos !== null && this.state.grupos.find(item => item._id === index.grupoId) !== undefined ? 
                                           this.state.grupos.find(item => item._id === index.grupoId).nombre :
@@ -729,6 +783,7 @@ export class Personal extends Component {
                                           <a href="!#" onClick={evt => this.updateAcivo(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Actualizar</a> 
                                         </td>
                                         <td>
+                                        <a href="!#" onClick={evt => this.setModalInfo(evt, index)} className="badge badge-success" style={{marginRight: '3px', color: 'white'}}>+ Info</a>
 																					<a href="!#" onClick={evt => this.generateQR(evt, index)} className="badge badge-dark" style={{marginRight: '3px'}}>QR</a>
                                           <a href="!#" onClick={evt => this.modifyActivo(evt, index)} className="badge badge-warning" style={{marginRight: '3px'}} >Modificar</a>
                                           <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Mod Estado</a>
@@ -766,6 +821,22 @@ export class Personal extends Component {
                                   <td>
                                   <a href="!#" onClick={evt => this.registerActivo(evt)} className="badge badge-success" style={{marginRight: '3px', color: 'whitesmoke'}}>Registrar Nuevo</a>
                                   </td>
+                                  <td>
+                                  <PDFDownloadLink document={<ActualizacionReport/>} fileName={`reporte-activo-actualizacion`} className="badge badge-info" style={{marginRight: '3px'}}>
+                                  Reporte Actualizacion
+                                  {/* {({ blob, url, loading, error }) =>
+                                    loading ? 'Cargando...' : 'Reporte Actualizacion'
+                                  } */}
+                                  </PDFDownloadLink>
+                                  </td>
+                                  <td>
+                                  <PDFDownloadLink document={<DepreciacionReport/>} fileName={`reporte-activo-depreciacion`} className="badge badge-info" style={{marginRight: '3px'}}>
+                                  Reporte Depreciacion
+                                  {/* {({ blob, url, loading, error }) =>
+                                    loading ? 'Cargando...' : 'Reporte Depreciacion'
+                                  } */}
+                                  </PDFDownloadLink>
+                                  </td>
                                 </tr>
                               </tbody>
                             </table>
@@ -774,6 +845,101 @@ export class Personal extends Component {
                       </div>
                     </div>
                   </div>
+                  <Modal show={this.state.show} onHide={() => this.setModalInfoClose()} centered>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Info Activo</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      {
+                        this.state.modalActivo !== null ?
+                        <div>
+                        <div style={{display: 'flex', flexDirection: 'row', border: '1px solid #ccc', fontSize: '12px'}}>
+                          <div style={{flex: 1, marginLeft: '10px', marginTop: '5px', marginBottom: '5px', borderRight: '6px solid #2196F3'}}>
+                            <div style={{borderBottom: '2px solid #2196F3', maxWidth: '90%', width: '100%'}}>
+                              <label style={{flex: '0 0 30%', maxWidth: '40%', width: '100%', marginBottom: '2px'}}>Codigo:</label>
+                              <label style={{flex: '0 0 70%', maxWidth: '60%', width: '100%',  marginBottom: '2px'}}>{this.state.modalActivo.codigo}</label>
+                            </div>
+                            <div style={{borderBottom: '2px solid #2196F3', maxWidth: '90%', width: '100%'}}>
+                              <label style={{flex: '0 0 30%', maxWidth: '40%', width: '100%', marginBottom: '2px'}}>Grupo: </label>
+                              <label style={{flex: '0 0 70%', maxWidth: '60%', width: '100%',  marginBottom: '2px'}}>
+                              {
+                              this.state.grupos !== null && this.state.grupos.find(item => item._id === this.state.modalActivo.grupoId) !== undefined ? 
+                              this.state.grupos.find(item => item._id === this.state.modalActivo.grupoId).nombre :
+                              null
+                              }
+                              </label>
+                            </div>
+                            <div style={{borderBottom: '2px solid #2196F3', maxWidth: '90%', width: '100%'}}>
+                              <label style={{flex: '0 0 30%', maxWidth: '40%', width: '100%', marginBottom: '2px'}}>Auxiliar: </label>
+                              <label style={{flex: '0 0 70%', maxWidth: '60%', width: '100%',  marginBottom: '2px'}}>
+                              {
+                              this.state.auxiliares !== null && this.state.auxiliares.find(item => item._id === this.state.modalActivo.auxiliarId) !== undefined ? 
+                              this.state.auxiliares.find(item => item._id === this.state.modalActivo.auxiliarId).nombre :
+                              null
+                              }
+                              </label>
+                            </div>
+                            <div style={{borderBottom: '2px solid #2196F3', maxWidth: '90%', width: '100%'}}>
+                              <label style={{flex: '0 0 30%', maxWidth: '40%', width: '100%', marginBottom: '2px'}}>Estado:</label>
+                              <label style={{flex: '0 0 70%', maxWidth: '60%', width: '100%',  marginBottom: '2px'}}>{this.state.modalActivo.estadoActivo}</label>
+                            </div>
+                            <div style={{borderBottom: '2px solid #2196F3', maxWidth: '90%', width: '100%'}}>
+                              <label style={{flex: '0 0 30%', maxWidth: '40%', width: '100%', marginBottom: '2px'}}>Oficina: </label>
+                              <label style={{flex: '0 0 70%', maxWidth: '60%', width: '100%',  marginBottom: '2px'}}>
+                              {
+                              this.state.oficinas !== null && this.state.oficinas.find(item => item._id === this.state.modalActivo.oficinaId) !== undefined ? 
+                              this.state.oficinas.find(item => item._id === this.state.modalActivo.oficinaId).nombre :
+                              null
+                              }
+                              </label>
+                            </div>
+                            <div style={{borderBottom: '2px solid #2196F3', maxWidth: '90%', width: '100%'}}>
+                              <label style={{flex: '0 0 30%', maxWidth: '40%', width: '100%', marginBottom: '2px'}}>Responsable: </label>
+                              <label style={{flex: '0 0 70%', maxWidth: '60%', width: '100%',  marginBottom: '2px'}}>
+                              {
+                              this.state.responsables !== null && this.state.responsables.find(item => item._id === this.state.modalActivo.usuarioId) !== undefined ? 
+                              this.getResponsable(this.state.responsables.find(item => item._id === this.state.modalActivo.usuarioId)) :
+                              null
+                              }
+                              </label>
+                            </div>
+                            <div style={{borderBottom: '2px solid #2196F3', maxWidth: '90%', width: '100%'}}>
+                              <label style={{flex: '0 0 30%', maxWidth: '40%', width: '100%', marginBottom: '2px'}}>Costo:</label>
+                              <label style={{flex: '0 0 70%', maxWidth: '60%', width: '100%',  marginBottom: '2px'}}>{this.state.modalActivo.costoInicial} Bs</label>
+                            </div>
+                          </div>
+                          <div style={{flex: 1, display: 'flex', marginLeft: '10px', marginTop: '5px', marginBottom: '5px', alignSelf: 'center'}}>
+                            <div style={{maxWidth: '90%', width: '100%', textAlign: 'center', maxHeight: '100%'}}>
+                              <img src={nodeimg+this.state.modalActivo.imagePath} alt="gaaa" style={{maxWidth: '100%', maxHeight: '100%', height: '140px'}}/>
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'row', border: '1px solid #ccc'}}>
+                          <div style={{flex: 1, marginLeft: '10px', marginTop: '5px', marginBottom: '5px', borderBottom: '6px solid #2196F3'}}>
+                            <div style={{borderBottom: '2px solid #2196F3', maxWidth: '90%', width: '100%', marginBottom: '4px'}}>
+                              <p style={{flex: '0 0 100%', maxWidth: '40%', width: '100%', marginBottom: '2px', fontSize: '12px'}}>Descripcion:</p>
+                              <p style={{flex: '0 0 100%', maxWidth: '60%', width: '100%',  marginBottom: '2px', fontSize: '12px'}}>{this.state.modalActivo.descripcion}</p>
+                            </div>
+                          </div>
+                          <div style={{flex: 1, marginLeft: '10px', marginTop: '5px', marginBottom: '5px', borderBottom: '6px solid #2196F3'}}>
+                          <div style={{borderBottom: '2px solid #2196F3', maxWidth: '90%', width: '100%', marginBottom: '4px'}}>
+                              <p style={{flex: '0 0 100%', maxWidth: '40%', width: '100%', marginBottom: '2px', fontSize: '12px'}}>Observaciones:</p>
+                              <p style={{flex: '0 0 100%', maxWidth: '60%', width: '100%',  marginBottom: '2px', fontSize: '12px'}}>{this.state.modalActivo.observaciones}</p>
+                            </div>
+                          </div>
+                        </div>
+                        </div> : null 
+                      }
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={() => this.setModalInfoClose()}>
+                        Cerrar
+                      </Button>
+                      {/* <Button variant="primary" onClick={() => this.setModalInfoClose()}>
+                        Save Changes
+                      </Button> */}
+                    </Modal.Footer>
+                  </Modal>
                   {
                     this.state.isUpdate === true ?
                     <div className="col-lg-6 grid-margin stretch-card">
@@ -808,7 +974,13 @@ export class Personal extends Component {
 											<div className="card">
 												<div className="card-body">
 													<h4 className="card-title">QR Del Activo</h4>
-													<QRCode value={this.state.qrCode} />
+													<QRCode value={this.state.qrCode} id={this.state.qrCode}/>
+                          <PDFDownloadLink document={<QrReport qr={this.state.qrCode}/>} fileName={`reporte-qr-activo`} className="badge badge-dark" style={{marginRight: '3px'}}>
+                          QR
+                          {/* {({ blob, url, loading, error }) =>
+                            loading ? 'Cargando...' : 'Reporte Actualizacion'
+                          } */}
+                          </PDFDownloadLink>
 												</div>
 											</div>
 										</div>
@@ -945,16 +1117,16 @@ export class Personal extends Component {
 																			{
                                         this.state.responsables !== null ? 
                                           this.state.responsables
-																					.filter((index) => {
-																						if(this.state.oficinaId === ''){
-																							return null
-																						}else{
-																							if(index.oficinaId === this.state.oficinaId){
-																								return index
-																							}
-																						}
-																						return null
-																					})
+																					// .filter((index) => {
+																					// 	if(this.state.oficinaId === ''){
+																					// 		return null
+																					// 	}else{
+																					// 		if(index.oficinaId === this.state.oficinaId){
+																					// 			return index
+																					// 		}
+																					// 	}
+																					// 	return null
+																					// })
 																					.map((index, key) => (
                                             <option value={index._id} key={key}>{index.nombre}</option>
                                           ))
@@ -1029,6 +1201,17 @@ export class Personal extends Component {
                                   <label className="col-sm-3 col-form-label">Observaciones</label>
                                   <div className="col-sm-9">
                                   <textarea className="form-control" id="inputObservaciones" onChange={this.handleObservaciones} rows="5" placeholder="Observaciones" required></textarea>
+                                  </div>
+                                </Form.Group>
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="col-md-6">
+                                <Form.Group className="row">
+                                  <label className="col-sm-3 col-form-label">Imagen de Activo</label>
+                                  <div className="col-sm-9">
+                                  <input type="file" className="form-control" name="upload_file" onChange={this.handleImagePath} />
+                                  <img src={this.state.image} style={{maxHeight: 120, maxWidth: 120}} id="imgContainer" alt="Esperando Imagen"/>
                                   </div>
                                 </Form.Group>
                               </div>

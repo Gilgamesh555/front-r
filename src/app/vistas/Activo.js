@@ -22,6 +22,7 @@ export class Personal extends Component {
 					request: 'false',
           auxiliarQr: '',
           responsableQr: '',
+          userData: null,
         }
     }
 
@@ -42,6 +43,7 @@ export class Personal extends Component {
         await axios.post(nodeapi+'users/verify', data)
         .then(res => {
           if(res.data.status === 'ok'){
+            this.setState({userData: this.decodeToken(data.token)})
             this.setState({isAuth: 'correct'})
           }else{
             window.localStorage.removeItem('token')
@@ -50,6 +52,16 @@ export class Personal extends Component {
         })
         .catch(err => err)
       }
+    }
+
+    decodeToken(token) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+  
+      return JSON.parse(jsonPayload);
     }
 
     componentDidMount(){
@@ -192,7 +204,7 @@ export class Personal extends Component {
                                   <th>Codigo</th>
                                   {/* <th>Fecha Incorporacion</th>
                                   <th>Fecha Registro</th> */}
-                                  <th>UFV</th>
+                                  {/* <th>UFV</th> */}
                                   <th>Grupo</th>
                                   <th>Auxiliar</th>
                                   <th>Oficina</th>
@@ -222,11 +234,11 @@ export class Personal extends Component {
                                         <td>{index.codigo}</td>
                                         {/* <td>{index.fechaIncorporacion}</td>
                                         <td>{index.fechaRegistro}</td> */}
-                                        <td>{
+                                        {/* <td>{
                                           this.state.ufvs !== null && this.state.ufvs.find(item => item._id === index.ufvId) !== undefined ? 
                                           this.state.ufvs.find(item => item._id === index.ufvId).valor :
                                           null
-                                        }</td>
+                                        }</td> */}
 																				<td>{
                                           this.state.grupos !== null && this.state.grupos.find(item => item._id === index.grupoId) !== undefined ? 
                                           this.state.grupos.find(item => item._id === index.grupoId).nombre :
@@ -278,6 +290,88 @@ export class Personal extends Component {
 										</div>
 										: null
 									}
+                  <div className="row">
+                    <div className="col-lg-12 grid-margin stretch-card">
+                      <div className="card">
+                        <div className="card-body">
+                          <h4 className="card-title">Mis Activos</h4>
+                          <div className="table-responsive">
+                            <table className="table table-hover">
+                              <thead>
+                                <tr>
+                                  <th>Codigo</th>
+                                  {/* <th>Fecha Incorporacion</th>
+                                  <th>Fecha Registro</th> */}
+                                  {/* <th>UFV</th> */}
+                                  <th>Grupo</th>
+                                  <th>Auxiliar</th>
+                                  <th>Oficina</th>
+                                  <th>Responsable</th>
+                                  <th>Estado Activo</th>
+                                  <th>Costo Inicial</th>
+																	<th>Estado</th>
+                                  <th>Otros</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                  {
+                                    this.state.data !== null ? 
+                                    this.state.data
+                                    .filter((index) => {
+                                      if(this.state.userData !== null && this.state.userData.id === index.usuarioId){
+                                        return index
+                                      }
+                                      return null;
+                                    })
+                                    .map((index, key) => (
+                                      <tr key={key}>
+                                        <td>{index.codigo}</td>
+                                        {/* <td>{index.fechaIncorporacion}</td>
+                                        <td>{index.fechaRegistro}</td> */}
+                                        {/* <td>{
+                                          this.state.ufvs !== null && this.state.ufvs.find(item => item._id === index.ufvId) !== undefined ? 
+                                          this.state.ufvs.find(item => item._id === index.ufvId).valor :
+                                          null
+                                        }</td> */}
+																				<td>{
+                                          this.state.grupos !== null && this.state.grupos.find(item => item._id === index.grupoId) !== undefined ? 
+                                          this.state.grupos.find(item => item._id === index.grupoId).nombre :
+                                          null
+                                        }</td>
+																				<td>{
+                                          this.state.auxiliares !== null && this.state.auxiliares.find(item => item._id === index.auxiliarId) !== undefined ? 
+                                          this.state.auxiliares.find(item => item._id === index.auxiliarId).nombre :
+                                          null
+                                        }</td>
+																				<td>{
+                                          this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ? 
+                                          this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
+                                          null
+                                        }</td>
+																				<td>{
+                                          this.state.responsables !== null && this.state.responsables.find(item => item._id === index.usuarioId) !== undefined ? 
+                                          this.state.responsables.find(item => item._id === index.usuarioId).nombre :
+                                          null
+                                        }</td>
+																				<td>{index.estadoActivo}</td>
+																				<td>{index.costoInicial}</td>
+                                        <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}> 
+                                          {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
+                                        </td>
+                                        <td>
+																					<a href="!#" onClick={evt => this.generateQR(evt, index)} className="badge badge-dark" style={{marginRight: '3px'}}>QR</a>
+                                        </td>
+                                      </tr>
+                                    ))
+                                    : null
+                                  }
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
               </div>
             )
           }

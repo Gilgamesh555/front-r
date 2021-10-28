@@ -913,7 +913,7 @@ export class Dashboard extends Component {
                 <div className="page-header">
                   <h4 className="page-title">Inicio</h4>
                   <div className="quick-link-wrapper w-100 d-md-flex flex-md-wrap">
-                    <ul className="quick-links">
+                    {/* <ul className="quick-links">
                       <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 1</a></li>
                       <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 2</a></li>
                       <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 3</a></li>
@@ -922,7 +922,7 @@ export class Dashboard extends Component {
                       <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 4</a></li>
                       <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 5</a></li>
                       <li><a href="!#" onClick={evt =>evt.preventDefault()}>otros 6</a></li>
-                    </ul>
+                    </ul> */}
                   </div>
                 </div>
               </div>

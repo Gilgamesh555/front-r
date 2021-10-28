@@ -3,6 +3,8 @@ import { Dropdown } from 'react-bootstrap';
 import { Trans } from 'react-i18next';
 import { Redirect } from 'react-router-dom'
 
+import imagej from '../../assets/images/faces/face-default.jpg'
+
 class Navbar extends Component {
   constructor(props){
     super(props)
@@ -80,7 +82,7 @@ class Navbar extends Component {
               </div>
             </form> */}
             <ul className="navbar-nav navbar-nav-right">
-            <li className="nav-item  nav-profile border-0 pl-4">
+            {/* <li className="nav-item  nav-profile border-0 pl-4">
                 <Dropdown>
                   <Dropdown.Toggle className="nav-link count-indicator p-0 toggle-arrow-hide bg-transparent">
                     <i className="mdi mdi-bell-outline"></i>
@@ -123,8 +125,8 @@ class Navbar extends Component {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-              </li>
-              <li className="nav-item  nav-profile border-0">
+              </li> */}
+              {/* <li className="nav-item  nav-profile border-0">
                 <Dropdown>
                   <Dropdown.Toggle className="nav-link count-indicator p-0 toggle-arrow-hide bg-transparent">
                     <i className="mdi mdi-email-outline"></i>
@@ -164,16 +166,16 @@ class Navbar extends Component {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-              </li>
+              </li> */}
               
               
               <li className="nav-item  nav-profile border-0">
                 <Dropdown>
                   <Dropdown.Toggle className="nav-link count-indicator bg-transparent">
-                    <img className="img-xs rounded-circle" src={require("../../assets/images/faces/face8.jpg")} alt="Profile" />
+                    <img className="img-xs rounded-circle" src={imagej} alt="Profile" />
                   </Dropdown.Toggle>
                   <Dropdown.Menu className="preview-list navbar-dropdown pb-3">
-                    <Dropdown.Item className="dropdown-item p-0 preview-item d-flex align-items-center border-bottom" href="!#" onClick={evt =>evt.preventDefault()}>
+                    {/* <Dropdown.Item className="dropdown-item p-0 preview-item d-flex align-items-center border-bottom" href="!#" onClick={evt =>evt.preventDefault()}>
                       <div className="d-flex">
                         <div className="py-3 px-4 d-flex align-items-center justify-content-center">
                           <i className="mdi mdi-bookmark-plus-outline mr-0"></i>
@@ -194,9 +196,9 @@ class Navbar extends Component {
                     </Dropdown.Item>
                     <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center border-0" onClick={evt =>evt.preventDefault()}>
                       <Trans>Check Inbox</Trans>
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
                     <Dropdown.Item className="dropdown-item preview-item d-flex align-items-center border-0" onClick={evt => this.signout(evt)}>
-                      <Trans>Sign Out</Trans>
+                      <Trans>Cerrar Sesion</Trans>
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

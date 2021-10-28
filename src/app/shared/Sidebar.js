@@ -7,14 +7,16 @@ import { Trans } from 'react-i18next';
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 
-import image1 from '../../assets/images/faces/face8.jpg'
+import image1 from '../../assets/images/faces/face-default.jpg'
+import logo from '../reportes/logo.png'
 
 class Sidebar extends Component {
 
   constructor(props) {
     super(props)
-    this.stat = {
+    this.user = {
       isAdmin: '',
+      username: '',
     }
   }
 
@@ -32,6 +34,8 @@ class Sidebar extends Component {
       });
       this.setState({[menuState] : true});
     }
+    this.setState({isAdmin: this.state.isAdmin})
+    this.setState({username: this.state.username})
   }
 
   componentDidUpdate(prevProps) {
@@ -64,6 +68,9 @@ class Sidebar extends Component {
         this.setState({[obj.state] : true})
       }
     }));
+
+    this.setState({isAdmin: this.state.isAdmin})
+    this.setState({username: this.state.username})
  
   } 
 
@@ -85,13 +92,13 @@ class Sidebar extends Component {
       .then(res => {
         if(res.data.status === 'ok'){
           const role = this.decodeToken(data.token).role
-          console.log(role)
+          this.setState({username: this.decodeToken(data.token).username})
           if(role !== undefined && role === 'usuario'){
             document.getElementById('liAdmin').style = 'display: none'
             this.setStat({isAdmin: 'correct'})
           }else{
-            this.setStat({isAdmin: 'failed'})
-            this.props.history.push('/login')
+            this.setState({isAdmin: 'failed'})
+            // this.props.history.push('/login')
           }
         }else{
           window.localStorage.removeItem('token')
@@ -136,8 +143,8 @@ class Sidebar extends Component {
     return (
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
         <div className="text-center sidebar-brand-wrapper d-flex align-items-center">
-          <a className="sidebar-brand brand-logo" href="index.html"><img src={require("../../assets/images/logo.svg")} alt="logo" /></a>
-          <a className="sidebar-brand brand-logo-mini pt-3" href="index.html"><img src={require("../../assets/images/logo-mini.svg" )} alt="logo" /></a>
+          <a className="sidebar-brand brand-logo" href="index.html"><img src={logo} alt="logo" /></a>
+          <a className="sidebar-brand brand-logo-mini pt-3" href="index.html"><img src={logo} alt="logo" /></a>
         </div>
         <ul className="nav">
           <li className="nav-item nav-profile not-navigation-link">
@@ -150,8 +157,8 @@ class Sidebar extends Component {
                       <div className="dot-indicator bg-success"></div>
                     </div>
                     <div className="text-wrapper">
-                      <p className="profile-name">User</p>
-                      <p className="designation">Admin</p>
+                      <p className="profile-name">{this.state.username !== '' ? this.state.username : 'zzzz'}</p>
+                      <p className="designation">{this.state.isAdmin === 'failed' ? 'Administrador' : 'Usuario'}</p>
                     </div>
                     
                   </div>
