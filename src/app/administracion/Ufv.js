@@ -258,7 +258,7 @@ export class Ufv extends Component {
             return (
               <div>
                   <div className="page-header">
-                      <h3 className="page-title"> UFV </h3>
+                      <h3 className="page-title">UFVz</h3>
                       <nav aria-label="breadcrumb">
                           <ol className="breadcrumb">
                           <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
