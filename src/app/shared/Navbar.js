@@ -4,6 +4,7 @@ import { Trans } from 'react-i18next';
 import { Redirect } from 'react-router-dom'
 
 import imagej from '../../assets/images/faces/face-default.jpg'
+import logo from '../reportes/resized.png'
 
 class Navbar extends Component {
   constructor(props){
@@ -32,7 +33,7 @@ class Navbar extends Component {
       return (
         <nav className="navbar col-lg-12 col-12 p-lg-0 fixed-top d-flex flex-row">
           <div className="navbar-menu-wrapper d-flex align-items-center justify-content-between">
-          <a className="navbar-brand brand-logo-mini align-self-center d-lg-none" href="!#" onClick={evt =>evt.preventDefault()}><img src={require("../../assets/images/logo-mini.svg")} alt="logo" /></a>
+          <a className="navbar-brand brand-logo-mini align-self-center d-lg-none" href="/inicio" ><img src={logo} alt="logo" /></a>
             <button className="navbar-toggler navbar-toggler align-self-center" type="button" onClick={ () => document.body.classList.toggle('sidebar-icon-only') }>
               <i className="mdi mdi-menu"></i>
             </button>

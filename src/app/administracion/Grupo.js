@@ -10,6 +10,9 @@ import nodeapi from '../../apis/nodeapi'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import GrupoReport from '../reportes/GrupoReport'
 
+import DepreciacionReport from '../reportes/DepreciacionReport'
+import ActualizacionReport from '../reportes/ActualizacionReport'
+
 export class Grupo extends Component {
     constructor(props) {
         super(props)
@@ -322,6 +325,7 @@ export class Grupo extends Component {
                                   <th>Cantidad</th>
                                   <th>Estado</th>
                                   <th>Acciones</th>
+                                  <th>Reportes</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -361,11 +365,31 @@ export class Grupo extends Component {
                                           <a href="!#" onClick={evt => this.modifyGrupo(evt, index)} className="badge badge-warning" style={{marginRight: '3px'}} >Modificar</a>
                                           <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Mod Estado</a>
                                           <a href="!#" onClick={evt => this.deleteGrupo(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>
-                                          <PDFDownloadLink document={<GrupoReport data={index}/>} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{marginRight: '3px'}}>
+                                          {/* <PDFDownloadLink document={<GrupoReport data={index}/>} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{marginRight: '3px'}}>
                                           {({ blob, url, loading, error }) =>
                                             loading ? 'Cargando...' : 'Reporte'
                                           }
+                                          </PDFDownloadLink> */}
+                                        </td>
+                                        <td>
+                                          <PDFDownloadLink document={<GrupoReport data={index}/>} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{marginRight: '3px'}}>
+                                          Reporte General
+                                          {/* {({ blob, url, loading, error }) =>
+                                            loading ? 'Cargando...' : 'Reporte'
+                                          } */}
                                           </PDFDownloadLink>
+                                          <PDFDownloadLink document={<ActualizacionReport data={index}/>} fileName={`reporte-activo-actualizacion`} className="badge badge-warning" style={{marginRight: '3px'}}>
+                                          Reporte Actualizacion
+                                          {/* {({ blob, url, loading, error }) =>
+                                            loading ? 'Cargando...' : 'Reporte Actualizacion'
+                                          } */}
+                                          </PDFDownloadLink>
+                                          <PDFDownloadLink document={<DepreciacionReport data={index}/>} fileName={`reporte-activo-depreciacion`} className="badge badge-danger" style={{marginRight: '3px'}}>
+                                          Reporte Depreciacion
+                                          {/* {({ blob, url, loading, error }) =>
+                                            loading ? 'Cargando...' : 'Reporte Depreciacion'
+                                          } */}
+                                          </PDFDownloadLink>  
                                         </td>
                                       </tr>
                                     ))

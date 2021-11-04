@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
+import logo from '../reportes/resized.png'
 
 export class Login extends Component {
   constructor(props) {
@@ -81,7 +82,7 @@ export class Login extends Component {
       return null
     }else{
       if(this.state.isAuth === 'correct'){
-        const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
+        const { from } = this.props.location.state || { from: { pathname: '/inicio' } }
         return (
           <Redirect to={{pathname: `${from.pathname}`, state: {isAuth: 'correct'}}}/>
         )
@@ -93,7 +94,7 @@ export class Login extends Component {
                 <div className="col-lg-4 mx-auto">
                   <div className="auth-form-light text-left py-5 px-4 px-sm-5">
                     <div className="brand-logo">
-                      <img src={require('../../assets/images/logo.svg').default} alt="logo" />
+                      <img src={logo} alt="logo" />
                     </div>
                     <h4>Sistema de Activos</h4>
                     <h6 className="font-weight-light">Inicio de Sesion</h6>

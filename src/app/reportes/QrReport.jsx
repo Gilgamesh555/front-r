@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer'
-import logo from './logo.png'
+import logo from './logo.jpeg'
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
@@ -104,7 +104,7 @@ class GrupoReport extends Component {
                 <Page size="LETTER" style={styles.page}>
                     <View style={styles.logoContainer}>
                         <Image
-                        style={{maxHeight: 30, maxWidth: 30}}
+                        style={{maxHeight: 40, maxWidth: 70}}
                         src={logo}
                         />
                     </View>
@@ -119,16 +119,16 @@ class GrupoReport extends Component {
                         </View>
                         <View style={{flex: 1, textAlign: 'right'}}>
                             <Text>
-                            Empresa XXX S.R.L.
+                            Empresa MINERA KERUMIN S.R.L.
                             </Text>
                             <Text>
-                            Calle La Paz #31
+                            Calle Durán de Castro #189
                             </Text>
                             <Text>
                             Potosi - Bolivia
                             </Text>
                             <Text>
-                            empresax@gmail.com
+                            minerakerumin@gmail.com
                             </Text>
                         </View>
                     </View>

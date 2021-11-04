@@ -150,8 +150,7 @@ class ActivoReport extends Component {
                         </View>
                     </View>
                     <View style={styles.titleContainer}>
-                        <Text style={{textAlign: 'center'}}>REPORTE POR USUARIO - ACTIVOS</Text>
-                        <Text style={{textAlign: 'center'}}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>
+                        <Text style={{textAlign: 'center'}}>REPORTE ESTADO DE ACTIVOS</Text>
                     </View>
                     <View style={styles.table}>
                         <View style={styles.row}>
@@ -160,16 +159,10 @@ class ActivoReport extends Component {
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Auxiliar</Text>
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Costo Inicial</Text>
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Estado</Text>
-                            <Text style={styles.rowChildren}>Oficina</Text>
                         </View>
                         {
                             this.state.data !== null && this.state.oficinas !== null && this.state.auxiliares !== null ?
-                            this.state.data.filter(index => {
-                                if(index.usuarioId === this.props.data._id){
-                                    return index
-                                }
-                                return null
-                            })
+                            this.state.data
                             .map((index,key) => (
                                 <View style={styles.row} key={key}>
                                     <Text style={[styles.rowChildren, {flex: 1}]}>{key + 1}</Text>
@@ -180,12 +173,7 @@ class ActivoReport extends Component {
                                     null}
                                     </Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>{index.costoInicial}</Text>
-                                    <Text style={[styles.rowChildren, {flex: 2}]}>{index.estadoActivo}</Text>
-                                    <Text style={styles.rowChildren}>
-                                    {this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ? 
-                                    this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
-                                    null}
-                                    </Text>
+                                    <Text style={[styles.rowChildren, {flex: 2}]}>{index.estado.toUpperCase()}</Text>
                                 </View>
                             ))
                             : null
