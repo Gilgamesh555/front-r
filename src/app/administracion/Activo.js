@@ -10,9 +10,8 @@ import nodeimg from '../../apis/nodeimg'
 import QRCode from 'qrcode.react'
 
 import { PDFDownloadLink } from '@react-pdf/renderer'
-import DepreciacionReport from '../reportes/DepreciacionReport'
-import ActualizacionReport from '../reportes/ActualizacionReport'
 import QrReport from '../reportes/QrReport'
+import EstadoActivoReport from '../reportes/EstadoActivoReport'
 
 export class Personal extends Component {
     constructor(props) {
@@ -822,21 +821,21 @@ export class Personal extends Component {
                                   <a href="!#" onClick={evt => this.registerActivo(evt)} className="badge badge-success" style={{marginRight: '3px', color: 'whitesmoke'}}>Registrar Nuevo</a>
                                   </td>
                                   <td>
-                                  <PDFDownloadLink document={<ActualizacionReport/>} fileName={`reporte-activo-actualizacion`} className="badge badge-info" style={{marginRight: '3px'}}>
-                                  Reporte Actualizacion
+                                  <PDFDownloadLink document={<EstadoActivoReport/>} fileName={`reporte-activo-actualizacion`} className="badge badge-info" style={{marginRight: '3px'}}>
+                                  Reporte Estado
                                   {/* {({ blob, url, loading, error }) =>
                                     loading ? 'Cargando...' : 'Reporte Actualizacion'
                                   } */}
                                   </PDFDownloadLink>
                                   </td>
-                                  <td>
+                                  {/* <td>
                                   <PDFDownloadLink document={<DepreciacionReport/>} fileName={`reporte-activo-depreciacion`} className="badge badge-info" style={{marginRight: '3px'}}>
                                   Reporte Depreciacion
-                                  {/* {({ blob, url, loading, error }) =>
+                                  {({ blob, url, loading, error }) =>
                                     loading ? 'Cargando...' : 'Reporte Depreciacion'
-                                  } */}
+                                  }
                                   </PDFDownloadLink>
-                                  </td>
+                                  </td> */}
                                 </tr>
                               </tbody>
                             </table>

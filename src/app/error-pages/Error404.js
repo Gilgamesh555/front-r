@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export class Error404 extends Component {
   render() {
-    const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
+    const { from } = this.props.location.state || { from: { pathname: '/inicio' } }
     return (
       <div>
         <div className="d-flex align-items-center text-center error-page bg-primary pt-5 pb-4 h-100">

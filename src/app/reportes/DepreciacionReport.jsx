@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer'
-import logo from './logo.png'
+import logo from './logo.jpeg'
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
@@ -104,14 +104,14 @@ class DepreciacionReport extends Component {
                 <Page size="LETTER" style={styles.page}>
                     <View style={styles.logoContainer}>
                         <Image
-                        style={{maxHeight: 30, maxWidth: 30}}
+                        style={{maxHeight: 40, maxWidth: 70}}
                         src={logo}
                         />
                     </View>
                     <View style={styles.invoiceInfoContainer}>
                         <View style={{flex: 1}}>
                             <Text style={{marginBottom: 20,fontSize: 18}}>
-                            Reporte De Grupo
+                            Reporte
                             </Text>
                             <Text>
                             Fecha De Reporte: {this.state.date}
@@ -119,21 +119,21 @@ class DepreciacionReport extends Component {
                         </View>
                         <View style={{flex: 1, textAlign: 'right'}}>
                             <Text>
-                            Empresa XXX S.R.L.
+                            Empresa MINERA KERUMIN S.R.L.
                             </Text>
                             <Text>
-                            Calle La Paz #31
+                            Calle Durán de Castro #189
                             </Text>
                             <Text>
                             Potosi - Bolivia
                             </Text>
                             <Text>
-                            empresax@gmail.com
+                            minerakerumin@gmail.com
                             </Text>
                         </View>
                     </View>
                     <View style={styles.titleContainer}>
-                        <Text style={{textAlign: 'center'}}>DEPRECIACION DE ACTIVOS</Text>
+                        <Text style={{textAlign: 'center'}}>DEPRECIACION DE ACTIVOS - GRUPO {this.props.data.nombre.toUpperCase()}</Text>
                     </View>
                     <View style={styles.table}>
                         <View style={styles.row}>
@@ -146,9 +146,15 @@ class DepreciacionReport extends Component {
                         {
                             this.state.data !== null && this.state.auxiliares !== null ?
                             this.state.data
+                            .filter((index) => {
+                                if(index.grupoId === this.props.data._id){
+                                    return index
+                                }
+                                return null
+                            })
                             .map((index,key) => (
                                 <View style={styles.row} key={key}>
-                                    <Text style={[styles.rowChildren, {flex: 1}]}>{key}</Text>
+                                    <Text style={[styles.rowChildren, {flex: 1}]}>{key + 1}</Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>{index.codigo}</Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>
                                     {this.state.auxiliares !== null && this.state.auxiliares.find(item => item._id === index.auxiliarId) !== undefined ? 

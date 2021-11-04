@@ -9,6 +9,9 @@ import { VectorMap } from "react-jvectormap"
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 import { Redirect } from 'react-router';
+import './InfoStyle.css'
+import imagen from '../reportes/logo.jpeg'
+
 
 const mapData = {
   CN: 100000,
@@ -23,6 +26,43 @@ const mapData = {
 
 // import DatePicker from 'react-datepicker';
 // import { Dropdown } from 'react-bootstrap';
+
+class InfoInicio extends Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    return(
+      <div className="info-body">
+        <div className="info-title">
+          <h1>EMPRESA MINERA KERUMIN SRL</h1>
+        </div>
+        <div className="info-image">
+          <img src={imagen} alt="imagen"/>
+        </div>
+        <div className="info-row-container">
+          <div>
+            <h2>¿Quienes Somos?</h2>
+            <p>La Empresa Minera Kerumim S. R. L. tiene como objetivo principal el constituirse en una empresa modelo de la minería estatal.</p>
+            <p>Realizando sus actividades mineras de <b>PROSPECCIÓN, EXPLORACIÓN, EXPLOTACIÓN, PROCESAMIENTO DE LOS CONCENTRADOS Y LA COMERCIALIZACIÓN DE LOS MINERALES</b> existentes en los yacimientos que se posee, con Eficiencia, Capacidad y Transparencia, precautelando la Seguridad Industrial, Salud Ocupacional y el cuidado del Medio Ambiente.</p>
+            <p>
+            De esta manera generando excedentes económicos – financieros aportando al desarrollo del Estado Plurinacional de Bolivia.
+            </p>
+          </div>
+          <div>
+            <h2>Mision</h2>
+            <p>Empresa productiva con la finalidad de cumplir las actividades mineras de Prospección, Exploración, Explotación, Comercialización e Industrialización de minerales, generando excedentes financieros para aportar al desarrollo y políticas sociales del Estado Boliviano.</p>
+          </div>
+          <div>
+            <h2>Vision</h2>
+            <p>Ser La Empresa líder de la economía minera estatal, logrando su rentabilidad, sostenibilidad y sustentabilidad con eficiencia, eficacia y transparencia, promoviendo la calidad en seguridad industrial, gestión empresarial, cuidado del medio ambiente y responsabilidad social.</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
 
 export class Dashboard extends Component {
 
@@ -926,6 +966,7 @@ export class Dashboard extends Component {
                   </div>
                 </div>
               </div>
+              <InfoInicio />
               {/* <div className="col-md-12">
                 <div className="page-header-toolbar">
                   <div className="btn-group toolbar-item" role="group" aria-label="Basic example">
@@ -1550,4 +1591,5 @@ export class Dashboard extends Component {
     }
   }
 }
+
 export default Dashboard;

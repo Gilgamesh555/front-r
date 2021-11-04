@@ -8,7 +8,8 @@ import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 
 import image1 from '../../assets/images/faces/face-default.jpg'
-import logo from '../reportes/logo.png'
+import logo from '../reportes/resized.png'
+import minilogo from '../reportes/minilogo.png'
 
 class Sidebar extends Component {
 
@@ -143,8 +144,8 @@ class Sidebar extends Component {
     return (
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
         <div className="text-center sidebar-brand-wrapper d-flex align-items-center">
-          <a className="sidebar-brand brand-logo" href="index.html"><img src={logo} alt="logo" /></a>
-          <a className="sidebar-brand brand-logo-mini pt-3" href="index.html"><img src={logo} alt="logo" /></a>
+          <a className="sidebar-brand brand-logo" href="/inicio"><img src={logo} alt="logo" /></a>
+          <a className="sidebar-brand brand-logo-mini pt-3" href="/inicio"><img src={minilogo} alt="logo" /></a>
         </div>
         <ul className="nav">
           <li className="nav-item nav-profile not-navigation-link">
@@ -194,8 +195,8 @@ class Sidebar extends Component {
             </div>
           </li>
       
-          <li className={ this.isPathActive('/dashboard') ? 'nav-item active' : 'nav-item' }>
-            <Link className="nav-link" to="/dashboard">
+          <li className={ this.isPathActive('/inicio') ? 'nav-item active' : 'nav-item' }>
+            <Link className="nav-link" to="/inicio">
               <i className="mdi mdi-television menu-icon"></i>
               <span className="menu-title"><Trans>Inicio</Trans></span>
             </Link>
