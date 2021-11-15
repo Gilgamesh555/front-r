@@ -414,7 +414,7 @@ export class Grupo extends Component {
                           <form className="forms-sample">
                             <Form.Group>
                               <label htmlFor="exampleInputUsername1">Nombre de Grupo</label>
-                              <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Oficina" size="lg" required/>
+                              <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre del Grupo" size="lg" required/>
                             </Form.Group>
                             <div className="row">
                               <div className="col-md-6">

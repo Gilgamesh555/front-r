@@ -580,7 +580,7 @@ export class Personal extends Component {
       }
       evt.preventDefault()
     }
-
+    // Depreciacion de Valor de Activo
     deprecateValor() {
       var valor = this.state.activoDeprecate.costoInicial
       valor = parseFloat(valor)
@@ -609,7 +609,7 @@ export class Personal extends Component {
       }
       evt.preventDefault()
     }
-
+    // Acualizar Valor de Activo
     updateValor() {
       var valor = this.state.activoUpdate.costoInicial
       valor = parseFloat(valor)
@@ -717,14 +717,14 @@ export class Personal extends Component {
                                   {/* <th>Fecha Incorporacion</th>
                                   <th>Fecha Registro</th> */}
                                   {/* <th>UFV</th> */}
-                                  <th>Grupo</th>
+                                  {/*<th>Grupo</th>*/}
                                   <th>Auxiliar</th>
                                   <th>Oficina</th>
                                   <th>Responsable</th>
-                                  <th>Estado Activo</th>
+                                  {/*<th>Estado Activo</th>*/}
                                   <th>Costo Inicial</th>
 																	<th>Estado</th>
-                                  <th>Otros</th>
+                                  <th>Operaciones</th>
 																	<th>Acciones</th>
                                 </tr>
                               </thead>
@@ -752,11 +752,11 @@ export class Personal extends Component {
                                           this.state.ufvs.find(item => item._id === index.ufvId).valor :
                                           null
                                         }</td> */}
-																				<td>{
+																				{/*<td>{
                                           this.state.grupos !== null && this.state.grupos.find(item => item._id === index.grupoId) !== undefined ? 
                                           this.state.grupos.find(item => item._id === index.grupoId).nombre :
                                           null
-                                        }</td>
+                                        }</td>*/}
 																				<td>{
                                           this.state.auxiliares !== null && this.state.auxiliares.find(item => item._id === index.auxiliarId) !== undefined ? 
                                           this.state.auxiliares.find(item => item._id === index.auxiliarId).nombre :
@@ -772,7 +772,7 @@ export class Personal extends Component {
                                           this.state.responsables.find(item => item._id === index.usuarioId).nombre :
                                           null
                                         }</td>
-																				<td>{index.estadoActivo}</td>
+																				{/*<td>{index.estadoActivo}</td>*/}
 																				<td>{index.costoInicial}</td>
                                         <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}> 
                                           {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
@@ -1165,7 +1165,7 @@ export class Personal extends Component {
                                 <Form.Group className="row">
                                   <label className="col-sm-3 col-form-label">Costo Inicial</label>
                                   <div className="col-sm-9">
-                                  <Form.Control type="number" placeholder="0.00" step="any" id="inputCostoInicial" required onChange={this.handleCostoInicial}/>
+                                  <Form.Control type="number" placeholder="0.00 Bs." step="any" id="inputCostoInicial" required onChange={this.handleCostoInicial}/>
                                   </div>
                                 </Form.Group>
                               </div>
@@ -1191,7 +1191,7 @@ export class Personal extends Component {
                                 <Form.Group className="row">
                                   <label className="col-sm-3 col-form-label">Descripcion</label>
                                   <div className="col-sm-9">
-                                  <textarea className="form-control" id="inputDescripcion" onChange={this.handleDescripcion} rows="5" placeholder="Descripcion Corta del Activo" required></textarea>
+                                  <textarea className="form-control" id="inputDescripcion" onChange={this.handleDescripcion} rows="5" placeholder="Descripcion Detallada del Activo" required></textarea>
                                   </div>
                                 </Form.Group>
                               </div>

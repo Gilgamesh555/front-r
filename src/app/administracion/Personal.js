@@ -49,7 +49,7 @@ export class Personal extends Component {
         this.handleOficinaId = this.handleOficinaId.bind(this)
         this.handleConfirmPassword = this.handleConfirmPassword.bind(this)
 
-        // Form Handler
+        // Form Handler acciones de botones
         this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this)
         this.handleReset = this.handleReset.bind(this)
         this.modifyUser = this.modifyUser.bind(this)
@@ -411,7 +411,7 @@ export class Personal extends Component {
                                   <th>CI</th>
                                   <th>Oficina</th>
                                   <th>Cargo</th>
-                                  <th>Email</th>
+                                  {/*<th>Email</th>*/}
                                   <th>Nro Celular</th>
                                   <th>Estado</th>
                                   <th>Acciones</th>
@@ -444,7 +444,7 @@ export class Personal extends Component {
                                           null
                                         }</td>
                                         <td>{index.cargo}</td>
-                                        <td>{index.email}</td>
+                                        {/*<td>{index.email}</td>*/}
                                         <td>{index.celular}</td>
                                         <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}> 
                                           {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
@@ -622,7 +622,7 @@ export class Personal extends Component {
                                 <Form.Group className="row">
                                   <label className="col-sm-3 col-form-label">Nro de Celular</label>
                                   <div className="col-sm-9">
-                                  <Form.Control type="text" placeholder="XXXX-XXXX" required id="inputCelular" onChange={this.handleCelular}/>
+                                  <Form.Control type="text" placeholder="1234-5678" required id="inputCelular" onChange={this.handleCelular}/>
                                   </div>
                                 </Form.Group>
                               </div>

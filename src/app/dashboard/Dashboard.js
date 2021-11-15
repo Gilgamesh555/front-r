@@ -36,7 +36,7 @@ class InfoInicio extends Component {
     return(
       <div className="info-body">
         <div className="info-title">
-          <h1>EMPRESA MINERA KERUMIN SRL</h1>
+          <h1>EMPRESA MINERA <br/> KERUMIN S. R. L.</h1> 
         </div>
         <div className="info-image">
           <img src={imagen} alt="imagen"/>

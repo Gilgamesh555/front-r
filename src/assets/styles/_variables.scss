@@ -66,10 +66,10 @@ $theme-gradient-colors: (
 ////////// COLOR SYSTEM //////////
 
 ////////// COLOR VARIABLES //////////
-$content-bg: #f3f3f3;
+$content-bg: #f3f3f3;//color body
 $footer-bg: $content-bg;
 $footer-color: color(dark);
-$border-color: #dee2e6;
+$border-color: #dee2e6;//bordes de formulario
 $circle-border:$white; 
 
 ////////// COLOR VARIABLES //////////
@@ -100,7 +100,7 @@ $type1:     'Roboto', sans-serif;
 $default-font-size: .875rem; // 14px as base font size
 
 $text-muted: #6c7293;
-$body-color: #343a40;
+$body-color: #292727;//texto colors
 
 ////////// FONT VARIABLES //////////
 
@@ -110,10 +110,10 @@ $sidebar-width-mini: 185px;
 $sidebar-width-icon: 70px;
 
 $sidebar-light-bg: #fff;
-$sidebar-light-menu-color: #fff;
+$sidebar-light-menu-color: #fff; ///Color de menus letra
 $sidebar-light-submenu-color: $sidebar-light-menu-color;
 $sidebar-light-menu-active-bg: #0f25d5;
-$sidebar-light-menu-active-color:#fff;
+$sidebar-light-menu-active-color:#fff;//color de Menu
 $sidebar-light-menu-hover-bg: $sidebar-light-menu-active-bg;
 $sidebar-light-menu-hover-color: $sidebar-light-menu-color;
 $sidebar-light-submenu-hover-bg: initial;
@@ -127,7 +127,7 @@ $sidebar-light-profile-name-color: #404852;
 $sidebar-light-profile-title-color: #8d9498;
 
 
-
+///barra de navegacion lateral
 $sidebar-gradient-color-1:#5768f3;
 $sidebar-gradient-color-2:#1c45ef;
 $sidebar-gradient:linear-gradient(to top, $sidebar-gradient-color-1, $sidebar-gradient-color-2);
@@ -195,10 +195,10 @@ $icon-only-menu-bg-dark: $sidebar-dark-bg;
 ///////// SIDEBAR ////////
 
 ///////// NAVBAR ////////
-
+//barra navegacion superior
 $navbar-height: 63px;
-$navbar-bg: #fff;
-$navbar-menu-color: #001737;
+$navbar-bg: #fff; //barra navegacion  
+$navbar-menu-color: #001737;//tres lineas
 $navbar-font-size: 15px;
 $navbar-icon-font-size: 1.25rem;
 $nvabar-brand-bg: #000000; 
@@ -302,7 +302,7 @@ $table-inverse-color: color(white);
 
 
 ////////// MEASUREMENT AND PROPERTY VARIABLES //////////
-$card-bg: #fff;
+$card-bg: #fff;//color formularios
 $card-title-color: $body-color;
 $border-property: 1px solid $border-color;
 $border-property: 1px solid $border-color;
