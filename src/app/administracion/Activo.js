@@ -12,6 +12,7 @@ import QRCode from 'qrcode.react'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import QrReport from '../reportes/QrReport'
 import EstadoActivoReport from '../reportes/EstadoActivoReport'
+import EstadoInactivosReport from  '../reportes/EstadoInactivosReport'
 
 export class Personal extends Component {
     constructor(props) {
@@ -49,6 +50,7 @@ export class Personal extends Component {
 					request: 'false',
           auxiliarQr: '',
           responsableQr: '',
+          qrSelectedInfo: "",
           isDeprecate: false,
           activoDeprecate: '',
           deprecateValue: null,
@@ -233,6 +235,7 @@ export class Personal extends Component {
           .then(res => {
             if(res.data.error){
               if(res.data.error === 11000){
+                console.log(res.data.errmsg);
                 if(res.data.errmsg.includes('email')){
                   this.setState({error: 'Email Ya en uso'})
                 }else{
@@ -280,6 +283,7 @@ export class Personal extends Component {
           .then(res => {
             if(res.data.error){
               if(res.data.error === 11000){
+                console.log(res.data.errmsg);
                 if(res.data.errmsg.includes('email')){
                   this.setState({error: 'Email Ya en uso'})
                 }else{
@@ -460,6 +464,8 @@ export class Personal extends Component {
 
 		generateQR(event, data) {
       // Auxiliar - Responsable Descripcion
+
+      this.setState({qrSelectedInfo: data});
 
       if(this.state.qrCode !== ''){
         this.setState({qrCode: ''})
@@ -822,7 +828,15 @@ export class Personal extends Component {
                                   </td>
                                   <td>
                                   <PDFDownloadLink document={<EstadoActivoReport/>} fileName={`reporte-activo-actualizacion`} className="badge badge-info" style={{marginRight: '3px'}}>
-                                  Reporte Estado
+                                  Reporte Estado Activos
+                                  {/* {({ blob, url, loading, error }) =>
+                                    loading ? 'Cargando...' : 'Reporte Actualizacion'
+                                  } */}
+                                  </PDFDownloadLink>
+                                  </td>
+                                  <td>
+                                  <PDFDownloadLink document={<EstadoInactivosReport/>} fileName={`reporte-activo-actualizacion`} className="badge badge-danger" style={{marginRight: '3px'}}>
+                                  Reporte Estado Inactivos
                                   {/* {({ blob, url, loading, error }) =>
                                     loading ? 'Cargando...' : 'Reporte Actualizacion'
                                   } */}
@@ -974,7 +988,7 @@ export class Personal extends Component {
 												<div className="card-body">
 													<h4 className="card-title">QR Del Activo</h4>
 													<QRCode value={this.state.qrCode} id={this.state.qrCode}/>
-                          <PDFDownloadLink document={<QrReport qr={this.state.qrCode}/>} fileName={`reporte-qr-activo`} className="badge badge-dark" style={{marginRight: '3px'}}>
+                          <PDFDownloadLink document={<QrReport qr={this.state.qrCode} info={this.state.qrSelectedInfo}/>} fileName={`reporte-qr-activo`} className="badge badge-dark" style={{marginRight: '3px'}}>
                           QR
                           {/* {({ blob, url, loading, error }) =>
                             loading ? 'Cargando...' : 'Reporte Actualizacion'
@@ -1127,7 +1141,7 @@ export class Personal extends Component {
 																					// 	return null
 																					// })
 																					.map((index, key) => (
-                                            <option value={index._id} key={key}>{index.nombre}</option>
+                                            <option value={index._id} key={key}>{`${index.nombre} ${index.apPaterno} ${index.apMaterno}`}</option>
                                           ))
                                         : <option>Cargando...</option>
                                       }

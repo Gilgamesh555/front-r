@@ -13,7 +13,10 @@ class DepreciacionReport extends Component {
             data: null,
             oficinas: null,
             auxiliares: null,
+            resultValue: 0,
         }
+
+        this.getValue = this.getValue.bind(this);
     }
 
     componentDidMount(){
@@ -42,6 +45,11 @@ class DepreciacionReport extends Component {
         .catch(err => console.log(err))
         }
         response()
+    }
+
+    getValue(value)
+    {
+        this.setState({resultValue: this.state.resultValue + value});
     }
 
 
@@ -162,11 +170,20 @@ class DepreciacionReport extends Component {
                                     null}
                                     </Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>{index.costoInicial}</Text>
-                                    <DeprecateValue data={index}/>
+                                    <DeprecateValue data={index} onGetValue={this.getValue}/>
                                 </View>
                             ))
                             : null
                         }
+                        <View style={styles.row}>
+                            <Text style={[styles.rowChildren, {flex: 1}]}></Text>
+                            <Text style={[styles.rowChildren, {flex: 2}]}></Text>
+                            <Text style={[styles.rowChildren, {flex: 2}]}></Text>
+                            <Text style={[styles.rowChildren, {flex: 2}]}>Total</Text>
+                            <Text style={[styles.rowChildren, {flex: 2, color: 'red'}]}>
+                            {this.state.resultValue}
+                            </Text>
+                        </View>
                     </View>
                     <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
                         `${pageNumber} / ${totalPages}`
@@ -201,6 +218,7 @@ class DeprecateValue extends Component {
         var coe = parseInt(res.data.coe)
         coe = coe / 100
         valor = valor * coe
+        this.props.onGetValue(valor)
         this.setState({value: valor})
         })
         .catch(err => console.log(err))

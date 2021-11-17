@@ -163,6 +163,13 @@ class ActivoReport extends Component {
                         {
                             this.state.data !== null && this.state.oficinas !== null && this.state.auxiliares !== null ?
                             this.state.data
+                            .filter(res => {
+                                if(res.estado === "activo")
+                                {
+                                    return res;
+                                }
+                                return null;
+                            })
                             .map((index,key) => (
                                 <View style={styles.row} key={key}>
                                     <Text style={[styles.rowChildren, {flex: 1}]}>{key + 1}</Text>

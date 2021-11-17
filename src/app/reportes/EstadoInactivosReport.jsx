@@ -5,7 +5,7 @@ import logo from './logo.jpeg'
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 
-class ActualizacionReport extends Component {
+class ActivoReport extends Component {
     constructor(props) {
         super(props)
         this.state ={
@@ -13,14 +13,12 @@ class ActualizacionReport extends Component {
             data: null,
             oficinas: null,
             auxiliares: null,
-            resultValue: 0,
         }
-
-        this.getValue = this.getValue.bind(this);
     }
 
     componentDidMount(){
         this.getData()
+        this.getOficinas()
         this.getAuxiliares()
     }
 
@@ -38,6 +36,15 @@ class ActualizacionReport extends Component {
         response()
     }
 
+    getOficinas(){
+        const response = async () => {
+        await axios.get(nodeapi+'oficinas')
+        .then(res => this.setState({oficinas: res.data}))
+        .catch(err => console.log(err))
+        }
+        response()
+    }
+
     getAuxiliares() {
         const response = async () => {
         await axios.get(nodeapi+'auxiliares')
@@ -47,9 +54,12 @@ class ActualizacionReport extends Component {
         response()
     }
 
-    getValue(value)
-    {
-        this.setState({resultValue: this.state.resultValue + value});
+    getUser(id) {
+        const data = this.state.users.find(item => item._id === id)
+        if(data !== undefined) {
+            return `${data.nombre} ${data.apPaterno} ${data.apMaterno}`
+        } 
+        return '' 
     }
 
     render() {
@@ -140,24 +150,25 @@ class ActualizacionReport extends Component {
                         </View>
                     </View>
                     <View style={styles.titleContainer}>
-                        <Text style={{textAlign: 'center'}}>ACTUALIZACION DE ACTIVOS - GRUPO {this.props.data.nombre.toUpperCase()}</Text>
+                        <Text style={{textAlign: 'center'}}>REPORTE ESTADO DE ACTIVOS</Text>
                     </View>
                     <View style={styles.table}>
                         <View style={styles.row}>
                             <Text style={[styles.rowChildren, {flex: 1,}]}>N°</Text>
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Codigo</Text>
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Auxiliar</Text>
-                            <Text style={[styles.rowChildren, {flex: 2,}]}>Costo Inicial (Bs.)</Text>
-                            <Text style={[styles.rowChildren, {flex: 2,}]}>Valor Actualizacion (Bs.)</Text>
+                            <Text style={[styles.rowChildren, {flex: 2,}]}>Costo Inicial</Text>
+                            <Text style={[styles.rowChildren, {flex: 2,}]}>Estado</Text>
                         </View>
                         {
-                            this.state.data !== null && this.state.auxiliares !== null ?
+                            this.state.data !== null && this.state.oficinas !== null && this.state.auxiliares !== null ?
                             this.state.data
-                            .filter((index) => {
-                                if(index.grupoId === this.props.data._id){
-                                    return index
+                            .filter(res => {
+                                if(res.estado === "inactivo")
+                                {
+                                    return res;
                                 }
-                                return null
+                                return null;
                             })
                             .map((index,key) => (
                                 <View style={styles.row} key={key}>
@@ -169,20 +180,11 @@ class ActualizacionReport extends Component {
                                     null}
                                     </Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>{index.costoInicial}</Text>
-                                    <UpdateValue data={index} onGetValue={this.getValue}/>
+                                    <Text style={[styles.rowChildren, {flex: 2}]}>{index.estado.toUpperCase()}</Text>
                                 </View>
                             ))
                             : null
                         }
-                        <View style={styles.row}>
-                            <Text style={[styles.rowChildren, {flex: 1}]}></Text>
-                            <Text style={[styles.rowChildren, {flex: 2}]}></Text>
-                            <Text style={[styles.rowChildren, {flex: 2}]}></Text>
-                            <Text style={[styles.rowChildren, {flex: 2}]}>Total</Text>
-                            <Text style={[styles.rowChildren, {flex: 2, color: 'red'}]}>
-                            {this.state.resultValue}
-                            </Text>
-                        </View>
                     </View>
                     <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
                         `${pageNumber} / ${totalPages}`
@@ -193,76 +195,4 @@ class ActualizacionReport extends Component {
     }
 }
 
-class UpdateValue extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            value: null,
-        }
-    }
-
-    componentDidMount() {
-        this.updateValor(this.props.data)
-    }
-
-    updateValor(activo) {
-        var valor = activo.costoInicial
-        valor = parseFloat(valor)
-        var now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        var date = now.toISOString().slice(0,10);
-        const data = {
-          fecha: date,
-        }
-        const response = async () => {
-          await axios.post(nodeapi+`ufv/date`, data)
-          .then(res => {
-            if(res.data !== null) {
-              const ufvF = parseFloat(res.data.valor)
-              const resp = async() => {
-                const data = {
-                  fecha: activo.fechaIncorporacion
-                }
-                await axios.post(nodeapi+`ufv/date`, data)
-                .then(res => {
-                  if(res.data !== null) {
-                    const ufvI = parseFloat(res.data.valor)
-                    valor = valor * (ufvF / ufvI -1)
-                    this.props.onGetValue(valor)
-                    this.setState({value: valor})
-                  }
-                })
-                .catch(err => console.log(err))
-              }
-              resp()
-            }
-          })
-          .catch(err => console.log(err))
-        }
-        response()
-    }
-
-    render() {
-        const styles = StyleSheet.create({
-            rowChildren: {
-                flex: 3,
-                borderTop: 1,
-            },
-            pageNumber: {
-                position: 'absolute',
-                fontSize: 10,
-                bottom: 30,
-                left: 0,
-                right: 0,
-                textAlign: 'center',
-            },
-        })
-        return(
-            <Text style={[styles.rowChildren, {flex: 2, color: 'red'}]}>
-            {this.state.value !== null ? this.state.value.toFixed(2) : null}
-            </Text>
-        )
-    }
-}
-
-export default ActualizacionReport
+export default ActivoReport

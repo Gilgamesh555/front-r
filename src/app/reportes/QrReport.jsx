@@ -142,6 +142,9 @@ class GrupoReport extends Component {
                             style={{display: 'block', margin: 'auto', width: 120, height: 120}}
                             />
                         </View>
+                        <View style={styles.row}>
+                            <Text style={{display: 'block', margin: 'auto', fontSize: 13}}>{this.props.info.codigo}</Text>
+                        </View>
                     </View>
                     <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
                         `${pageNumber} / ${totalPages}`

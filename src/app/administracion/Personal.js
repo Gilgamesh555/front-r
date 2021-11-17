@@ -27,6 +27,7 @@ export class Personal extends Component {
           email: '',
           celular: '',
           oficinaId: '',
+          cityId: '',
           estado: '',
           error: '',
           id: '',
@@ -48,6 +49,7 @@ export class Personal extends Component {
         this.handleCelular = this.handleCelular.bind(this)
         this.handleOficinaId = this.handleOficinaId.bind(this)
         this.handleConfirmPassword = this.handleConfirmPassword.bind(this)
+        this.handleCityId = this.handleCityId.bind(this);
 
         // Form Handler acciones de botones
         this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this)
@@ -108,6 +110,11 @@ export class Personal extends Component {
       this.setState({confirmPassword: event.target.value})
     }
 
+    handleCityId(event)
+    {
+      this.setState({cityId: event.target.value});
+    }
+
     handleRegisterSubmit(event) {
       var text =  document.getElementById('card-title-user').textContent
       if(text === 'Modificar Usuario') {
@@ -118,7 +125,7 @@ export class Personal extends Component {
           username: this.state.username,
           apPaterno: this.state.apPaterno,
           apMaterno: this.state.apMaterno,
-          ci: this.state.ci,
+          ci: this.state.ci + "-" + this.state.cityId,
           cargo: this.state.cargo,
           email: this.state.email,
           celular: this.state.celular,
@@ -155,7 +162,7 @@ export class Personal extends Component {
           username: this.state.username,
           apPaterno: this.state.apPaterno,
           apMaterno: this.state.apMaterno,
-          ci: this.state.ci,
+          ci: this.state.ci + "-" + this.state.cityId,
           cargo: this.state.cargo,
           email: this.state.email,
           celular: this.state.celular,
@@ -536,12 +543,25 @@ export class Personal extends Component {
                               <div className="col-md-6">
                                 <Form.Group className="row">
                                   <label className="col-sm-3 col-form-label">CI</label>
-                                  <div className="col-sm-9">
+                                  <div className="col-sm-6">
                                     <Form.Control type="text" placeholder="Ej: 123456pt" required id="inputCi" onChange={this.handleCi}/>
                                     {/* <select className="form-control">
                                       <option>Male</option>
                                       <option>Female</option>
                                     </select> */}
+                                  </div>
+                                  <div className="col-sm-3">
+                                    <select className="form-control" onChange={this.handleCityId} required>
+                                      <option value={"Lp"}>La Paz</option>
+                                      <option value={"Or"}>Oruro</option>
+                                      <option value={"Pt"}>Potosi</option>
+                                      <option value={"Tj"}>Tarija</option>
+                                      <option value={"Ch"}>Chuquisaca</option>
+                                      <option value={"Sc"}>Santa Cruz</option>
+                                      <option value={"Bn"}>Beni</option>
+                                      <option value={"Pa"}>Pando</option>
+                                      <option value={"Cb"}>Cochabamba</option>
+                                    </select>
                                   </div>
                                 </Form.Group>
                               </div>
