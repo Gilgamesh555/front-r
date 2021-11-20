@@ -476,7 +476,7 @@ export class Personal extends Component {
             const responseR = async () => {
               await axios.get(nodeapi+'users/'+data.usuarioId)
               .then(res => this.setState({responsableQr: res.data},  function() {
-                this.setState({qrCode: `Codigo: ${data.codigo}. Estado: ${data.estadoActivo}. Descripcion: ${data.descripcion}. Auxiliar: ${this.state.auxiliarQr.nombre}. Responsable: ${this.state.responsableQr.nombre}.`})
+                this.setState({qrCode: `Codigo: ${data.codigo}. \n Activo: ${this.state.auxiliarQr.nombre}. \n Descripcion: ${data.descripcion}.\n Responsable: ${this.state.responsableQr.nombre} ${this.state.responsableQr.apPaterno} ${this.state.responsableQr.apMaterno}. \n Estado: ${data.estadoActivo}.`})
               }))
               .catch(err => console.log(err))
             }
@@ -1213,7 +1213,7 @@ export class Personal extends Component {
                                 <Form.Group className="row">
                                   <label className="col-sm-3 col-form-label">Observaciones</label>
                                   <div className="col-sm-9">
-                                  <textarea className="form-control" id="inputObservaciones" onChange={this.handleObservaciones} rows="5" placeholder="Observaciones" required></textarea>
+                                  <textarea className="form-control" id="inputObservaciones" onChange={this.handleObservaciones} rows="5" placeholder="Observaciones de estado" required></textarea>
                                   </div>
                                 </Form.Group>
                               </div>

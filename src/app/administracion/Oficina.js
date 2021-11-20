@@ -324,7 +324,7 @@ export class Oficina extends Component {
                             <Form.Group>
                               <label htmlFor="exampleInputEmail1">Codigo</label>
                               <Form.Control onChange={this.handleCodigo} 
-                              type="text" className="form-control" id="inputCodigo" placeholder="Codigo" required/>
+                              type="text" className="form-control" id="inputCodigo" placeholder="Ej. Ofi-001" required/>
                             </Form.Group>
                             {/* <div className="form-check">
                               <label className="form-check-label text-muted">

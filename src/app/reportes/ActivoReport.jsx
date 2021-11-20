@@ -160,7 +160,8 @@ class ActivoReport extends Component {
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Auxiliar</Text>
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Costo Inicial</Text>
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Estado</Text>
-                            <Text style={styles.rowChildren}>Oficina</Text>
+                            <Text style={[styles.rowChildren, {flex: 2,}]}>Oficina</Text>
+                            {/*<Text style={[styles.rowChildren, {flex: 2,}]}>Oficina</Text> */}
                         </View>
                         {
                             this.state.data !== null && this.state.oficinas !== null && this.state.auxiliares !== null ?
@@ -181,11 +182,12 @@ class ActivoReport extends Component {
                                     </Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>{index.costoInicial}</Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>{index.estadoActivo}</Text>
-                                    <Text style={styles.rowChildren}>
+                                    <Text style={[styles.rowChildren, {flex: 2}]}   >
                                     {this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ? 
                                     this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
                                     null}
                                     </Text>
+                                    {/*<Text style={[styles.rowChildren, {flex: 2}]}>{}</Text>*/}
                                 </View>
                             ))
                             : null

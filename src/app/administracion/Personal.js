@@ -465,6 +465,11 @@ export class Personal extends Component {
                                             loading ? 'Cargando...' : 'Reporte'
                                           }
                                           </PDFDownloadLink>
+                                          {/*<PDFDownloadLink document={<ActivoReport data={index}/>} fileName={`reporte-usuario-${index.username}`} className="badge badge-info" style={{marginRight: '3px'}}>
+                                          {({ blob, url, loading, error }) =>
+                                            loading ? 'Cargando...' : 'Reporte'
+                                          }
+                                        </PDFDownloadLink>*/}
                                         </td>
                                       </tr>
                                     ))
