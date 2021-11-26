@@ -186,7 +186,6 @@ export class Oficina extends Component {
 
     registerOficina(event) {
       document.getElementById('inputNombre').value = ''
-      document.getElementById('inputCodigo').value = ''
       document.getElementById('card-title-oficina').innerHTML = 'Registrar Oficina'
       document.getElementById('card-title-oficina').style = 'color: black'
       event.preventDefault()

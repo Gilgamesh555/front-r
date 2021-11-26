@@ -308,12 +308,12 @@ export class Personal extends Component {
         await axios.put(nodeapi+`users/${data._id}/estado`, data)
         .then(res => {
           console.log(res.data)
+          this.getData();
         })
         .catch(err => console.log(err))
       }
       response()
       event.preventDefault()
-      window.location.reload()
     }
 
     deleteUser(event ,datax) {
