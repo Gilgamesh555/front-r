@@ -459,8 +459,8 @@ export class Personal extends Component {
                                         <td>
                                           <a href="!#" onClick={evt => this.modifyUser(evt, index)} className="badge badge-warning" style={{marginRight: '3px'}} >Modificar</a>
                                           <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Mod Estado</a>
-                                          <a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>
-                                          <PDFDownloadLink document={<ActivoReport data={index}/>} fileName={`reporte-usuario-${index.username}`} className="badge badge-info" style={{marginRight: '3px'}}>
+                                          {/*<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>*/}
+                                          <PDFDownloadLink document={<ActivoReport data={index}/>} fileName={`reporte-usuario-${index.username}`} className="badge badge-success" style={{marginRight: '3px'}}>
                                           {({ blob, url, loading, error }) =>
                                             loading ? 'Cargando...' : 'Reporte'
                                           }

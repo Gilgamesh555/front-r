@@ -193,6 +193,8 @@ class ActivoReport extends Component {
                             : null
                         }
                     </View>
+                    <Text style={[styles.rowChildren, {flex: 2}]}> {"\n"} {"\n"}{"\n"}  </Text>
+                    <Text style={[styles.rowChildren, {flex: 2}]}> {"\n"} {"\n"}{"\n"}   Firma</Text>
                     <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
                         `${pageNumber} / ${totalPages}`
                     )} fixed />
