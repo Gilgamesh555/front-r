@@ -11,6 +11,7 @@ export class Login extends Component {
     this.state = {
       username: '',
       password: '',
+      errorMsg: '',
       isAuth: '',
     }
 
@@ -60,7 +61,8 @@ export class Login extends Component {
         }
         else{
           window.localStorage.removeItem('token')
-          this.setState({isAuth: 'failed'})
+          console.log(res.data);
+          this.setState({isAuth: 'failed', errorMsg: res.data.error})
         }
       })
       .catch(err => console.log(err))
@@ -111,7 +113,7 @@ export class Login extends Component {
                       </div>
                       {
                         this.state.isAuth === 'failed' ?
-                        <p style={{color: 'red'}}>Nombre de Usuario o Contraseña Incorrectos</p>
+                        <p style={{color: 'red'}}>{this.state.errorMsg}</p>
                         : null
                       }
                       {/* <div className="my-2 d-flex justify-content-between align-items-center">

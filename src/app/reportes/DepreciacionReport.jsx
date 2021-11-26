@@ -181,7 +181,7 @@ class DepreciacionReport extends Component {
                             <Text style={[styles.rowChildren, {flex: 2}]}></Text>
                             <Text style={[styles.rowChildren, {flex: 2}]}>Total</Text>
                             <Text style={[styles.rowChildren, {flex: 2, color: 'red'}]}>
-                            {this.state.resultValue}
+                            {this.state.resultValue.toFixed(2)}
                             </Text>
                         </View>
                     </View>
