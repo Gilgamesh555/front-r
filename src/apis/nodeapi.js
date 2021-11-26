@@ -1,2 +1,2 @@
-var api = 'http://127.0.0.1:8002/api/'
+var api = 'http://192.168.100.32:8002/api/'
 export default api

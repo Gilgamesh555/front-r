@@ -19,7 +19,6 @@ export class Oficina extends Component {
           data: null,
           searchOficina: '',
         }
-        this.handleCodigo = this.handleCodigo.bind(this)
         this.handleNombre = this.handleNombre.bind(this)
         this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this)
         this.handleReset = this.handleReset.bind(this)
@@ -42,16 +41,11 @@ export class Oficina extends Component {
       this.setState({nombre: event.target.value})
     }
 
-    handleCodigo(event) {
-      this.setState({codigo: event.target.value})
-    }
-
     handleRegisterSubmit(event) {
       var text =  document.getElementById('card-title-oficina').textContent
       if(text === 'Modificar Oficina') {
         const data = {
           nombre: this.state.nombre,
-          codigo: this.state.codigo,
           estado: this.state.estado,
           _id: this.state.id
         }
@@ -59,6 +53,7 @@ export class Oficina extends Component {
           await axios.put(nodeapi+`oficinas/${data._id}`, data)
           .then(res => {
             console.log(res.data)
+            this.getData()
           })
           .catch(err => console.log(err))
         }
@@ -66,7 +61,6 @@ export class Oficina extends Component {
       } else {
         const data = {
           nombre: this.state.nombre,
-          codigo: this.state.codigo,
           estado: 'activo',
         }
         const response = async () => {
@@ -76,13 +70,15 @@ export class Oficina extends Component {
               this.setState({error: res.data.error})
             }else{
               console.log(res.data.msg)
+              this.getData()
             }
           })
           .catch(err => console.log(err))
         }
         response()
       }
-      // event.preventDefault()
+
+      event.preventDefault()
     }
 
     handleReset(event) {
@@ -143,7 +139,6 @@ export class Oficina extends Component {
     //crud
     modifyOficina(event, data) {
       document.getElementById('inputNombre').value = data.nombre
-      document.getElementById('inputCodigo').value = data.codigo
       document.getElementById('card-title-oficina').innerHTML = 'Modificar Oficina'
       document.getElementById('card-title-oficina').style = 'color: red'
       this.setState({id: data._id, estado: data.estado, nombre: data.nombre, codigo: data.codigo})
@@ -180,12 +175,13 @@ export class Oficina extends Component {
         await axios.delete(nodeapi+`oficinas/${data._id}`, data)
         .then(res => {
           console.log(res.data)
+          this.getData()
         })
         .catch(err => console.log(err))
       }
       response()
       event.preventDefault()
-      window.location.reload()
+      // window.location.reload()
     }
 
     registerOficina(event) {
@@ -321,11 +317,11 @@ export class Oficina extends Component {
                               <label htmlFor="exampleInputUsername1">Nombre de Oficina</label>
                               <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Oficina" size="lg" required/>
                             </Form.Group>
-                            <Form.Group>
+                            {/* <Form.Group>
                               <label htmlFor="exampleInputEmail1">Codigo</label>
                               <Form.Control onChange={this.handleCodigo} 
                               type="text" className="form-control" id="inputCodigo" placeholder="Ej. Ofi-001" required/>
-                            </Form.Group>
+                            </Form.Group> */}
                             {/* <div className="form-check">
                               <label className="form-check-label text-muted">
                                 <input type="checkbox" className="form-check-input"/>
