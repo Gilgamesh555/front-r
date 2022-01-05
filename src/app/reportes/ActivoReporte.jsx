@@ -150,7 +150,7 @@ class ActivoReport extends Component {
                         </View>
                     </View>
                     <View style={styles.titleContainer}>
-                        <Text style={{textAlign: 'center'}}>ENTREGA DE ACTIVOS</Text>
+                        <Text style={{textAlign: 'center'}}>REPORTE DE ESTADO DE ACTIVOS</Text>
                         <Text style={{textAlign: 'center'}}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>
                     </View>
                     <View style={styles.table}>
@@ -161,7 +161,7 @@ class ActivoReport extends Component {
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Costo Inicial</Text>
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Estado</Text>
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Oficina</Text>
-                            {/*<Text style={[styles.rowChildren, {flex: 2,}]}>Oficina</Text> */}
+                            <Text style={[styles.rowChildren, {flex: 2,}]}>Observaciones</Text>
                         </View>
                         {
                             this.state.data !== null && this.state.oficinas !== null && this.state.auxiliares !== null ?
@@ -187,13 +187,13 @@ class ActivoReport extends Component {
                                     this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
                                     null}
                                     </Text>
-                                    {/*<Text style={[styles.rowChildren, {flex: 2}]}>{}</Text>*/}
+                                    <Text style={[styles.rowChildren, {flex: 2}]}>{}</Text>
                                 </View>
                             ))
                             : null
                         }
                     </View>
-                    
+                
                     <Text style={{textAlign: 'center'}}> {'\n'} {'\n'} {'\n'}_____________________________________</Text>
                     <Text style={{textAlign: 'center'}}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>
                     <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (

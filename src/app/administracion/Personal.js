@@ -8,6 +8,7 @@ import nodeapi from '../../apis/nodeapi'
 
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import ActivoReport from '../reportes/ActivoReport'
+import ActivoReporte from '../reportes/ActivoReporte'
 
 export class Personal extends Component {
     constructor(props) {
@@ -462,14 +463,14 @@ export class Personal extends Component {
                                           {/*<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>*/}
                                           <PDFDownloadLink document={<ActivoReport data={index}/>} fileName={`reporte-usuario-${index.username}`} className="badge badge-success" style={{marginRight: '3px'}}>
                                           {({ blob, url, loading, error }) =>
-                                            loading ? 'Cargando...' : 'Reporte'
+                                            loading ? 'Cargando...' : 'Entrega de Activos'
                                           }
                                           </PDFDownloadLink>
-                                          {/*<PDFDownloadLink document={<ActivoReport data={index}/>} fileName={`reporte-usuario-${index.username}`} className="badge badge-info" style={{marginRight: '3px'}}>
+                                          {<PDFDownloadLink document={<ActivoReporte data={index}/>} fileName={`reporte-usuario-${index.username}`} className="badge badge-info" style={{marginRight: '3px'}}>
                                           {({ blob, url, loading, error }) =>
-                                            loading ? 'Cargando...' : 'Reporte'
+                                            loading ? 'Cargando...' : 'Reporte de Estado'
                                           }
-                                        </PDFDownloadLink>*/}
+                                        </PDFDownloadLink>}
                                         </td>
                                       </tr>
                                     ))

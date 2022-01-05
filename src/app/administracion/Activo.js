@@ -730,7 +730,7 @@ export class Personal extends Component {
                                   {/*<th>Estado Activo</th>*/}
                                   <th>Costo Inicial</th>
 																	<th>Estado</th>
-                                  <th>Operaciones</th>
+                                  {/*<th>Operaciones</th>*/}
 																	<th>Acciones</th>
                                 </tr>
                               </thead>
@@ -783,10 +783,10 @@ export class Personal extends Component {
                                         <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}> 
                                           {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                         </td>
-                                        <td>
+                                        {/*<td>
                                           <a href="!#" onClick={evt => this.deprecateActivo(evt, index)} className="badge badge-dark" style={{marginRight: '3px'}}>Depreciar</a>
                                           <a href="!#" onClick={evt => this.updateAcivo(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Actualizar</a> 
-                                        </td>
+                                        </td>*/}
                                         <td>
                                         <a href="!#" onClick={evt => this.setModalInfo(evt, index)} className="badge badge-success" style={{marginRight: '3px', color: 'white'}}>+ Info</a>
 																					<a href="!#" onClick={evt => this.generateQR(evt, index)} className="badge badge-dark" style={{marginRight: '3px'}}>QR</a>
