@@ -1,2 +1,3 @@
-var api = 'http://127.0.0.1:8002/'
+import Url from './url';
+var api = `http://${Url}:8002/`;
 export default api

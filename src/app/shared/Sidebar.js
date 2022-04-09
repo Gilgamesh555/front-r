@@ -18,6 +18,10 @@ class Sidebar extends Component {
     this.user = {
       isAdmin: '',
       username: '',
+      role: null,
+      roleId: '',
+      permissions: null,
+      views: null,
     }
   }
 
@@ -26,17 +30,21 @@ class Sidebar extends Component {
 
   toggleMenuState(menuState) {
     if (this.state[menuState]) {
-      this.setState({[menuState] : false});
-    } else if(Object.keys(this.state).length === 0) {
-      this.setState({[menuState] : true});
+      this.setState({ [menuState]: false });
+    } else if (Object.keys(this.state).length === 0) {
+      this.setState({ [menuState]: true });
     } else {
       Object.keys(this.state).forEach(i => {
-        this.setState({[i]: false});
+        this.setState({ [i]: false });
       });
-      this.setState({[menuState] : true});
+      this.setState({ [menuState]: true });
     }
-    this.setState({isAdmin: this.state.isAdmin})
-    this.setState({username: this.state.username})
+    this.setState({
+      username: this.state.username,
+      role: this.state.role,
+      roleId: this.state.roleId,
+      views: this.state.views,
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -48,38 +56,42 @@ class Sidebar extends Component {
   onRouteChanged() {
     document.querySelector('#sidebar').classList.remove('active');
     Object.keys(this.state).forEach(i => {
-      this.setState({[i]: false});
+      this.setState({ [i]: false });
     });
 
     const dropdownPaths = [
-      {path:'/apps', state: 'appsMenuOpen'},
-      {path:'/basic-ui', state: 'basicUiMenuOpen'},
-      {path:'/form-elements', state: 'formElementsMenuOpen'},
-      {path:'/tables', state: 'tablesMenuOpen'},
-      {path:'/icons', state: 'iconsMenuOpen'},
-      {path:'/charts', state: 'chartsMenuOpen'},
-      {path:'/user-pages', state: 'userPagesMenuOpen'},
-      {path:'/error-pages', state: 'errorPagesMenuOpen'},
-      {path:'/administracion', state: 'administracionMenuOpen'},
-      {path:'/vistas', state: 'vistasMenuOpen'},
+      { path: '/apps', state: 'appsMenuOpen' },
+      { path: '/basic-ui', state: 'basicUiMenuOpen' },
+      { path: '/form-elements', state: 'formElementsMenuOpen' },
+      { path: '/tables', state: 'tablesMenuOpen' },
+      { path: '/icons', state: 'iconsMenuOpen' },
+      { path: '/charts', state: 'chartsMenuOpen' },
+      { path: '/user-pages', state: 'userPagesMenuOpen' },
+      { path: '/error-pages', state: 'errorPagesMenuOpen' },
+      { path: '/administracion', state: 'administracionMenuOpen' },
+      { path: '/vistas', state: 'vistasMenuOpen' },
     ];
 
     dropdownPaths.forEach((obj => {
       if (this.isPathActive(obj.path)) {
-        this.setState({[obj.state] : true})
+        this.setState({ [obj.state]: true })
       }
     }));
 
-    this.setState({isAdmin: this.state.isAdmin})
-    this.setState({username: this.state.username})
- 
-  } 
+    this.setState({
+      username: this.state.username,
+      role: this.state.role,
+      roleId: this.state.roleId,
+      views: this.state.views,
+    })
+
+  }
 
   checkToken() {
     const token = window.localStorage.getItem('token')
-    if(token) {
+    if (token) {
       this.verifytoken()
-    }else{
+    } else {
       this.props.history.push('/login')
     }
   }
@@ -88,33 +100,91 @@ class Sidebar extends Component {
     const data = {
       token: window.localStorage.getItem('token')
     }
-    if(data.token){
-      await axios.post(nodeapi+'users/verify', data)
-      .then(res => {
-        if(res.data.status === 'ok'){
-          const role = this.decodeToken(data.token).role
-          this.setState({username: this.decodeToken(data.token).username})
-          if(role !== undefined && role === 'usuario'){
-            document.getElementById('liAdmin').style = 'display: none'
-            this.setStat({isAdmin: 'correct'})
-          }else{
-            this.setState({isAdmin: 'failed'})
-            // this.props.history.push('/login')
+    if (data.token) {
+      await axios.post(nodeapi + 'users/verify', data)
+        .then(async res => {
+          if (res.data.status === 'ok') {
+            const roleId = this.decodeToken(data.token).role
+            this.setState({ username: this.decodeToken(data.token).username })
+            await this.getRole(roleId);
+            const viewsPermissions = [
+              {
+                name: 'oficinas',
+                viewId: '6249b9ca9a85b64c0665d3b4',
+                isVisible: await this.getPermissions(roleId, '6249b9ca9a85b64c0665d3b4'),
+              },
+              {
+                name: 'personal',
+                viewId: '6249b9d39a85b64c0665d3b6',
+                isVisible: await this.getPermissions(roleId, '6249b9d39a85b64c0665d3b6'),
+              },
+              {
+                name: 'grupos',
+                viewId: '6249b9da9a85b64c0665d3b8',
+                isVisible: await this.getPermissions(roleId, '6249b9da9a85b64c0665d3b8'),
+              },
+              {
+                name: 'auxiliares',
+                viewId: '6249b9e09a85b64c0665d3ba',
+                isVisible: await this.getPermissions(roleId, '6249b9e09a85b64c0665d3ba'),
+              },
+              {
+                name: 'ufv',
+                viewId: '6249b9e79a85b64c0665d3bc',
+                isVisible: await this.getPermissions(roleId, '6249b9e79a85b64c0665d3bc'),
+              },
+              {
+                name: 'activos',
+                viewId: '6249b9ed9a85b64c0665d3be',
+                isVisible: await this.getPermissions(roleId, '6249b9ed9a85b64c0665d3be'),
+              },
+              {
+                name: 'roles',
+                viewId: '6249b9f29a85b64c0665d3c0',
+                isVisible: await this.getPermissions(roleId, '6249b9f29a85b64c0665d3c0'),
+              },
+            ]
+            this.setState({ views: viewsPermissions })
+          } else {
+            window.localStorage.removeItem('token');
           }
-        }else{
-          window.localStorage.removeItem('token')
-          this.setStat({isAdmin: 'failed'})
+        })
+        .catch(err => err)
+    }
+  }
+
+  async getRole(roleId) {
+    await axios.get(`${nodeapi}roles/${roleId}`)
+      .then(res => {
+        if (res.status === 200) {
+          this.setState({
+            role: res.data.name,
+            roleId: res.data._id,
+          });
         }
       })
-      .catch(err => err)
-    }
+  }
+
+  async getPermissions(roleId, viewId) {
+    const permission = await axios.get(`${nodeapi}roleviews/find`, {
+      params: {
+        roleId,
+        viewId
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          return res.data.isVisible;
+        }
+      })
+    return permission;
   }
 
   decodeToken(token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 
     return JSON.parse(jsonPayload);
@@ -126,21 +196,21 @@ class Sidebar extends Component {
     // add className 'hover-open' to sidebar navitem while hover in sidebar-icon-only menu
     const body = document.querySelector('body');
     document.querySelectorAll('.sidebar .nav-item').forEach((el) => {
-      
-      el.addEventListener('mouseover', function() {
-        if(body.classList.contains('sidebar-icon-only')) {
+
+      el.addEventListener('mouseover', function () {
+        if (body.classList.contains('sidebar-icon-only')) {
           el.classList.add('hover-open');
         }
       });
-      el.addEventListener('mouseout', function() {
-        if(body.classList.contains('sidebar-icon-only')) {
+      el.addEventListener('mouseout', function () {
+        if (body.classList.contains('sidebar-icon-only')) {
           el.classList.remove('hover-open');
         }
       });
     });
   }
 
-  render () {
+  render() {
     return (
       <nav className="sidebar sidebar-offcanvas" id="sidebar">
         <div className="text-center sidebar-brand-wrapper d-flex align-items-center">
@@ -154,14 +224,14 @@ class Sidebar extends Component {
                 <Dropdown.Toggle className="nav-link user-switch-dropdown-toggler p-0 toggle-arrow-hide bg-transparent border-0 w-100">
                   <div className="d-flex justify-content-between align-items-start">
                     <div className="profile-image">
-                    <img className="img-xs rounded-circle" src={ image1 } alt="profile" />
+                      <img className="img-xs rounded-circle" src={image1} alt="profile" />
                       <div className="dot-indicator bg-success"></div>
                     </div>
                     <div className="text-wrapper">
-                      <p className="profile-name">{this.state.username !== '' ? this.state.username : 'zzzz'}</p>
-                      <p className="designation">{this.state.isAdmin === 'failed' ? 'Administrador' : 'Usuario'}</p>
+                      <p className="profile-name">{this.state.username !== '' ? this.state.username : 'error'}</p>
+                      <p className="designation">{this.state.role === null ? 'Error' : this.state.role}</p>
                     </div>
-                    
+
                   </div>
                 </Dropdown.Toggle>
                 {/* <Dropdown.Menu className="preview-list navbar-dropdown">
@@ -194,8 +264,8 @@ class Sidebar extends Component {
               </Dropdown>
             </div>
           </li>
-      
-          <li className={ this.isPathActive('/inicio') ? 'nav-item active' : 'nav-item' }>
+
+          <li className={this.isPathActive('/inicio') ? 'nav-item active' : 'nav-item'}>
             <Link className="nav-link" to="/inicio">
               <i className="mdi mdi-television menu-icon"></i>
               <span className="menu-title"><Trans>Inicio</Trans></span>
@@ -294,39 +364,49 @@ class Sidebar extends Component {
               <span className="menu-title"><Trans>Documentation</Trans></span>
             </a>
           </li> */}
-          <li className={ this.isPathActive('/administracion') ? 'nav-item active' : 'nav-item' } id="liAdmin">
-            <div className={ this.state.administracionMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('administracionMenuOpen') } data-toggle="collapse">
+          <li className={this.isPathActive('/administracion') ? 'nav-item active' : 'nav-item'} id="liAdmin">
+            <div className={this.state.administracionMenuOpen ? 'nav-link menu-expanded' : 'nav-link'} onClick={() => this.toggleMenuState('administracionMenuOpen')} data-toggle="collapse">
               <i className="mdi mdi-information-outline menu-icon"></i>
               <span className="menu-title"><Trans>Administracion</Trans></span>
               <i className="menu-arrow"></i>
             </div>
-            <Collapse in={ this.state.administracionMenuOpen }>
+            <Collapse in={this.state.administracionMenuOpen}>
               <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/administracion/oficinas') ? 'nav-link active' : 'nav-link' } to="/administracion/oficinas">Oficinas</Link></li>
+                {
+                  this.state.views !== undefined ? (
+                    this.state.views.map((item) => {
+                      if (item.isVisible) {
+                        return <li key={item.viewId} className="nav-item"> <Link className={this.isPathActive(`/administracion/${item.name}`) ? 'nav-link active' : 'nav-link'} to={`/administracion/${item.name}`}>{item.name}</Link></li>
+                      }
+                      return null;
+                    })
+                  ) : null
+                }
+                {/* <li className="nav-item"> <Link className={ this.isPathActive('/administracion/oficinas') ? 'nav-link active' : 'nav-link' } to="/administracion/oficinas">Oficinas</Link></li>
                 <li className="nav-item"> <Link className={ this.isPathActive('/administracion/personal') ? 'nav-link active' : 'nav-link' } to="/administracion/personal">Personal</Link></li>
                 <li className="nav-item"> <Link className={ this.isPathActive('/administracion/grupos') ? 'nav-link active' : 'nav-link' } to="/administracion/grupos">Grupos</Link></li>
                 <li className="nav-item"> <Link className={ this.isPathActive('/administracion/auxiliares') ? 'nav-link active' : 'nav-link' } to="/administracion/auxiliares">Auxiliares</Link></li>
                 <li className="nav-item"> <Link className={ this.isPathActive('/administracion/ufv') ? 'nav-link active' : 'nav-link' } to="/administracion/ufv">UFV</Link></li>
                 <li className="nav-item"> <Link className={ this.isPathActive('/administracion/activos') ? 'nav-link active' : 'nav-link' } to="/administracion/activos">Activos</Link></li>
+                <li className="nav-item"> <Link className={ this.isPathActive('/administracion/roles') ? 'nav-link active' : 'nav-link' } to="/administracion/roles">Roles</Link></li> */}
                 {/* <li className="nav-item"> <Link className={ this.isPathActive('/error-pages/error-500') ? 'nav-link active' : 'nav-link' } to="/error-pages/error-500">500</Link></li> */}
               </ul>
             </Collapse>
           </li>
-          <li className={ this.isPathActive('/vistas') ? 'nav-item active' : 'nav-item' } id="liVistas">
-            <div className={ this.state.vistasMenuOpen ? 'nav-link menu-expanded' : 'nav-link' } onClick={ () => this.toggleMenuState('vistasMenuOpen') } data-toggle="collapse">
+          <li className={this.isPathActive('/vistas') ? 'nav-item active' : 'nav-item'} id="liVistas">
+            <div className={this.state.vistasMenuOpen ? 'nav-link menu-expanded' : 'nav-link'} onClick={() => this.toggleMenuState('vistasMenuOpen')} data-toggle="collapse">
               <i className="mdi mdi-information-outline menu-icon"></i>
               <span className="menu-title"><Trans>Vistas</Trans></span>
               <i className="menu-arrow"></i>
             </div>
-            <Collapse in={ this.state.vistasMenuOpen }>
+            <Collapse in={this.state.vistasMenuOpen}>
               <ul className="nav flex-column sub-menu">
-                <li className="nav-item"> <Link className={ this.isPathActive('/visas/oficinas') ? 'nav-link active' : 'nav-link' } to="/vistas/oficinas">Oficinas</Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/vistas/personal') ? 'nav-link active' : 'nav-link' } to="/vistas/personal">Personal</Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/vistas/grupos') ? 'nav-link active' : 'nav-link' } to="/vistas/grupos">Grupos</Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/vistas/auxiliares') ? 'nav-link active' : 'nav-link' } to="/vistas/auxiliares">Auxiliares</Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/vistas/ufv') ? 'nav-link active' : 'nav-link' } to="/vistas/ufv">UFV</Link></li>
-                <li className="nav-item"> <Link className={ this.isPathActive('/vistas/activos') ? 'nav-link active' : 'nav-link' } to="/vistas/activos">Activos</Link></li>
-                {/* <li className="nav-item"> <Link className={ this.isPathActive('/error-pages/error-500') ? 'nav-link active' : 'nav-link' } to="/error-pages/error-500">500</Link></li> */}
+                <li className="nav-item"> <Link className={this.isPathActive('/visas/oficinas') ? 'nav-link active' : 'nav-link'} to="/vistas/oficinas">Oficinas</Link></li>
+                <li className="nav-item"> <Link className={this.isPathActive('/vistas/personal') ? 'nav-link active' : 'nav-link'} to="/vistas/personal">Personal</Link></li>
+                <li className="nav-item"> <Link className={this.isPathActive('/vistas/grupos') ? 'nav-link active' : 'nav-link'} to="/vistas/grupos">Grupos</Link></li>
+                <li className="nav-item"> <Link className={this.isPathActive('/vistas/auxiliares') ? 'nav-link active' : 'nav-link'} to="/vistas/auxiliares">Auxiliares</Link></li>
+                <li className="nav-item"> <Link className={this.isPathActive('/vistas/ufv') ? 'nav-link active' : 'nav-link'} to="/vistas/ufv">UFV</Link></li>
+                <li className="nav-item"> <Link className={this.isPathActive('/vistas/activos') ? 'nav-link active' : 'nav-link'} to="/vistas/activos">Activos</Link></li>
               </ul>
             </Collapse>
           </li>
