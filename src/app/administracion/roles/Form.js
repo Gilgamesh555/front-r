@@ -54,7 +54,6 @@ function FormRole({ data }) {
   }
 
   const onSubmit = (dataFromForm) => {
-    console.log(dataFromForm);
     if (data === null) {
       onRegisterRole(dataFromForm);
     } else {

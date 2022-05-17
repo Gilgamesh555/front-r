@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Form, Modal, Button } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+import UpdateActivo from './activo/updateActivo';
+import DeprecateActivo from './activo/deprecateActivo';
 // import DatePicker from "react-datepicker";
 
 import axios from 'axios'
@@ -819,10 +821,10 @@ export class Personal extends Component {
                                     <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                     </td>
-                                    {/*<td>
-                                          <a href="!#" onClick={evt => this.deprecateActivo(evt, index)} className="badge badge-dark" style={{marginRight: '3px'}}>Depreciar</a>
-                                          <a href="!#" onClick={evt => this.updateAcivo(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Actualizar</a> 
-                                        </td>*/}
+                                    <td>
+                                      <a href="!#" onClick={evt => this.deprecateActivo(evt, index)} className="badge badge-dark" style={{ marginRight: '3px' }}>Depreciar</a>
+                                      <a href="!#" onClick={evt => this.updateAcivo(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Actualizar</a>
+                                    </td>
                                     <td>
                                       <a href="!#" onClick={evt => this.setModalInfo(evt, index)} className="badge badge-success" style={{ marginRight: '3px', color: 'white' }}>+ Info</a>
                                       <a href="!#" onClick={evt => this.generateQR(evt, index)} className="badge badge-dark" style={{ marginRight: '3px' }}>QR</a>
@@ -1011,30 +1013,11 @@ export class Personal extends Component {
             </Modal>
             {
               this.state.isUpdate === true ?
-                <div className="col-lg-6 grid-margin stretch-card">
-                  <div className="card">
-                    <div className="card-body">
-                      <h4 className="card-title">Activo Actualizado</h4>
-                      <div className="row">
-                        <label>El Valor de Actualizacion Es  =  {this.updateValor()} {this.state.updateValue !== null ? this.state.updateValue : null} Bs.</label>
-                      </div>
-                    </div>
-                  </div>
-                </div> :
-                null
+                <UpdateActivo activo={this.state.activoUpdate} /> : null
             }
             {
               this.state.isDeprecate === true ?
-                <div className="col-lg-6 grid-margin stretch-card">
-                  <div className="card">
-                    <div className="card-body">
-                      <h4 className="card-title">Activo Depreciado</h4>
-                      <div className="row">
-                        <label>El Valor de Depreciacion Es  =  {this.deprecateValor()} {this.state.deprecateValue !== null ? this.state.deprecateValue : null} Bs.</label>
-                      </div>
-                    </div>
-                  </div>
-                </div> :
+                <DeprecateActivo activo={this.state.activoDeprecate} /> :
                 null
             }
             {
