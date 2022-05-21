@@ -22,7 +22,7 @@ export class Auxiliar extends Component {
       grupos: null,
       searchAuxiliar: '',
       request: 'false',
-      viewId: '6249b9e09a85b64c0665d3ba',
+      viewId: '6267492ac1665c49f26105c7',
       permissions: null,
       changeToEdit: false,
     }

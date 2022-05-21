@@ -35,7 +35,7 @@ export class Personal extends Component {
       searchUser: '',
       oficinas: null,
       request: 'false',
-      viewId: '6249b9d39a85b64c0665d3b6',
+      viewId: '6267491dc1665c49f26105c3',
       permissions: null,
       changeToEdit: false,
       roles: null,
@@ -480,7 +480,7 @@ export class Personal extends Component {
                                   if (this.state.searchUser === '') {
                                     return index
                                   } else {
-                                    if (index.nombre.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apPaterno.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apMaterno.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.username.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.cargo.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase())) {
+                                    if (index.nombre.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apPaterno?.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apMaterno.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.username.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.cargo.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase())) {
                                       return index
                                     }
                                   }
@@ -519,7 +519,7 @@ export class Personal extends Component {
                                           <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>
                                         )
                                       }
-                                      {/*<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>*/}
+                                      {<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>}
                                       <PDFDownloadLink document={<ActivoReport data={index} />} fileName={`reporte-usuario-${index.username}`} className="badge badge-success" style={{ marginRight: '3px' }}>
                                         {({ blob, url, loading, error }) =>
                                           loading ? 'Cargando...' : 'Entrega de Activos'

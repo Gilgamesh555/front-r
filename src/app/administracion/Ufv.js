@@ -19,7 +19,7 @@ export class Ufv extends Component {
       data: null,
       searchUfv: '',
       request: 'false',
-      viewId: '6249b9e79a85b64c0665d3bc',
+      viewId: '62674934c1665c49f26105c9',
       permissions: null,
       changeToEdit: false,
     }

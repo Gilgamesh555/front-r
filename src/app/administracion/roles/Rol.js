@@ -15,7 +15,7 @@ import './style.css';
 function Personal({ history }) {
   const { register, getValues } = useForm();
   const ViewName = 'Roles';
-  const viewId = '6249b9f29a85b64c0665d3c0';
+  const viewId = '626745e7c1665c49f2610591';
   const [roles, setRoles] = useState(null);
   const [dataToEdit, setDataToEdit] = useState(null);
   const [searchValue, setSearchValue] = useState('');

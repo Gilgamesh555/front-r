@@ -34,7 +34,7 @@ export default function UpdateActivo(props) {
     const ufvBeginDate = parseFloat(await getActualUfvDate(beginDate));
     const ufvEndDate = parseFloat(await getActualUfvDate(endDate));
 
-    const updatedValue = activo.costoInicial * (ufvBeginDate / ufvEndDate - 1);
+    const updatedValue = activo.costoInicial * ( ufvEndDate /  ufvBeginDate );
 
     await modifyActivo({
       ...activo,

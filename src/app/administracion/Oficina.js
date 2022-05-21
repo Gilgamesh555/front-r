@@ -17,7 +17,7 @@ export class Oficina extends Component {
       estado: '',
       data: null,
       searchOficina: '',
-      viewId: '6249b9ca9a85b64c0665d3b4',
+      viewId: '62674914c1665c49f26105c1',
       permissions: null,
       changeToEdit: false,
     }

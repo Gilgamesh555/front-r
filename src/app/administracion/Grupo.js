@@ -29,7 +29,7 @@ export class Grupo extends Component {
       searchGrupo: '',
       request: 'false',
       auxiliares: null,
-      viewId: '6249b9da9a85b64c0665d3b8',
+      viewId: '62674923c1665c49f26105c5',
       permissions: null,
       changeToEdit: false,
     }

@@ -60,7 +60,7 @@ export class Personal extends Component {
       updateValue: null,
       show: false,
       modalActivo: null,
-      viewId: '6249b9ed9a85b64c0665d3be',
+      viewId: '6267493bc1665c49f26105cb',
       permissions: null,
       changeToEdit: false,
     }
