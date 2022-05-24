@@ -9,6 +9,7 @@ import nodeapi from '../../apis/nodeapi'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import ActivoReport from '../reportes/ActivoReport'
 import ActivoReporte from '../reportes/ActivoReporte'
+import TransferActives from './activo/transferActives';
 
 export class Personal extends Component {
   constructor(props) {
@@ -35,10 +36,11 @@ export class Personal extends Component {
       searchUser: '',
       oficinas: null,
       request: 'false',
-      viewId: '6267491dc1665c49f26105c3',
+      viewId: '6249b9d39a85b64c0665d3b6',
       permissions: null,
       changeToEdit: false,
       roles: null,
+      isWillBeTransfer: false,
     }
     // Register User
     this.handleNombre = this.handleNombre.bind(this)
@@ -320,11 +322,11 @@ export class Personal extends Component {
       username: data.username,
       apPaterno: data.apPaterno,
       apMaterno: data.apMaterno,
-      ci: data.ci, 
-      email: data.email, 
+      ci: data.ci,
+      email: data.email,
       celular: data.celular,
       oficinaId: data.oficinaId,
-      changeToEdit: !this.state.changeToEdit, 
+      changeToEdit: !this.state.changeToEdit,
     }
       , () => {
         document.getElementById('inputRole').value = data.role
@@ -365,6 +367,12 @@ export class Personal extends Component {
     }
     response()
     event.preventDefault()
+  }
+
+  handleTransferActive(event) {
+    this.setState({ isWillBeTransfer: !this.state.isWillBeTransfer });
+    
+    event.preventDefault();
   }
 
   deleteUser(event, datax) {
@@ -519,8 +527,16 @@ export class Personal extends Component {
                                           <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>
                                         )
                                       }
-                                      {<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{marginRight: '3px'}}>Eliminar</a>}
-                                      <PDFDownloadLink document={<ActivoReport data={index} />} fileName={`reporte-usuario-${index.username}`} className="badge badge-success" style={{ marginRight: '3px' }}>
+                                      {<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}
+                                      <PDFDownloadLink
+                                        document={<ActivoReport
+                                          data={index}
+                                          token={window.localStorage.getItem('token')}
+                                        />}
+                                        fileName={`reporte-usuario-${index.username}`}
+                                        className="badge badge-success"
+                                        style={{ marginRight: '3px' }}
+                                      >
                                         {({ blob, url, loading, error }) =>
                                           loading ? 'Cargando...' : 'Entrega de Activos'
                                         }
@@ -569,6 +585,11 @@ export class Personal extends Component {
                                 </td>
                               )
                             }
+                            {
+                              <td>
+                                <a href="!#" onClick={evt => this.handleTransferActive(evt)} className="badge badge-warning" style={{ marginRight: '3px', color: 'whitesmoke' }}>Transferir Activos</a>
+                              </td>
+                            }
                           </tr>
                         </tbody>
                       </table>
@@ -577,6 +598,9 @@ export class Personal extends Component {
                 </div>
               </div>
             </div>
+            {
+              !this.state.isWillBeTransfer ? <TransferActives /> : null
+            }
             {
               (this.state.changeToEdit || this.state.permissions.isAddble) &&
               (

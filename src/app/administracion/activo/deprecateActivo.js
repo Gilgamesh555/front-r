@@ -19,7 +19,7 @@ export default function DeprecateActivo(props) {
       return parseInt(coe.data.coe);
     }
 
-    const deprecatedValue = activo.costoInicial * (await getCurrentCoe(activo) / 100);
+    const deprecatedValue = activo.costoInicial * (await getCurrentCoe(activo));
     const valueByMonth = (deprecatedValue / 12) * dataFromForm['deprecateMonths'];
 
 
