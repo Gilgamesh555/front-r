@@ -19,15 +19,13 @@ export default function DeprecateActivo(props) {
       return parseInt(coe.data.coe);
     }
 
-    const deprecatedValue = activo.costoInicial * (await getCurrentCoe(activo));
+    const deprecatedValue = activo.costoInicial * (await getCurrentCoe(activo) / 100);
     const valueByMonth = (deprecatedValue / 12) * dataFromForm['deprecateMonths'];
+    const finalValue = activo.costoInicial - valueByMonth;
 
-
-    // To change David - con esto cambiarias el valor del precio Inicial si esta bien lo cambias..
-    // Yo lo voy a dejar asi para funcione si quieres lo comentas para que no modifique la db
     await modifyActivo({
       ...activo,
-      costoInicial: valueByMonth.toString(),
+      costoInicial: finalValue.toString(),
     });
 
     window.location.reload();
