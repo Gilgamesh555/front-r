@@ -194,8 +194,12 @@ class ActivoReport extends Component {
                         }
                     </View>
                 
-                    <Text style={{textAlign: 'center'}}> {'\n'} {'\n'} {'\n'}_____________________________________</Text>
-                    <Text style={{textAlign: 'center'}}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>
+                    <View style={[styles.rowChildren, { flex: 2 }]}>
+                  <Text style={{ textAlign: 'center' }}> {'\n'} {'\n'} {'\n'}_____________________________________</Text>
+                  <Text style={{ textAlign: 'center' }}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>
+                  <Text style={{ textAlign: 'center' }}>{`${this.props.data.cargo} - Recibe`}</Text>
+                </View>  
+                    
                     <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
                         `${pageNumber} / ${totalPages}`
                     )} fixed />

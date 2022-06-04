@@ -336,7 +336,7 @@ export class Grupo extends Component {
               <div className="col-lg-12 grid-margin stretch-card">
                 <div className="card">
                   <div className="card-body">
-                    <h4 className="card-title">Lista de Grupos</h4>
+                    <h4 className="card-title">Lista de Auxiliares</h4>
                     {/* <p className="card-description"> Add className <code>.table-hover</code>
                           </p> */}
                     <div className="table-responsive">
@@ -345,9 +345,9 @@ export class Grupo extends Component {
                           <tr>
                             <th>Nombre</th>
                             <th>Codigo</th>
-                            <th>Vida</th>
+                            <th>Vida Útil</th>
                             <th>Cantidad</th>
-                            <th>Estado</th>
+                            {/*<th>Estado</th>*/}
                             <th>Acciones</th>
                             <th>Reportes</th>
                           </tr>
@@ -382,9 +382,9 @@ export class Grupo extends Component {
                                           null
                                       }
                                     </td>
-                                    <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                    {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
-                                    </td>
+                                    </td>*/}
                                     <td>
                                       {
                                         this.state.permissions !== undefined &&
@@ -392,7 +392,7 @@ export class Grupo extends Component {
                                         (
                                           <>
                                             <a href="!#" onClick={evt => this.modifyGrupo(evt, index)} className="badge badge-warning" style={{ marginRight: '3px' }} >Modificar</a>
-                                            <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>
+                                            {/*<a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>*/}
                                           </>
                                         )
                                       }

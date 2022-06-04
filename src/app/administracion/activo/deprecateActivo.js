@@ -55,7 +55,7 @@ export default function DeprecateActivo(props) {
               </div>
             </div>
             <div className="col-md-6">
-              <button type="submit" className="btn btn-primary mr-2">Obtener Actualizacion</button>
+              <button type="submit" className="btn btn-primary mr-2">Obtener Depreciacion</button>
               <button className="btn btn-light" type='reset'>Borrar Datos</button>
             </div>
           </form>

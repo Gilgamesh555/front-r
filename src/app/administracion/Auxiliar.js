@@ -328,7 +328,7 @@ export class Auxiliar extends Component {
                             <th>Codigo</th>
                             <th>Grupo</th>
                             {/* <th>Descripcion</th> */}
-                            <th>Estado</th>
+                            {/*<th>Estado</th>*/}
                             <th>Acciones</th>
                           </tr>
                         </thead>
@@ -358,17 +358,17 @@ export class Auxiliar extends Component {
                                       }
                                     </td>
                                     {/* <td style={{whiteSpace: 'normal',maxWidth: '300px'}}>{index.descripcion}</td> */}
-                                    <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                    {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
-                                    </td>
+                                    </td>*/}
                                     <td>
                                       {
                                         this.state.permissions !== undefined &&
                                         this.state.permissions.isEditable &&
                                         (
                                           <>
-                                            <a href="!#" onClick={evt => this.modifyAuxiliar(evt, index)} className="badge badge-warning" style={{ marginRight: '3px' }} >Modificar</a>
-                                            <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>
+                                            <a href="!#" onClick={evt => this.modifyAuxiliar(evt, index)} className="badge badge-warning" for="inputNombre"style={{ marginRight: '3px' }} >Modificar</a>
+                                            {/*<a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>*/}
                                           </>
                                         )
                                       }

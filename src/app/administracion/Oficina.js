@@ -262,7 +262,7 @@ export class Oficina extends Component {
                           <tr>
                             <th>Nombre</th>
                             <th>Codigo</th>
-                            <th>Estado</th>
+                            {/*<th>Estado</th>*/}
                             <th>Acciones</th>
                           </tr>
                         </thead>
@@ -284,9 +284,9 @@ export class Oficina extends Component {
                                   <tr key={key}>
                                     <td>{index.nombre}</td>
                                     <td>{index.codigo}</td>
-                                    <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                    {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
-                                    </td>
+                                    </td>*/}
                                     <td>
                                       {
                                         this.state.permissions !== undefined &&
@@ -294,7 +294,7 @@ export class Oficina extends Component {
                                         (
                                           <>
                                             <a href="!#" onClick={evt => this.modifyOficina(evt, index)} className="badge badge-warning" style={{ marginRight: '3px' }} >Modificar</a>
-                                            <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>
+                                            {/*<a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>*/}
                                           </>
                                         )
                                       }
