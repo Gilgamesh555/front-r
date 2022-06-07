@@ -36,10 +36,11 @@ export class Personal extends Component {
       searchUser: '',
       oficinas: null,
       request: 'false',
-      viewId: '6267491dc1665c49f26105c3',
+      viewId: '6249b9d39a85b64c0665d3b6',
       permissions: null,
       changeToEdit: false,
       roles: null,
+      cargos: null,
       isWillBeTransfer: false,
     }
     // Register User
@@ -97,6 +98,7 @@ export class Personal extends Component {
   }
 
   handleCargo(event) {
+    console.log(event.target.value)
     this.setState({ cargo: event.target.value })
   }
 
@@ -121,6 +123,8 @@ export class Personal extends Component {
   }
 
   handleRegisterSubmit(event) {
+    event.preventDefault();
+
     var text = document.getElementById('card-title-user').textContent
     if (text === 'Modificar Usuario') {
       const data = {
@@ -200,7 +204,6 @@ export class Personal extends Component {
         this.setState({ error: 'Las contraseñas no coinciden' })
       }
     }
-    event.preventDefault()
   }
 
   handleReset(event) {
@@ -300,6 +303,7 @@ export class Personal extends Component {
     this.checkToken()
     this.getData()
     this.getOficinas()
+    this.getCargos();
   }
 
   getData() {
@@ -313,6 +317,8 @@ export class Personal extends Component {
 
   //crud
   modifyUser(event, data) {
+    event.preventDefault()
+
     this.setState({
       id: data._id,
       estado: data.estado,
@@ -330,13 +336,13 @@ export class Personal extends Component {
     }
       , () => {
         document.getElementById('inputRole').value = data.role
-        document.getElementById('inputCargo').value = data.cargo
+        // document.getElementById('inputCargo').value = data.cargo
         document.getElementById('inputNombre').value = data.nombre
         document.getElementById('inputUsername').value = data.username
         document.getElementById('inputApPaterno').value = data.apPaterno
         document.getElementById('inputApMaterno').value = data.apMaterno
         document.getElementById('inputCi').value = data.ci
-        document.getElementById('inputCargo').value = data.cargo
+        // document.getElementById('inputCargo').value = data.cargo
         document.getElementById('inputEmail').value = data.email
         document.getElementById('inputCelular').value = data.celular
         document.getElementById('inputOficinaId').value = data.oficinaId
@@ -347,9 +353,7 @@ export class Personal extends Component {
 
         document.getElementById('card-title-user').innerHTML = 'Modificar Usuario'
         document.getElementById('card-title-user').style = 'color: red'
-
       })
-    event.preventDefault()
   }
 
   changeEstado(event, datax) {
@@ -420,6 +424,16 @@ export class Personal extends Component {
         .catch(err => console.log(err))
     }
     response()
+  }
+
+  getCargos() {
+    const response = async () => {
+      await axios.get(`${nodeapi}cargos`)
+        .then(res => this.setState({ cargos: res.data }))
+        .catch(err => console.log(err));
+    }
+
+    response();
   }
 
   render() {
@@ -506,7 +520,11 @@ export class Personal extends Component {
                                         this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
                                         null
                                     }</td>
-                                    <td>{index.cargo}</td>
+                                    <td>{
+                                      this.state.cargos !== null && this.state.cargos.find(item => item._id === index.cargo) !== undefined ?
+                                        this.state.cargos.find(item => item._id === index.cargo).name :
+                                        null
+                                    }</td>
                                     {/*<td>{index.email}</td>*/}
                                     <td>{index.celular}</td>
                                     <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
@@ -686,10 +704,27 @@ export class Personal extends Component {
                               <Form.Group className="row">
                                 <label className="col-sm-3 col-form-label">Cargo</label>
                                 <div className="col-sm-9">
-                                  <Form.Control type="text" placeholder="Cargo" id="inputCargo" required onChange={this.handleCargo} />
+                                  <select className="form-control" required id="inputOficinaId" onChange={this.handleCargo}>
+                                    <option hidden value=''>Escoga una Opcion</option>
+                                    {
+                                      this.state.cargos !== null ?
+                                        this.state.cargos.map((index, key) => (
+                                          <option value={index._id} key={key}>{index.name}</option>
+                                        ))
+                                        : <option>Cargando...</option>
+                                    }
+                                  </select>
                                 </div>
                               </Form.Group>
                             </div>
+                            {/* <div className="col-md-6">
+                              <Form.Group className="row">
+                                <label className="col-sm-3 col-form-label">Cargo</label>
+                                <div className="col-sm-9">
+                                  <Form.Control type="text" placeholder="Cargo" id="inputCargo" required onChange={this.handleCargo} />
+                                </div>
+                              </Form.Group>
+                            </div> */}
                           </div>
                           <div className="row">
                             {/* <div className="col-md-6">

@@ -56,11 +56,13 @@ export class Personal extends Component {
       activoDeprecate: '',
       deprecateValue: null,
       isUpdate: false,
+      isReevaluate: false,
+      actualItemReevaluate: null,
       activoUpdate: '',
       updateValue: null,
       show: false,
       modalActivo: null,
-      viewId: '6267493bc1665c49f26105cb',
+      viewId: '6249b9ed9a85b64c0665d3be',
       permissions: null,
       changeToEdit: false,
     }
@@ -619,6 +621,12 @@ export class Personal extends Component {
 
   }
 
+  reevaluateActivo(evt, item) {
+    evt.preventDefault();
+    this.setState({ isReevaluate: !this.state.isReevaluate })
+    this.setState({ actualItemReevaluate: item })
+  }
+
   deprecateActivo(evt, data) {
     if (this.state.isDeprecate === true) {
       this.setState({ isDeprecate: false })
@@ -822,8 +830,7 @@ export class Personal extends Component {
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                     </td>
                                     <td>
-                                      <a href="!#" onClick={evt => this.deprecateActivo(evt, index)} className="badge badge-dark" style={{ marginRight: '3px' }}>Depreciar</a>
-                                      <a href="!#" onClick={evt => this.updateAcivo(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Actualizar</a>
+                                      <a href="!#" onClick={evt => this.reevaluateActivo(evt, index)} className="badge badge-dark" style={{ marginRight: '3px' }}>Reevaluar</a>
                                     </td>
                                     <td>
                                       <a href="!#" onClick={evt => this.setModalInfo(evt, index)} className="badge badge-success" style={{ marginRight: '3px', color: 'white' }}>+ Info</a>
@@ -1012,13 +1019,24 @@ export class Personal extends Component {
               </Modal.Footer>
             </Modal>
             {
-              this.state.isUpdate === true ?
-                <UpdateActivo activo={this.state.activoUpdate} /> : null
-            }
-            {
-              this.state.isDeprecate === true ?
-                <DeprecateActivo activo={this.state.activoDeprecate} /> :
-                null
+              this.state.isReevaluate ?
+                <div className="col-lg-12 grid-margin stretch-card">
+                  <div className="card">
+                    <div className="card-body">
+                      <a href="!#" onClick={evt => this.deprecateActivo(evt, this.state.actualItemReevaluate)} className="badge badge-dark" style={{ marginRight: '3px' }}>Depreciar</a>
+                      <a href="!#" onClick={evt => this.updateAcivo(evt, this.state.actualItemReevaluate)} className="badge badge-info" style={{ marginRight: '3px' }} >Actualizar</a>
+                      {
+                        this.state.isDeprecate === true ?
+                          <DeprecateActivo activo={this.state.activoDeprecate} /> :
+                          null
+                      }
+                      {
+                        this.state.isUpdate === true ?
+                          <UpdateActivo activo={this.state.activoUpdate} /> : null
+                      }
+                    </div>
+                  </div>
+                </div> : null
             }
             {
               this.state.qrCode !== '' ?

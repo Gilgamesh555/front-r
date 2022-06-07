@@ -27,6 +27,7 @@ const Auxiliar = lazy(() => import('./administracion/Auxiliar'))
 const Activo = lazy(() => import('./administracion/Activo'))
 const Ufv = lazy(() => import('./administracion/Ufv'))
 const Rol = lazy(() => import('./administracion/roles/Rol'))
+const Cargo = lazy(() => import('./administracion/cargos/Cargo'))
 
 const vistaOficina = lazy(() => import('./vistas/Oficina'))
 const vistaPersonal = lazy(() => import('./vistas/Personal'))
@@ -72,6 +73,7 @@ class AppRoutes extends Component {
           <Route path="/administracion/activos" component={ Activo } />
           <Route path="/administracion/ufv" component={ Ufv } />
           <Route path="/administracion/roles" component={ Rol } />
+          <Route path="/administracion/cargos" component={ Cargo } />
 
           {/* VISTAS */}
           <Route path="/vistas/oficinas" component={ vistaOficina } />
