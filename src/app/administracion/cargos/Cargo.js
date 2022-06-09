@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 export default function CargoView({ history }) {
   const { register, getValues } = useForm();
   const ViewName = 'Cargos';
-  const viewId = '629eb53bade241fb9f4440eb';
+  const viewId = '629f6820ef207fa5b7042502';
   const [cargos, setCargos] = useState(null);
   const [dataToEdit, setDataToEdit] = useState(null);
   const [searchValue, setSearchValue] = useState('');

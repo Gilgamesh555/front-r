@@ -317,7 +317,7 @@ export class Auxiliar extends Component {
               <div className="col-lg-12 grid-margin stretch-card">
                 <div className="card">
                   <div className="card-body">
-                    <h4 className="card-title">Lista de Grupos</h4>
+                    <h4 className="card-title">Lista de Auxiliares</h4>
                     {/* <p className="card-description"> Add className <code>.table-hover</code>
                           </p> */}
                     <div className="table-responsive">

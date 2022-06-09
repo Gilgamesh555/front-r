@@ -62,7 +62,7 @@ export class Personal extends Component {
       updateValue: null,
       show: false,
       modalActivo: null,
-      viewId: '6249b9ed9a85b64c0665d3be',
+      viewId: '6267493bc1665c49f26105cb',
       permissions: null,
       changeToEdit: false,
     }
@@ -548,7 +548,7 @@ export class Personal extends Component {
     document.getElementById('inputCoe').value = ''
     document.getElementById('imgContainer').src = 'https://www.kenyons.com/wp-content/uploads/2017/04/default-image.jpg'
 
-    document.getElementById('card-title-activo').innerHTML = 'Registrar Usuario'
+    document.getElementById('card-title-activo').innerHTML = 'Registro y asignacion de Activo'
     document.getElementById('card-title-activo').style = 'color: black'
     event.preventDefault()
   }
@@ -1063,7 +1063,7 @@ export class Personal extends Component {
                   <div className="col-md-12 grid-margin stretch-card">
                     <div className="card">
                       <div className="card-body">
-                        <h4 className="card-title" id="card-title-activo">Registrar Activo</h4>
+                        <h4 className="card-title" id="card-title-activo">Registro y Asignacion de Activo</h4>
                         <form className="form-sample">
                           <p className="card-description"> Asignacion de Activo </p>
                           <div className="row">
@@ -1265,7 +1265,7 @@ export class Personal extends Component {
                               <Form.Group className="row">
                                 <label className="col-sm-3 col-form-label">Descripcion</label>
                                 <div className="col-sm-9">
-                                  <textarea className="form-control" id="inputDescripcion" onChange={this.handleDescripcion} rows="5" placeholder="Descripcion Detallada del Activo" required></textarea>
+                                  <textarea className="form-control" id="inputDescripcion" onChange={this.handleDescripcion} rows="5" placeholder="Descripcion Detallada del Activo Fijo&#10;Nombre, Codigo, Color, Etc." required></textarea>
                                 </div>
                               </Form.Group>
                             </div>

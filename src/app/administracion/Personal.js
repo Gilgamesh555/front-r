@@ -36,7 +36,7 @@ export class Personal extends Component {
       searchUser: '',
       oficinas: null,
       request: 'false',
-      viewId: '6249b9d39a85b64c0665d3b6',
+      viewId: '6267491dc1665c49f26105c3',
       permissions: null,
       changeToEdit: false,
       roles: null,
@@ -545,7 +545,7 @@ export class Personal extends Component {
                                           <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>
                                         )
                                       }
-                                      {/*{<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}*/}
+                                      {<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}
                                       <PDFDownloadLink
                                         document={<ActivoReport
                                           data={index}
@@ -561,7 +561,7 @@ export class Personal extends Component {
                                       </PDFDownloadLink>
                                       {<PDFDownloadLink document={<ActivoReporte data={index} />} fileName={`reporte-usuario-${index.username}`} className="badge badge-info" style={{ marginRight: '3px' }}>
                                         {({ blob, url, loading, error }) =>
-                                          loading ? 'Cargando...' : 'Reporte de Estado'
+                                          loading ? 'Cargando...' : 'Verificar estado de Activos'
                                         }
                                       </PDFDownloadLink>}
                                     </td>

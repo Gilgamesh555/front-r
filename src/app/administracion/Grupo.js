@@ -280,7 +280,7 @@ export class Grupo extends Component {
     document.getElementById('inputCoe').value = ''
     // document.getElementById('inputCodigo').value = ''
 
-    document.getElementById('card-title-grupo').innerHTML = 'Registrar Usuario'
+    document.getElementById('card-title-grupo').innerHTML = 'Registrar Grupo'
     document.getElementById('card-title-grupo').style = 'color: black'
     event.preventDefault()
   }
@@ -336,7 +336,7 @@ export class Grupo extends Component {
               <div className="col-lg-12 grid-margin stretch-card">
                 <div className="card">
                   <div className="card-body">
-                    <h4 className="card-title">Lista de Auxiliares</h4>
+                    <h4 className="card-title">Lista de Grupos</h4>
                     {/* <p className="card-description"> Add className <code>.table-hover</code>
                           </p> */}
                     <div className="table-responsive">
@@ -417,13 +417,13 @@ export class Grupo extends Component {
                                           } */}
                                       </PDFDownloadLink>
                                       <PDFDownloadLink document={<ActualizacionReport data={index} />} fileName={`reporte-activo-actualizacion`} className="badge badge-warning" style={{ marginRight: '3px' }}>
-                                        Reporte Actualizacion
+                                        {/*Reporte Actualizacion*/}
                                         {/* {({ blob, url, loading, error }) =>
                                             loading ? 'Cargando...' : 'Reporte Actualizacion'
                                           } */}
                                       </PDFDownloadLink>
                                       <PDFDownloadLink document={<DepreciacionReport data={index} />} fileName={`reporte-activo-depreciacion`} className="badge badge-danger" style={{ marginRight: '3px' }}>
-                                        Reporte Depreciacion
+                                        {/*Reporte Depreciacion*/}
                                         {/* {({ blob, url, loading, error }) =>
                                             loading ? 'Cargando...' : 'Reporte Depreciacion'
                                           } */}
