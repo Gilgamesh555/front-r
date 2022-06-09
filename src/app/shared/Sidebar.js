@@ -109,7 +109,7 @@ class Sidebar extends Component {
             await this.getRole(roleId);
             const viewsPermissions = [
               {
-                name: 'oficinas',
+                name: 'departamentos',
                 viewId: '62674914c1665c49f26105c1',
                 isVisible: await this.getPermissions(roleId, '62674914c1665c49f26105c1'),
               },

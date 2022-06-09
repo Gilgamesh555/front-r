@@ -66,7 +66,7 @@ class AppRoutes extends Component {
           <Route path="/error-pages/error-500" component={ Error500 } />
 
           {/* ADMINISTRACION */}
-          <Route path="/administracion/oficinas" component={ Oficina } />
+          <Route path="/administracion/departamentos" component={ Oficina } />
           <Route path="/administracion/personal" component={ Personal } />
           <Route path="/administracion/grupos" component={ Grupo } />
           <Route path="/administracion/auxiliares" component={ Auxiliar } />
