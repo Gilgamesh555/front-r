@@ -1,4 +1,4 @@
-export const View = {
+export const Views = {
     departamentos: '62674914c1665c49f26105c1',
     personal: '6267491dc1665c49f26105c3',
     grupos: '62674923c1665c49f26105c5',
