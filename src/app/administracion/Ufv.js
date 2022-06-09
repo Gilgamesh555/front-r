@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
-// import DatePicker from "react-datepicker";
+import { Views } from '../../views/Views';
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
@@ -19,7 +19,7 @@ export class Ufv extends Component {
       data: null,
       searchUfv: '',
       request: 'false',
-      viewId: '62674934c1665c49f26105c9',
+      viewId: Views.ufv,
       permissions: null,
       changeToEdit: false,
     }

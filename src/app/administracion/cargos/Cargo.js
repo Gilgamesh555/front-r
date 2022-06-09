@@ -6,11 +6,12 @@ import nodeapi from '../../../apis/nodeapi'
 import ItemCargo from './Item';
 import FormCargo from './Form';
 import { useForm } from 'react-hook-form';
+import { Views } from '../../../views/Views';
 
 export default function CargoView({ history }) {
   const { register, getValues } = useForm();
   const ViewName = 'Cargos';
-  const viewId = '629f6820ef207fa5b7042502';
+  const viewId = Views.cargos;
   const [cargos, setCargos] = useState(null);
   const [dataToEdit, setDataToEdit] = useState(null);
   const [searchValue, setSearchValue] = useState('');

@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
+import { Views } from '../../views/Views';
 
 export class Oficina extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ export class Oficina extends Component {
       estado: '',
       data: null,
       searchOficina: '',
-      viewId: '62674914c1665c49f26105c1',
+      viewId: Views.departamentos,
       permissions: null,
       changeToEdit: false,
     }

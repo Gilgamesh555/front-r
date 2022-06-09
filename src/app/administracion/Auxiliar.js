@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
+import { Views } from '../../views/Views';
 
 export class Auxiliar extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ export class Auxiliar extends Component {
       grupos: null,
       searchAuxiliar: '',
       request: 'false',
-      viewId: '6267492ac1665c49f26105c7',
+      viewId: Views.auxiliares,
       permissions: null,
       changeToEdit: false,
     }

@@ -15,6 +15,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer'
 import QrReport from '../reportes/QrReport'
 import EstadoActivoReport from '../reportes/EstadoActivoReport'
 import EstadoInactivosReport from '../reportes/EstadoInactivosReport'
+import { Views } from '../../views/Views';
 
 export class Personal extends Component {
   constructor(props) {
@@ -62,7 +63,7 @@ export class Personal extends Component {
       updateValue: null,
       show: false,
       modalActivo: null,
-      viewId: '6267493bc1665c49f26105cb',
+      viewId: Views.activos,
       permissions: null,
       changeToEdit: false,
     }

@@ -12,6 +12,7 @@ import GrupoReport from '../reportes/GrupoReport'
 
 import DepreciacionReport from '../reportes/DepreciacionReport'
 import ActualizacionReport from '../reportes/ActualizacionReport'
+import { Views } from '../../views/Views';
 
 export class Grupo extends Component {
   constructor(props) {
@@ -29,7 +30,7 @@ export class Grupo extends Component {
       searchGrupo: '',
       request: 'false',
       auxiliares: null,
-      viewId: '62674923c1665c49f26105c5',
+      viewId: Views.grupos,
       permissions: null,
       changeToEdit: false,
     }

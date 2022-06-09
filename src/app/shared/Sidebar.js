@@ -10,6 +10,7 @@ import nodeapi from '../../apis/nodeapi'
 import image1 from '../../assets/images/faces/face-default.jpg'
 import logo from '../reportes/resized.png'
 import minilogo from '../reportes/minilogo.png'
+import { Views } from '../../views/Views'
 
 class Sidebar extends Component {
 
@@ -110,43 +111,43 @@ class Sidebar extends Component {
             const viewsPermissions = [
               {
                 name: 'departamentos',
-                viewId: '62674914c1665c49f26105c1',
-                isVisible: await this.getPermissions(roleId, '62674914c1665c49f26105c1'),
+                viewId: Views.departamentos,
+                isVisible: await this.getPermissions(roleId, Views.departamentos),
               },
               {
                 name: 'personal',
-                viewId: '6267491dc1665c49f26105c3',
-                isVisible: await this.getPermissions(roleId, '6267491dc1665c49f26105c3'),
+                viewId: Views.personal,
+                isVisible: await this.getPermissions(roleId, Views.personal),
               },
               {
                 name: 'grupos',
-                viewId: '62674923c1665c49f26105c5',
-                isVisible: await this.getPermissions(roleId, '62674923c1665c49f26105c5'),
+                viewId: Views.grupos,
+                isVisible: await this.getPermissions(roleId, Views.grupos),
               },
               {
                 name: 'auxiliares',
-                viewId: '6267492ac1665c49f26105c7',
-                isVisible: await this.getPermissions(roleId, '6267492ac1665c49f26105c7'),
+                viewId: Views.auxiliares,
+                isVisible: await this.getPermissions(roleId, Views.auxiliares),
               },
               {
                 name: 'ufv',
-                viewId: '62674934c1665c49f26105c9',
-                isVisible: await this.getPermissions(roleId, '62674934c1665c49f26105c9'),
+                viewId: Views.ufv,
+                isVisible: await this.getPermissions(roleId, Views.ufv),
               },
               {
                 name: 'activos',
-                viewId: '6267493bc1665c49f26105cb',
-                isVisible: await this.getPermissions(roleId, '6267493bc1665c49f26105cb'),
+                viewId: Views.activos,
+                isVisible: await this.getPermissions(roleId, Views.activos),
               },
               {
                 name: 'roles',
-                viewId: '626745e7c1665c49f2610591',
-                isVisible: await this.getPermissions(roleId, '626745e7c1665c49f2610591'),
+                viewId: Views.roles,
+                isVisible: await this.getPermissions(roleId, Views.roles),
               },
               {
                 name: 'cargos',
-                viewId: '629f6820ef207fa5b7042502',
-                isVisible: await this.getPermissions(roleId, '629f6820ef207fa5b7042502'), 
+                viewId: Views.cargos,
+                isVisible: await this.getPermissions(roleId, Views.cargos), 
               }
             ]
             this.setState({ views: viewsPermissions })

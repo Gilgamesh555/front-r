@@ -10,6 +10,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer'
 import ActivoReport from '../reportes/ActivoReport'
 import ActivoReporte from '../reportes/ActivoReporte'
 import TransferActives from './activo/transferActives';
+import { Views } from '../../views/Views';
 
 export class Personal extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ export class Personal extends Component {
       searchUser: '',
       oficinas: null,
       request: 'false',
-      viewId: '6267491dc1665c49f26105c3',
+      viewId: Views.personal,
       permissions: null,
       changeToEdit: false,
       roles: null,

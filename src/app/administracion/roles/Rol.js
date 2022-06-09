@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
 
 import axios from 'axios'
 import nodeapi from '../../../apis/nodeapi'
 
-import { PDFDownloadLink } from '@react-pdf/renderer'
-import ActivoReport from '../../reportes/ActivoReport'
-import ActivoReporte from '../../reportes/ActivoReporte'
 import ItemRole from './Item';
 import FormRole from './Form';
 import { useForm } from 'react-hook-form';
 import './style.css';
+import { Views } from '../../../views/Views';
 
 function Personal({ history }) {
   const { register, getValues } = useForm();
   const ViewName = 'Roles';
-  const viewId = '626745e7c1665c49f2610591';
+  const viewId = Views.roles;
   const [roles, setRoles] = useState(null);
   const [dataToEdit, setDataToEdit] = useState(null);
   const [searchValue, setSearchValue] = useState('');
