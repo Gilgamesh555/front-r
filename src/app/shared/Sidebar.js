@@ -109,6 +109,16 @@ class Sidebar extends Component {
             await this.getRole(roleId);
             const viewsPermissions = [
               {
+                name: 'roles',
+                viewId: '626745e7c1665c49f2610591',
+                isVisible: await this.getPermissions(roleId, '626745e7c1665c49f2610591'),
+              },
+              {
+                name: 'cargos',
+                viewId: '629f6820ef207fa5b7042502',
+                isVisible: await this.getPermissions(roleId, '629f6820ef207fa5b7042502'), 
+              },
+              {
                 name: 'departamentos',
                 viewId: '62674914c1665c49f26105c1',
                 isVisible: await this.getPermissions(roleId, '62674914c1665c49f26105c1'),
@@ -137,17 +147,8 @@ class Sidebar extends Component {
                 name: 'activos',
                 viewId: '6267493bc1665c49f26105cb',
                 isVisible: await this.getPermissions(roleId, '6267493bc1665c49f26105cb'),
-              },
-              {
-                name: 'roles',
-                viewId: '626745e7c1665c49f2610591',
-                isVisible: await this.getPermissions(roleId, '626745e7c1665c49f2610591'),
-              },
-              {
-                name: 'cargos',
-                viewId: '629f6820ef207fa5b7042502',
-                isVisible: await this.getPermissions(roleId, '629f6820ef207fa5b7042502'), 
               }
+              
             ]
             this.setState({ views: viewsPermissions })
           } else {
@@ -398,7 +399,7 @@ class Sidebar extends Component {
               </ul>
             </Collapse>
           </li>
-          <li className={this.isPathActive('/vistas') ? 'nav-item active' : 'nav-item'} id="liVistas">
+          {/*<li className={this.isPathActive('/vistas') ? 'nav-item active' : 'nav-item'} id="liVistas">
             <div className={this.state.vistasMenuOpen ? 'nav-link menu-expanded' : 'nav-link'} onClick={() => this.toggleMenuState('vistasMenuOpen')} data-toggle="collapse">
               <i className="mdi mdi-information-outline menu-icon"></i>
               <span className="menu-title"><Trans>Vistas</Trans></span>
@@ -414,7 +415,7 @@ class Sidebar extends Component {
                 <li className="nav-item"> <Link className={this.isPathActive('/vistas/activos') ? 'nav-link active' : 'nav-link'} to="/vistas/activos">Activos</Link></li>
               </ul>
             </Collapse>
-          </li>
+          </li>*/}
         </ul>
       </nav>
     );

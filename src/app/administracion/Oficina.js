@@ -234,11 +234,11 @@ export class Oficina extends Component {
         return (
           <div>
             <div className="page-header">
-              <h3 className="page-title"> Oficinas </h3>
+              <h3 className="page-title"> Departamentos </h3>
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
-                  <li className="breadcrumb-item active" aria-current="page">Oficinas</li>
+                  <li className="breadcrumb-item active" aria-current="page">Departamentos</li>
                 </ol>
               </nav>
             </div>
@@ -357,12 +357,12 @@ export class Oficina extends Component {
                   <div className="col-md-6 grid-margin stretch-card">
                     <div className="card">
                       <div className="card-body">
-                        <h4 className="card-title" id="card-title-oficina">Registrar Oficina</h4>
+                        <h4 className="card-title" id="card-title-oficina">Registrar Departamentos</h4>
                         <p className="card-description">Todos los campos son requeridos</p>
                         <form className="forms-sample">
                           <Form.Group>
-                            <label htmlFor="exampleInputUsername1">Nombre de Oficina</label>
-                            <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Oficina" size="lg" required />
+                            <label htmlFor="exampleInputUsername1">Nombre de Departamento</label>
+                            <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Departamento" size="lg" required />
                           </Form.Group>
                           {/* <Form.Group>
                               <label htmlFor="exampleInputEmail1">Codigo</label>

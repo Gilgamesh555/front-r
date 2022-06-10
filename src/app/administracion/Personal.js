@@ -486,7 +486,7 @@ export class Personal extends Component {
                             <th>Ap. Materno</th>
                             {/* <th>Usuario</th> */}
                             <th>CI</th>
-                            <th>Oficina</th>
+                            <th>Departamento</th>
                             <th>Cargo</th>
                             {/*<th>Email</th>*/}
                             <th>Nro Celular</th>
@@ -685,7 +685,7 @@ export class Personal extends Component {
                           <div className="row">
                             <div className="col-md-6">
                               <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Oficina</label>
+                                <label className="col-sm-3 col-form-label">Departamento</label>
                                 <div className="col-sm-9">
                                   <select className="form-control" required id="inputOficinaId" onChange={this.handleOficinaId}>
                                     <option hidden value=''>Escoga una Opcion</option>
