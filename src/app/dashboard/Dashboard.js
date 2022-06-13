@@ -33,6 +33,7 @@ class InfoInicio extends Component {
   }
 
   render() {
+    alert('\n                                    Bienvenido al Sistema \n                                    Debe registre el Ufv de Hoy\n                                    Gracias')
     return(
       <div className="info-body">
         <div className="info-title">

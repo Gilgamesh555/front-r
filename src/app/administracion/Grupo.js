@@ -417,13 +417,13 @@ export class Grupo extends Component {
                                           } */}
                                       </PDFDownloadLink>
                                       <PDFDownloadLink document={<ActualizacionReport data={index} />} fileName={`reporte-activo-actualizacion`} className="badge badge-warning" style={{ marginRight: '3px' }}>
-                                        {/*Reporte Actualizacion*/}
+                                        Reporte Actualizacion
                                         {/* {({ blob, url, loading, error }) =>
                                             loading ? 'Cargando...' : 'Reporte Actualizacion'
                                           } */}
                                       </PDFDownloadLink>
                                       <PDFDownloadLink document={<DepreciacionReport data={index} />} fileName={`reporte-activo-depreciacion`} className="badge badge-danger" style={{ marginRight: '3px' }}>
-                                        {/*Reporte Depreciacion*/}
+                                        Reporte Depreciacion
                                         {/* {({ blob, url, loading, error }) =>
                                             loading ? 'Cargando...' : 'Reporte Depreciacion'
                                           } */}
