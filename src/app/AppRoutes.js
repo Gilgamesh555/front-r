@@ -38,6 +38,7 @@ const vistaUfv = lazy(() => import('./vistas/Ufv'))
 
 const Login = lazy(() => import('./user-pages/Login')); 
 const Register1 = lazy(() => import('./user-pages/Register'));
+const ActivoDetail = lazy(() => import('./user-pages/ActivoDetail'));
 
 
 class AppRoutes extends Component {
@@ -60,6 +61,7 @@ class AppRoutes extends Component {
 
 
           <Route path="/login" component={ Login } />
+          <Route path="/detailActivo" component={ ActivoDetail } />
           <Route path="/user-pages/register-1" component={ Register1 } />
 
           <Route path="/error-pages/error-404" component={ Error404 } />

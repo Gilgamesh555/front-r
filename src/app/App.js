@@ -8,12 +8,14 @@ import Sidebar from './shared/Sidebar';
 import SettingsPanel from './shared/SettingsPanel';
 import Footer from './shared/Footer';
 import { withTranslation } from "react-i18next";
+// import SampleReport from './reportes/SampleReport';
+// import { PDFDownloadLink } from '@react-pdf/renderer';
 
 import axios from 'axios'
 import nodeapi from '../apis/nodeapi'
 
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       isAuth: '',
@@ -22,10 +24,10 @@ class App extends Component {
 
   checkToken() {
     const token = window.localStorage.getItem('token')
-    if(token) {
+    if (token) {
       this.verifytoken()
     } else {
-      this.setState({isAuth: 'failed'})
+      this.setState({ isAuth: 'failed' })
     }
   }
 
@@ -33,17 +35,17 @@ class App extends Component {
     const data = {
       token: window.localStorage.getItem('token')
     }
-    if(data.token){
-      await axios.post(nodeapi+'users/verify', data)
-      .then(res => {
-        if(res.data.status === 'ok'){
-          this.setState({isAuth: 'correct'})
-        }else{
-          window.localStorage.removeItem('token')
-          this.setState({isAuth: 'failed'})
-        }
-      })
-      .catch(err => err)
+    if (data.token) {
+      await axios.post(nodeapi + 'users/verify', data)
+        .then(res => {
+          if (res.data.status === 'ok') {
+            this.setState({ isAuth: 'correct' })
+          } else {
+            window.localStorage.removeItem('token')
+            this.setState({ isAuth: 'failed' })
+          }
+        })
+        .catch(err => err)
     }
   }
 
@@ -55,48 +57,51 @@ class App extends Component {
   }
 
 
-  render () {
-    let navbarComponent = !this.state.isFullPageLayout ? <Navbar/> : '';
-    let sidebarComponent = !this.state.isFullPageLayout ? <Sidebar/> : '';
-    let SettingsPanelComponent = !this.state.isFullPageLayout ? <SettingsPanel/> : '';
-    let footerComponent = !this.state.isFullPageLayout ? <Footer/> : '';
-    if(this.state.isAuth === ''){
+  render() {
+    let navbarComponent = !this.state.isFullPageLayout ? <Navbar /> : '';
+    let sidebarComponent = !this.state.isFullPageLayout ? <Sidebar /> : '';
+    let SettingsPanelComponent = !this.state.isFullPageLayout ? <SettingsPanel /> : '';
+    let footerComponent = !this.state.isFullPageLayout ? <Footer /> : '';
+    if (this.state.isAuth === '') {
       return (
-        <div className="page-body-wrapper">  
-        </div>      
+        <div className="page-body-wrapper">
+        </div>
       )
-    }else{
-      if(this.state.isAuth === 'correct'){
-        return(
-        <div className="container-scroller">
-          { navbarComponent }
-          <div className={`container-fluid page-body-wrapper ${this.state.isFullPageLayout === true ? 'full-page-wrapper' : ''}`}>
-            { sidebarComponent }
-            <div className="main-panel">
-              <div className="content-wrapper">
-                <AppRoutes/>
-                { SettingsPanelComponent }
+    } else {
+      if (this.state.isAuth === 'correct') {
+        return (
+          <div className="container-scroller">
+            {navbarComponent}
+            <div className={`container-fluid page-body-wrapper ${this.state.isFullPageLayout === true ? 'full-page-wrapper' : ''}`}>
+              {sidebarComponent}
+              <div className="main-panel">
+                <div className="content-wrapper">
+                  {/* <PDFDownloadLink document={<SampleReport />} fileName={`reporte-activo-actualizacion`} className="badge badge-danger" style={{ marginRight: '3px' }}>
+                    Reporte Estado Inactivos
+                  </PDFDownloadLink> */}
+                  <AppRoutes/>
+                  {SettingsPanelComponent}
+                </div>
+                {footerComponent}
               </div>
-              { footerComponent }
             </div>
           </div>
-        </div>
         )
       } else {
-        return(
-        <div className="container-scroller">
-          {/* { navbarComponent } */}
-          <div className={`container-fluid page-body-wrapper ${this.state.isFullPageLayout === true ? 'full-page-wrapper' : ''}`}>
-            {/* { sidebarComponent } */}
-            <div className="main-panel">
-              <div className="content-wrapper">
-                <AppRoutes/>
-                {/* { SettingsPanelComponent } */}
+        return (
+          <div className="container-scroller">
+            {/* { navbarComponent } */}
+            <div className={`container-fluid page-body-wrapper ${this.state.isFullPageLayout === true ? 'full-page-wrapper' : ''}`}>
+              {/* { sidebarComponent } */}
+              <div className="main-panel">
+                <div className="content-wrapper">
+                  <AppRoutes />
+                  {/* { SettingsPanelComponent } */}
+                </div>
+                {/* { footerComponent } */}
               </div>
-              {/* { footerComponent } */}
             </div>
           </div>
-        </div>
         )
       }
     }
@@ -113,7 +118,7 @@ class App extends Component {
     console.log("ROUTE CHANGED");
     // const { i18n } = this.props;
     const body = document.querySelector('body');
-    if(this.props.location.pathname === '/layout/RtlLayout') {
+    if (this.props.location.pathname === '/layout/RtlLayout') {
       body.classList.add('rtl');
       // i18n.changeLanguage('ar');
     }
@@ -123,7 +128,7 @@ class App extends Component {
     }
     window.scrollTo(0, 0);
     const fullPageLayoutRoutes = ['/user-pages/login-1', '/user-pages/login-2', '/user-pages/register-1', '/user-pages/register-2', '/user-pages/lockscreen', '/error-pages/error-404', '/error-pages/error-500', '/general-pages/landing-page', '/login', '/'];
-    for ( let i = 0; i < fullPageLayoutRoutes.length; i++ ) {
+    for (let i = 0; i < fullPageLayoutRoutes.length; i++) {
       if (this.props.location.pathname === fullPageLayoutRoutes[i]) {
         this.setState({
           isFullPageLayout: true

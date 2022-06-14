@@ -16,6 +16,8 @@ import QrReport from '../reportes/QrReport'
 import EstadoActivoReport from '../reportes/EstadoActivoReport'
 import EstadoInactivosReport from '../reportes/EstadoInactivosReport'
 import { Views } from '../../views/Views';
+import { passphrase } from '../../views/Passphrase';
+import CryptoJS, { enc } from 'crypto-js';
 
 export class Personal extends Component {
   constructor(props) {
@@ -520,7 +522,17 @@ export class Personal extends Component {
             const responseR = async () => {
               await axios.get(nodeapi + 'users/' + data.usuarioId)
                 .then(res => this.setState({ responsableQr: res.data }, function () {
-                  this.setState({ qrCode: `Codigo: ${data.codigo}. \n Activo: ${this.state.auxiliarQr.nombre}. \n Descripcion: ${data.descripcion}.\n Responsable: ${this.state.responsableQr.nombre} ${this.state.responsableQr.apPaterno} ${this.state.responsableQr.apMaterno}. \n Estado: ${data.estadoActivo}.` })
+                  const dataFormatted = {
+                    codigo: data.codigo,
+                    activo: this.state.auxiliarQr.nombre,
+                    descripcion: data.descripcion,
+                    responsable: `${this.state.responsableQr.nombre} ${this.state.responsableQr.apPaterno} ${this.state.responsableQr.apMaterno}`,
+                    estado: data.estadoActivo
+                  };
+                  const dataEncrypted = JSON.stringify(dataFormatted);
+                  const encrypted = CryptoJS.AES.encrypt(dataEncrypted, passphrase).toString();
+                  console.log(encrypted);
+                  this.setState({ qrCode:  encrypted })
                 }))
                 .catch(err => console.log(err))
             }

@@ -1,0 +1,1 @@
+export const passphrase = 'vjkb@!#!#!$%%^fdjbiweqwe1235@bbiwebdfgfgdfbdfbnttnt';
