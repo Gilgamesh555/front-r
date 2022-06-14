@@ -587,7 +587,6 @@ export class Personal extends Component {
                                   <td>Messsy</td>
                                   <td>Flash</td>
                                   <td className="text-danger"> 21.06% <i className="mdi mdi-arrow-down"></i></td>
-                                  <td><label className="badge badge-warning">In progress</label></td>
                                 </tr>
                                 <tr>
                                   <td>John</td>

@@ -9,6 +9,7 @@ import nodeapi from '../../apis/nodeapi'
 
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import GrupoReport from '../reportes/GrupoReport'
+import GeneralReport from '../reportes/GeneralReport'
 
 import DepreciacionReport from '../reportes/DepreciacionReport'
 import ActualizacionReport from '../reportes/ActualizacionReport'
@@ -411,19 +412,25 @@ export class Grupo extends Component {
                                     </td>
                                     <td>
                                       <PDFDownloadLink document={<GrupoReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{ marginRight: '3px' }}>
-                                        Reporte General
+                                        Rept. Grupal
                                         {/* {({ blob, url, loading, error }) =>
                                             loading ? 'Cargando...' : 'Reporte'
                                           } */}
                                       </PDFDownloadLink>
-                                      <PDFDownloadLink document={<ActualizacionReport data={index} />} fileName={`reporte-activo-actualizacion`} className="badge badge-warning" style={{ marginRight: '3px' }}>
-                                        Reporte Actualizacion
+                                      <PDFDownloadLink document={<GeneralReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-warning" style={{ marginRight: '3px' }}>
+                                        Rept. General
+                                        {/* {({ blob, url, loading, error }) =>
+                                            loading ? 'Cargando...' : 'Reporte'
+                                          } */}
+                                      </PDFDownloadLink>
+                                      <PDFDownloadLink document={<ActualizacionReport data={index} />} fileName={`reporte-activo-actualizacion`} className="badge badge-success" style={{ marginRight: '3px' }}>
+                                        Rept. Actualizacion
                                         {/* {({ blob, url, loading, error }) =>
                                             loading ? 'Cargando...' : 'Reporte Actualizacion'
                                           } */}
                                       </PDFDownloadLink>
                                       <PDFDownloadLink document={<DepreciacionReport data={index} />} fileName={`reporte-activo-depreciacion`} className="badge badge-danger" style={{ marginRight: '3px' }}>
-                                        Reporte Depreciacion
+                                        Rept. Depreciacion
                                         {/* {({ blob, url, loading, error }) =>
                                             loading ? 'Cargando...' : 'Reporte Depreciacion'
                                           } */}
