@@ -399,7 +399,7 @@ class Sidebar extends Component {
               </ul>
             </Collapse>
           </li>
-          <li className={this.isPathActive('/vistas') ? 'nav-item active' : 'nav-item'} id="liVistas">
+          {/*<li className={this.isPathActive('/vistas') ? 'nav-item active' : 'nav-item'} id="liVistas">
             <div className={this.state.vistasMenuOpen ? 'nav-link menu-expanded' : 'nav-link'} onClick={() => this.toggleMenuState('vistasMenuOpen')} data-toggle="collapse">
               <i className="mdi mdi-information-outline menu-icon"></i>
               <span className="menu-title"><Trans>Vistas</Trans></span>
@@ -415,7 +415,7 @@ class Sidebar extends Component {
                 <li className="nav-item"> <Link className={this.isPathActive('/vistas/activos') ? 'nav-link active' : 'nav-link'} to="/vistas/activos">Activos</Link></li>
               </ul>
             </Collapse>
-          </li>
+          </li>*/}
         </ul>
       </nav>
     );

@@ -5,13 +5,14 @@ import logo from './logo.jpeg'
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 
-class ActivoReport extends Component {
+class GeneralReport extends Component {
     constructor(props) {
         super(props)
         this.state ={
             date: null,
             data: null,
             oficinas: null,
+            users: null,
             auxiliares: null,
         }
     }
@@ -19,6 +20,7 @@ class ActivoReport extends Component {
     componentDidMount(){
         this.getData()
         this.getOficinas()
+        this.getUsuarios()
         this.getAuxiliares()
     }
 
@@ -40,6 +42,15 @@ class ActivoReport extends Component {
         const response = async () => {
         await axios.get(nodeapi+'oficinas')
         .then(res => this.setState({oficinas: res.data}))
+        .catch(err => console.log(err))
+        }
+        response()
+    }
+
+    getUsuarios() {
+        const response = async () => {
+        await axios.get(nodeapi+'users')
+        .then(res => this.setState({users: res.data}))
         .catch(err => console.log(err))
         }
         response()
@@ -150,8 +161,7 @@ class ActivoReport extends Component {
                         </View>
                     </View>
                     <View style={styles.titleContainer}>
-                        <Text style={{textAlign: 'center'}}>REPORTE DE ESTADO DE ACTIVOS</Text>
-                        {/*<Text style={{textAlign: 'center'}}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>*/}
+                        <Text style={{textAlign: 'center'}}>REPORTE GENERAL DE ACTIVOS</Text>
                     </View>
                     <View style={styles.table}>
                         <View style={styles.row}>
@@ -160,13 +170,13 @@ class ActivoReport extends Component {
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Auxiliar</Text>
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Costo Inicial</Text>
                             <Text style={[styles.rowChildren, {flex: 2,}]}>Estado</Text>
-                            <Text style={[styles.rowChildren, {flex: 2,}]}>Oficina</Text>
-                            <Text style={[styles.rowChildren, {flex: 2,}]}>Observaciones</Text>
+                            <Text style={styles.rowChildren}>Oficina</Text>
+                            <Text style={styles.rowChildren}>Responsable</Text>
                         </View>
                         {
-                            this.state.data !== null && this.state.oficinas !== null && this.state.auxiliares !== null ?
+                            this.state.data !== null && this.state.oficinas !== null && this.state.users !== null && this.state.auxiliares !== null ?
                             this.state.data.filter(index => {
-                                if(index.usuarioId === this.props.data._id){
+                                if(index.grupoId === this.props.data._id){
                                     return index
                                 }
                                 return null
@@ -182,24 +192,21 @@ class ActivoReport extends Component {
                                     </Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>{index.costoInicial}</Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>{index.estadoActivo}</Text>
-                                    <Text style={[styles.rowChildren, {flex: 2}]}   >
+                                    <Text style={styles.rowChildren}>
                                     {this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ? 
                                     this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
                                     null}
                                     </Text>
-                                    <Text style={[styles.rowChildren, {flex: 2}]}>{}</Text>
+                                    <Text style={styles.rowChildren}>
+                                    {this.state.users !== null && this.state.users.find(item => item._id === index.usuarioId) !== undefined ? 
+                                    this.getUser(index.usuarioId) :
+                                    null}
+                                    </Text>
                                 </View>
                             ))
                             : null
                         }
                     </View>
-                
-                    <View style={[styles.rowChildren, { flex: 2 }]}>
-                  <Text style={{ textAlign: 'center' }}> {'\n'} {'\n'} {'\n'}_____________________________________</Text>
-                  <Text style={{ textAlign: 'center' }}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>
-                  <Text style={{ textAlign: 'center' }}>{`${this.props.data.cargo} - Recibe`}</Text>
-                </View>  
-                    
                     <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
                         `${pageNumber} / ${totalPages}`
                     )} fixed />
@@ -209,4 +216,4 @@ class ActivoReport extends Component {
     }
 }
 
-export default ActivoReport
+export default GeneralReport

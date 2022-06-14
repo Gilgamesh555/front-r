@@ -8,6 +8,7 @@ import nodeapi from '../../apis/nodeapi'
 
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import ActivoReport from '../reportes/ActivoReport'
+import ActivoReturn from '../reportes/ActivoReturn'
 import ActivoReporte from '../reportes/ActivoReporte'
 import TransferActives from './activo/transferActives';
 import { Views } from '../../views/Views';
@@ -487,7 +488,7 @@ export class Personal extends Component {
                             <th>Ap. Materno</th>
                             {/* <th>Usuario</th> */}
                             <th>CI</th>
-                            <th>Oficina</th>
+                            <th>Departamento</th>
                             <th>Cargo</th>
                             {/*<th>Email</th>*/}
                             <th>Nro Celular</th>
@@ -546,7 +547,7 @@ export class Personal extends Component {
                                           <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>
                                         )
                                       }
-                                      {<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}
+                                      {/*{<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}*/}
                                       <PDFDownloadLink
                                         document={<ActivoReport
                                           data={index}
@@ -557,12 +558,25 @@ export class Personal extends Component {
                                         style={{ marginRight: '3px' }}
                                       >
                                         {({ blob, url, loading, error }) =>
-                                          loading ? 'Cargando...' : 'Entrega de Activos'
+                                          loading ? 'Cargando...' : 'Ent. Activos'
+                                        }
+                                      </PDFDownloadLink>
+                                      <PDFDownloadLink
+                                        document={<ActivoReturn
+                                          data={index}
+                                          token={window.localStorage.getItem('token')}
+                                        />}
+                                        fileName={`reporte-usuario-${index.username}`}
+                                        className="badge badge-danger"
+                                        style={{ marginRight: '3px' }}
+                                      >
+                                        {({ blob, url, loading, error }) =>
+                                          loading ? 'Cargando...' : 'Dev. Activos'
                                         }
                                       </PDFDownloadLink>
                                       {<PDFDownloadLink document={<ActivoReporte data={index} />} fileName={`reporte-usuario-${index.username}`} className="badge badge-info" style={{ marginRight: '3px' }}>
                                         {({ blob, url, loading, error }) =>
-                                          loading ? 'Cargando...' : 'Verificar estado de Activos'
+                                          loading ? 'Cargando...' : 'Verif. Est. de Activos'
                                         }
                                       </PDFDownloadLink>}
                                     </td>
@@ -574,7 +588,6 @@ export class Personal extends Component {
                                   <td>Messsy</td>
                                   <td>Flash</td>
                                   <td className="text-danger"> 21.06% <i className="mdi mdi-arrow-down"></i></td>
-                                  <td><label className="badge badge-warning">In progress</label></td>
                                 </tr>
                                 <tr>
                                   <td>John</td>
@@ -686,7 +699,7 @@ export class Personal extends Component {
                           <div className="row">
                             <div className="col-md-6">
                               <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Oficina</label>
+                                <label className="col-sm-3 col-form-label">Departamento</label>
                                 <div className="col-sm-9">
                                   <select className="form-control" required id="inputOficinaId" onChange={this.handleOficinaId}>
                                     <option hidden value=''>Escoga una Opcion</option>

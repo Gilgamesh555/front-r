@@ -5,7 +5,7 @@ import logo from './logo.jpeg'
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 
-class ActivoReport extends Component {
+class ActivoReturn   extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -164,7 +164,7 @@ class ActivoReport extends Component {
             </View>
           </View>
           <View style={styles.titleContainer}>
-            <Text style={{ textAlign: 'center' }}>ENTREGA DE ACTIVOS</Text>
+            <Text style={{ textAlign: 'center' }}>DEVOLUVION DE ACTIVOS</Text>
             {/*<Text style={{ textAlign: 'center' }}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>*/}
           </View>
           <View style={styles.table}>
@@ -213,12 +213,12 @@ class ActivoReport extends Component {
                 <View style={[styles.rowChildren, { flex: 2 }]}>
                   <Text style={{ textAlign: 'center' }}> {'\n'} {'\n'} {'\n'}_____________________________________</Text>
                   <Text style={{ textAlign: 'center' }}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>
-                  <Text style={{ textAlign: 'center' }}>{`${this.props.data.cargo} - Recibe`}</Text>
+                  <Text style={{ textAlign: 'center' }}>{`${this.props.data.cargo} - Entrega`}</Text>
                 </View>
                 <View style={[styles.rowChildren, { flex: 2 }]}>
                   <Text style={{ textAlign: 'center' }}> {'\n'} {'\n'} {'\n'}_____________________________________</Text>
                   <Text style={{ textAlign: 'center' }}>{`${this.state.responsible.nombre} ${this.state.responsible.apPaterno} ${this.state.responsible.apMaterno}`}</Text>
-                  <Text style={{ textAlign: 'center' }}>{`${this.state.responsible.cargo} - Entrega`}</Text>
+                  <Text style={{ textAlign: 'center' }}>{`${this.state.responsible.cargo} - Recibe`}</Text>
                 </View>
               </View>
             ) : null
@@ -232,4 +232,4 @@ class ActivoReport extends Component {
   }
 }
 
-export default ActivoReport
+export default ActivoReturn
