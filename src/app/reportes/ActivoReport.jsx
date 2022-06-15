@@ -145,7 +145,7 @@ class ActivoReport extends Component {
                 Reporte
               </Text>
               <Text>
-                Fecha De Reporte: {this.state.date}
+                Fecha De Entrega: {this.state.date}
               </Text>
             </View>
             <View style={{ flex: 1, textAlign: 'right' }}>
