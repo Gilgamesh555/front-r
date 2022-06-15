@@ -1,10 +1,10 @@
 export const Views = {
-    departamentos: '6249b9ca9a85b64c0665d3b4',
-    personal: '6249b9d39a85b64c0665d3b6',
-    grupos: '6249b9da9a85b64c0665d3b8',
-    auxiliares: '6249b9e09a85b64c0665d3ba',
-    ufv: '6249b9e79a85b64c0665d3bc',
-    activos: '6249b9ed9a85b64c0665d3be',
-    roles: '6249b9f29a85b64c0665d3c0',
-    cargos: '629eb53bade241fb9f4440eb',
+    departamentos: '62674914c1665c49f26105c1',
+    personal: '6267491dc1665c49f26105c3',
+    grupos: '62674923c1665c49f26105c5',
+    auxiliares: '6267492ac1665c49f26105c7',
+    ufv: '62674934c1665c49f26105c9',
+    activos: '6267493bc1665c49f26105cb',
+    roles: '626745e7c1665c49f2610591',
+    cargos: '629f6820ef207fa5b7042502',
 };

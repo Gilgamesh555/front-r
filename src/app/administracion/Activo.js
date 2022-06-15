@@ -15,6 +15,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer'
 import QrReport from '../reportes/QrReport'
 import EstadoActivoReport from '../reportes/EstadoActivoReport'
 import EstadoInactivosReport from '../reportes/EstadoInactivosReport'
+import LogActivo from './activo/Log'
 import { Views } from '../../views/Views';
 import { passphrase } from '../../views/Passphrase';
 import CryptoJS, { enc } from 'crypto-js';
@@ -68,6 +69,8 @@ export class Personal extends Component {
       viewId: Views.activos,
       permissions: null,
       changeToEdit: false,
+      showLogModal: false,
+      userLogged: null,
     }
     // Register User
     this.handleCodigo = this.handleCodigo.bind(this)
@@ -355,6 +358,7 @@ export class Personal extends Component {
         .then(async res => {
           if (res.data.status === 'ok') {
             const roleId = this.decodeToken(data.token).role;
+            this.setState({ userLogged: this.decodeToken(data.token)});
             await this.getPermissions(roleId, this.state.viewId);
             if (!this.state.permissions.isVisible) {
               this.props.history.push('/');
@@ -478,8 +482,9 @@ export class Personal extends Component {
   changeEstado(event, datax) {
     const data = {
       estado: datax.estado === 'activo' ? 'inactivo' : 'activo',
-      _id: datax._id
-    }
+      _id: datax._id,
+      usuarioId: datax.usuarioId
+    };
     const response = async () => {
       await axios.put(nodeapi + `activos/${data._id}/estado`, data)
         .then(res => {
@@ -489,7 +494,7 @@ export class Personal extends Component {
     }
     response()
     event.preventDefault()
-    window.location.reload()
+    // window.location.reload()
   }
 
   deleteActivo(event, datax) {
@@ -724,6 +729,17 @@ export class Personal extends Component {
     this.setState({ show: false })
   }
 
+  setModalLogInfo(evt, data) {
+    this.setState({ modalActivo: data})
+    this.setState({ showLogModal: true })
+    evt.preventDefault()
+  }
+
+  setModalLogClose(props) {
+    console.log(this);
+    this.setState({ showLogModal: false })
+  }
+
   getResponsable(user) {
     return `${user.nombre} ${user.apPaterno} ${user.apMaterno}`
   }
@@ -865,6 +881,7 @@ export class Personal extends Component {
                                           <a href="!#" onClick={evt => this.deleteActivo(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>
                                         )
                                       }
+                                      <a href="!#" onClick={evt => this.setModalLogInfo(evt, index)} className="badge badge-success" style={{ marginRight: '3px', color: 'white' }}>Logs</a>
                                     </td>
                                   </tr>
                                 ))
@@ -936,6 +953,12 @@ export class Personal extends Component {
                 </div>
               </div>
             </div>
+            <Modal show={this.state.showLogModal} onHide={() => this.setModalLogClose()} centered>
+              <LogActivo 
+                data={this.state.modalActivo}
+                setModalLogClose={this.setModalLogClose}
+              />
+            </Modal>
             <Modal show={this.state.show} onHide={() => this.setModalInfoClose()} centered>
               <Modal.Header closeButton>
                 <Modal.Title>Info Activo</Modal.Title>
