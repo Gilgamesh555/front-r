@@ -8,7 +8,6 @@ import axios from 'axios';
 export default function Log({ data }) {
   const { _id } = data;
   const [logs, setLogs] = useState([]);
-  const [newLogs, setNewLogs] = useState([]);
 
   useEffect(() => {
     getLogs();

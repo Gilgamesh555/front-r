@@ -15,6 +15,8 @@ import { PDFDownloadLink } from '@react-pdf/renderer'
 import QrReport from '../reportes/QrReport'
 import EstadoActivoReport from '../reportes/EstadoActivoReport'
 import EstadoInactivosReport from '../reportes/EstadoInactivosReport'
+import DisableActivo from './activo/DisableActivo';
+import ActivoBajaReport from '../reportes/ActivoBajaReport';
 import LogActivo from './activo/Log'
 import { Views } from '../../views/Views';
 import { passphrase } from '../../views/Passphrase';
@@ -71,6 +73,8 @@ export class Personal extends Component {
       changeToEdit: false,
       showLogModal: false,
       userLogged: null,
+      showInactiveModal: false,
+      inactiveModalData: null,
     }
     // Register User
     this.handleCodigo = this.handleCodigo.bind(this)
@@ -358,7 +362,7 @@ export class Personal extends Component {
         .then(async res => {
           if (res.data.status === 'ok') {
             const roleId = this.decodeToken(data.token).role;
-            this.setState({ userLogged: this.decodeToken(data.token)});
+            this.setState({ userLogged: this.decodeToken(data.token) });
             await this.getPermissions(roleId, this.state.viewId);
             if (!this.state.permissions.isVisible) {
               this.props.history.push('/');
@@ -492,9 +496,13 @@ export class Personal extends Component {
         })
         .catch(err => console.log(err))
     }
-    response()
     event.preventDefault()
-    // window.location.reload()
+    if (datax.estado === 'inactivo') {
+      response()
+      window.location.reload()
+    } else {
+      this.setState({ showInactiveModal: true, inactiveModalData: data });
+    }
   }
 
   deleteActivo(event, datax) {
@@ -537,7 +545,7 @@ export class Personal extends Component {
                   const dataEncrypted = JSON.stringify(dataFormatted);
                   const encrypted = CryptoJS.AES.encrypt(dataEncrypted, passphrase).toString();
                   console.log(encrypted);
-                  this.setState({ qrCode:  encrypted })
+                  this.setState({ qrCode: encrypted })
                 }))
                 .catch(err => console.log(err))
             }
@@ -730,14 +738,17 @@ export class Personal extends Component {
   }
 
   setModalLogInfo(evt, data) {
-    this.setState({ modalActivo: data})
+    this.setState({ modalActivo: data })
     this.setState({ showLogModal: true })
     evt.preventDefault()
   }
 
-  setModalLogClose(props) {
-    console.log(this);
+  setModalLogClose() {
     this.setState({ showLogModal: false })
+  }
+
+  setModalDisableActivoClose() {
+    this.setState({ showInactiveModal: false })
   }
 
   getResponsable(user) {
@@ -860,6 +871,21 @@ export class Personal extends Component {
                                     </td>
                                     <td>
                                       <a href="!#" onClick={evt => this.reevaluateActivo(evt, index)} className="badge badge-dark" style={{ marginRight: '3px' }}>Reevaluar</a>
+                                      {
+                                        index.estado === 'inactivo' ?
+                                          <PDFDownloadLink 
+                                            document={
+                                            <ActivoBajaReport 
+                                              data={index}  
+                                            />} 
+                                            fileName={`reporte-activo-actualizacion`} 
+                                            className="badge badge-info" 
+                                            style={{ marginRight: '3px' }}
+                                          >
+                                            Reporte Baja
+                                          </PDFDownloadLink> :
+                                          null
+                                      }
                                     </td>
                                     <td>
                                       <a href="!#" onClick={evt => this.setModalInfo(evt, index)} className="badge badge-success" style={{ marginRight: '3px', color: 'white' }}>+ Info</a>
@@ -953,10 +979,15 @@ export class Personal extends Component {
                 </div>
               </div>
             </div>
+            {/* showInactiveModal */}
+            <Modal show={this.state.showInactiveModal} onHide={() => this.setModalDisableActivoClose()} centered>
+              <DisableActivo
+                data={this.state.inactiveModalData}
+              />
+            </Modal>
             <Modal show={this.state.showLogModal} onHide={() => this.setModalLogClose()} centered>
-              <LogActivo 
+              <LogActivo
                 data={this.state.modalActivo}
-                setModalLogClose={this.setModalLogClose}
               />
             </Modal>
             <Modal show={this.state.show} onHide={() => this.setModalInfoClose()} centered>
