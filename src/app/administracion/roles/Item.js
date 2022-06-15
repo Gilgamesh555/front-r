@@ -27,13 +27,13 @@ function ItemRole({ data, onEdit, permissions }) {
             && permissions.isEditable
             && (
               <>
-                <a
+                {/*<a
                   href="!#"
                   className="badge badge-info"
                   style={{ marginRight: '3px' }}
                 >
                   Mod Estado
-                </a>
+            </a>*/}
                 <a
                   href="!#"
                   onClick={(e) => onEdit(e, data)}

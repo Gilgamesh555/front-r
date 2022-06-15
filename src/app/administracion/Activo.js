@@ -922,6 +922,9 @@ export class Personal extends Component {
                               }
                             </td>
                             <td>
+                            <a href="../detailActivo"  className="badge badge-warning" style={{ marginRight: '3px', color: 'whitesmoke' }}>Decifrar qr</a>
+                            </td>
+                            <td>
                               <PDFDownloadLink document={<EstadoActivoReport />} fileName={`reporte-activo-actualizacion`} className="badge badge-info" style={{ marginRight: '3px' }}>
                                 Reporte Estado Activos
                                 {/* {({ blob, url, loading, error }) =>
