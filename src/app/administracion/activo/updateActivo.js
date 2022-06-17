@@ -20,7 +20,11 @@ export default function UpdateActivo(props) {
 
     const getActualUfvDate = async (data) => {
       const ufv = await axios.post(`${nodeapi}ufv/date`, data);
-      return ufv.data.valor;
+      try{
+        return ufv.data.valor;
+      } catch(error){
+
+      }
     }
 
     const beginDate = {
@@ -41,7 +45,7 @@ export default function UpdateActivo(props) {
       costoInicial: updatedValue.toString(),
     });
 
-    window.location.reload();
+    alert('Activo Actualizado');
   }
 
   return (
