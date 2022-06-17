@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 import { Views } from '../../views/Views';
+import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 export class Oficina extends Component {
   constructor(props) {
@@ -233,6 +234,13 @@ export class Oficina extends Component {
       }
       else {
         return (
+          <Element
+            id="containerElement"
+            style={{
+              height: "1000px",
+              overflow: "scroll",
+            }}
+          >
           <div>
             <div className="page-header">
               <h3 className="page-title"> Departamentos </h3>
@@ -294,8 +302,10 @@ export class Oficina extends Component {
                                         this.state.permissions.isEditable &&
                                         (
                                           <>
+                                            <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
                                             <a href="!#" onClick={evt => this.modifyOficina(evt, index)} className="badge badge-warning" style={{ marginRight: '3px' }} >Modificar</a>
                                             {/*<a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>*/}
+                                            </Link>
                                           </>
                                         )
                                       }
@@ -341,7 +351,9 @@ export class Oficina extends Component {
                               this.state.permissions.isAddble &&
                               (
                                 <td>
+                                  <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
                                   <a href="!#" onClick={evt => this.registerOficina(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'white' }}>Registrar Nuevo</a>
+                                  </Link>
                                 </td>
                               )
                             }
@@ -355,7 +367,7 @@ export class Oficina extends Component {
               {
                 (this.state.changeToEdit || this.state.permissions.isAddble) &&
                 (
-                  <div className="col-md-6 grid-margin stretch-card">
+                  <div className="col-lg-6 grid-margin stretch-card">
                     <div className="card">
                       <div className="card-body">
                         <h4 className="card-title" id="card-title-oficina">Registrar Departamentos</h4>
@@ -390,6 +402,7 @@ export class Oficina extends Component {
               }
             </div>
           </div>
+          </Element>
         )
       }
     }

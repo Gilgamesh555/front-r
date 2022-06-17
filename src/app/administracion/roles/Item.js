@@ -1,5 +1,6 @@
 import React from 'react';
 import './style.css';
+import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 function ItemRole({ data, onEdit, permissions }) {
   const { name, status } = data;
@@ -34,14 +35,16 @@ function ItemRole({ data, onEdit, permissions }) {
                 >
                   Mod Estado
             </a>*/}
-                <a
-                  href="!#"
-                  onClick={(e) => onEdit(e, data)}
-                  className="badge badge-warning"
-                  style={{ marginRight: '3px' }}
-                >
-                  Modificar
-                </a>
+                <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
+                  <a
+                    href="!#"
+                    onClick={(e) => onEdit(e, data)}
+                    className="badge badge-warning"
+                    style={{ marginRight: '3px' }}
+                  >
+                    Modificar
+                  </a>
+                </Link>
               </>
             )
           }

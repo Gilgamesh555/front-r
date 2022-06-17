@@ -8,6 +8,7 @@ import FormRole from './Form';
 import { useForm } from 'react-hook-form';
 import './style.css';
 import { Views } from '../../../views/Views';
+import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 function Personal({ history }) {
   const { register, getValues } = useForm();
@@ -115,6 +116,13 @@ function Personal({ history }) {
   }
 
   return (
+    <Element
+      id="containerElement"
+      style={{
+        height: "800px",
+        overflow: "scroll",
+      }}
+    >
     <div>
       <div className="page-header">
         <h3 className="page-title"> {ViewName} </h3>
@@ -191,6 +199,7 @@ function Personal({ history }) {
                       ))}
                     <tr>
                       <td colSpan={3}>
+                        <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
                         <a
                           href="!#"
                           onClick={(e) => onClickFormButton(e)}
@@ -198,6 +207,7 @@ function Personal({ history }) {
                           style={{ marginRight: '3px', color: 'whitesmoke' }}>
                           Registrar Nuevo
                         </a>
+                        </Link>
                       </td>
                     </tr>
                   </tbody>
@@ -211,6 +221,7 @@ function Personal({ history }) {
         data={dataToEdit}
       />
     </div>
+    </Element>
   )
 }
 

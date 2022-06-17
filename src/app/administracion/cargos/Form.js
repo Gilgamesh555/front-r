@@ -5,6 +5,7 @@ import nodeapi from '../../../apis/nodeapi';
 
 import { Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
+import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 function FormRole({ data }) {
   const { register, handleSubmit } = useForm();
@@ -93,6 +94,7 @@ function FormRole({ data }) {
   }
 
   return (
+    <Element name="FormActivo">
     <div className="row">
       <div className="col-md-9 grid-margin stretch-card">
         <div className="card">
@@ -130,6 +132,7 @@ function FormRole({ data }) {
         </div>
       </div>
     </div>
+    </Element>
   )
 }
 

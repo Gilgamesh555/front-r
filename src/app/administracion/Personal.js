@@ -12,6 +12,7 @@ import ActivoReturn from '../reportes/ActivoReturn'
 import ActivoReporte from '../reportes/ActivoReporte'
 import TransferActives from './activo/transferActives';
 import { Views } from '../../views/Views';
+import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 export class Personal extends Component {
   constructor(props) {
@@ -399,13 +400,13 @@ export class Personal extends Component {
 
   registerUser(event) {
     document.getElementById('inputRole').value = ''
-    document.getElementById('inputCargo').value = ''
+    document.getElementById('inputOficinaId').value = ''
     document.getElementById('inputNombre').value = ''
     document.getElementById('inputUsername').value = ''
     document.getElementById('inputApPaterno').value = ''
     document.getElementById('inputApMaterno').value = ''
     document.getElementById('inputCi').value = ''
-    document.getElementById('inputCargo').value = ''
+    // document.getElementById('inputCargo').value = ''
     document.getElementById('inputEmail').value = ''
     document.getElementById('inputCelular').value = ''
     document.getElementById('inputOficinaId').value = ''
@@ -455,6 +456,13 @@ export class Personal extends Component {
       }
       else {
         return (
+          <Element
+            id="containerElement"
+            style={{
+              height: "800px",
+              overflow: "scroll",
+            }}
+          >
           <div>
             <div className="page-header">
               <h3 className="page-title"> Personal </h3>
@@ -537,7 +545,9 @@ export class Personal extends Component {
                                         this.state.permissions !== undefined &&
                                         this.state.permissions.isEditable &&
                                         (
+                                          <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
                                           <a href="!#" onClick={evt => this.modifyUser(evt, index)} className="badge badge-warning" style={{ marginRight: '3px' }} >Modificar</a>
+                                          </Link>
                                         )
                                       }
                                       {
@@ -613,13 +623,17 @@ export class Personal extends Component {
                               this.state.permissions.isAddble &&
                               (
                                 <td>
+                                  <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
                                   <a href="!#" onClick={evt => this.registerUser(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
+                                  </Link>
                                 </td>
                               )
                             }
                             {
                               <td>
+                                <Link to="TransferirActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
                                 <a href="!#" onClick={evt => this.handleTransferActive(evt)} className="badge badge-warning" style={{ marginRight: '3px', color: 'whitesmoke' }}>Transferir Activos</a>
+                                </Link>
                               </td>
                             }
                           </tr>
@@ -631,11 +645,12 @@ export class Personal extends Component {
               </div>
             </div>
             {
-              !this.state.isWillBeTransfer ? <TransferActives /> : null
+              !this.state.isWillBeTransfer ? <Element name="TransferirActivo"><TransferActives /></Element> : null
             }
             {
               (this.state.changeToEdit || this.state.permissions.isAddble) &&
               (
+                <Element name="FormActivo">
                 <div className="row">
                   <div className="col-md-9 grid-margin stretch-card">
                     <div className="card">
@@ -845,9 +860,11 @@ export class Personal extends Component {
                     </div>
                   </div>
                 </div>
+                </Element>
               )
             }
           </div>
+          </Element>
         )
       }
     }

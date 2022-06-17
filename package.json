@@ -75,6 +75,7 @@
     "react-rating": "^2.0.0",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
+    "react-scroll": "^1.8.7",
     "react-select": "^3.0.8",
     "react-simple-maps": "^1.0.0-beta.0",
     "react-simplemde-editor": "^4.1.0",

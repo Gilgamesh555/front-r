@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom';
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 import { Views } from '../../views/Views';
+import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 export class Auxiliar extends Component {
   constructor(props) {
@@ -297,6 +298,13 @@ export class Auxiliar extends Component {
       }
       else {
         return (
+          <Element
+            id="containerElement"
+            style={{
+              height: "1000px",
+              overflow: "scroll",
+            }}
+          >
           <div>
             <div className="page-header">
               <h3 className="page-title"> Auxiliares </h3>
@@ -368,8 +376,10 @@ export class Auxiliar extends Component {
                                         this.state.permissions.isEditable &&
                                         (
                                           <>
+                                            <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
                                             <a href="!#" onClick={evt => this.modifyAuxiliar(evt, index)} className="badge badge-warning" for="inputNombre"style={{ marginRight: '3px' }} >Modificar</a>
                                             {/*<a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>*/}
+                                            </Link>
                                           </>
                                         )
                                       }
@@ -391,7 +401,9 @@ export class Auxiliar extends Component {
                               this.state.permissions.isAddble &&
                               (
                                 <td>
-                                  <a href="!#" onClick={evt => this.registerAuxiliar(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
+                                  <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
+                                    <a href="!#" onClick={evt => this.registerAuxiliar(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
+                                  </Link>
                                 </td>
                               )
                             }
@@ -406,6 +418,7 @@ export class Auxiliar extends Component {
             {
               (this.state.changeToEdit || this.state.permissions.isAddble) &&
               (
+                <Element name="FormActivo">
                 <div className="row">
                   <div className="col-md-6 grid-margin stretch-card">
                     <div className="card">
@@ -448,9 +461,11 @@ export class Auxiliar extends Component {
                     </div>
                   </div>
                 </div>
+                </Element>
               )
             }
           </div>
+          </Element>
         )
       }
     }

@@ -7,6 +7,7 @@ import ItemCargo from './Item';
 import FormCargo from './Form';
 import { useForm } from 'react-hook-form';
 import { Views } from '../../../views/Views';
+import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 export default function CargoView({ history }) {
   const { register, getValues } = useForm();
@@ -45,7 +46,7 @@ export default function CargoView({ history }) {
               if (!permission.isVisible) {
                 history.push('/');
               }
-              setIsAuth(true);  
+              setIsAuth(true);
             } else {
               window.localStorage.removeItem('token')
               setIsAuth(false)
@@ -122,105 +123,95 @@ export default function CargoView({ history }) {
   }
 
   return (
-    <div>
-      <div className="page-header">
-        <h3 className="page-title"> {ViewName} </h3>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
-            <li className="breadcrumb-item active" aria-current="page">{ViewName}</li>
-          </ol>
-        </nav>
-      </div>
-      {/* <div className="row">
-        <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
-          <div className="row form-group" style={{ width: '100%', marginLeft: '0' }}>
-            <input
-              type="search"
-              className="col-lg-8 form-control"
-              placeholder="Buscar"
-              onChange={(e) => setSearchValue(e.target.value)}
-              {...register('search')}
-            />
-            <button
-              type="submit"
-              className="col-lg-3 btn btn-primary mr-2"
-              onClick={onClickSearchButton}
-            >
-              Buscar
-            </button>
-          </div>
+    <Element
+      id="containerElement"
+      style={{
+        height: "800px",
+        overflow: "scroll",
+      }}
+    >
+      <div>
+        <div className="page-header">
+          <h3 className="page-title"> {ViewName} </h3>
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
+              <li className="breadcrumb-item active" aria-current="page">{ViewName}</li>
+            </ol>
+          </nav>
         </div>
-      </div> */}
-      <div className="row">
-        <div className="col-lg-12 grid-margin stretch-card">
-          <div className="card">
-            <div className="card-body">
-              <h4 className="card-title">Lista de {ViewName}</h4>
-              <div className="table-responsive">
-                <table className="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Codigo</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody className='table-body-notFound'>
-                    {cargos === null || permissions === null ?
-                      <th colSpan={3} className='table-body-notFound'>No existen roles</th> :
-                      (
-                        cargos.filter((item) => {
-                          if (searchValue !== '') {
-                            const nameFixed = item.name.toLowerCase();
-                            const checkIfNameExists = nameFixed.includes(searchValue.toLocaleLowerCase());
+        <div className="row">
+          <div className="col-lg-12 grid-margin stretch-card">
+            <div className="card">
+              <div className="card-body">
+                <h4 className="card-title">Lista de {ViewName}</h4>
+                <div className="table-responsive">
+                  <table className="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Codigo</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody className='table-body-notFound'>
+                      {cargos === null || permissions === null ?
+                        <th colSpan={3} className='table-body-notFound'>No existen roles</th> :
+                        (
+                          cargos.filter((item) => {
+                            if (searchValue !== '') {
+                              const nameFixed = item.name.toLowerCase();
+                              const checkIfNameExists = nameFixed.includes(searchValue.toLocaleLowerCase());
 
-                            if (checkIfNameExists) {
-                              return item;
+                              if (checkIfNameExists) {
+                                return item;
+                              } else {
+                                return null;
+                              }
                             } else {
-                              return null;
+                              if (searchValue === '') {
+                                return item;
+                              } else {
+                                return null;
+                              }
                             }
-                          } else {
-                            if (searchValue === '') {
-                              return item;
-                            } else {
-                              return null;
-                            }
+                          })
+                        ).map((item) => (
+                          <ItemCargo
+                            key={item._id}
+                            data={item}
+                            onEdit={onClickEditButton}
+                            onDelete={onClickDeleteButton}
+                            permissions={permissions}
+                          />
+                        ))}
+                      <tr>
+                        <td colSpan={3}>
+                          {
+                            permissions !== null && permissions.isAddble ?
+                              <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
+                              <a
+                                href="!#"
+                                onClick={(e) => onClickFormButton(e)}
+                                className="badge badge-success"
+                                style={{ marginRight: '3px', color: 'whitesmoke' }}>
+                                Registrar Nuevo
+                              </a>
+                              </Link> : null
                           }
-                        })
-                      ).map((item) => (
-                        <ItemCargo
-                          key={item._id}
-                          data={item}
-                          onEdit={onClickEditButton}
-                          onDelete={onClickDeleteButton}
-                          permissions={permissions}
-                        />
-                      ))}
-                    <tr>
-                      <td colSpan={3}>
-                        {
-                          permissions !== null && permissions.isAddble ?
-                            <a
-                              href="!#"
-                              onClick={(e) => onClickFormButton(e)}
-                              className="badge badge-success"
-                              style={{ marginRight: '3px', color: 'whitesmoke' }}>
-                              Registrar Nuevo
-                            </a> : null 
-                        }
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <FormCargo
+          data={dataToEdit}
+        />
       </div>
-      <FormCargo
-        data={dataToEdit}
-      />
-    </div>
+    </Element>
   )
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 export default function CargoItem({ data, onEdit, onDelete, permissions }) {
   const { name, code } = data;
@@ -21,6 +22,7 @@ export default function CargoItem({ data, onEdit, onDelete, permissions }) {
             (permissions !== undefined && permissions !== null)
             && permissions.isEditable
             && (
+              <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
               <a
                 href="!#"
                 onClick={(e) => onEdit(e, data)}
@@ -29,6 +31,7 @@ export default function CargoItem({ data, onEdit, onDelete, permissions }) {
               >
                 Modificar
               </a>
+              </Link>
             )
           }
           {
