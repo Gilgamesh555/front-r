@@ -358,8 +358,24 @@ export class Grupo extends Component {
                               <th>Vida Útil</th>
                               <th>Cantidad</th>
                               {/*<th>Estado</th>*/}
-                              <th>Acciones</th>
-                              <th>Reportes</th>
+                              {
+                                this.state.permissions !== undefined &&
+                                this.state.permissions.isEditable && (
+                                  <>
+                                  <th>Acciones</th>
+                                  <th>Reportes</th>
+                                  </>
+                                )
+                              }
+                              {
+                                this.state.permissions !== undefined &&
+                                this.state.permissions.isDeletable && this.state.permissions.isEditable (
+                                  <>
+                                  <th>Acciones</th>
+                                  <th>Reportes</th>
+                                  </>
+                                )
+                              }
                             </tr>
                           </thead>
                           <tbody>
