@@ -173,10 +173,15 @@ export class Personal extends Component {
 
   handleUsuarioId(event) {
     this.setState({ usuarioId: event.target.value })
+    let cargoId='';
     const response = async () => {
       await axios.get(nodeapi + `users/${event.target.value}`)
         .then(res => {
-          document.getElementById('inputCargo').value = res.data.cargo
+          cargoId = res.data.cargo;
+        })
+        .then(async res => {
+          const cargoName = await axios.get(`${nodeapi}cargos/${cargoId}`);
+          document.getElementById('inputCargo').value = cargoName.data.name;
         })
         .catch(err => console.log(err))
     }

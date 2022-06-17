@@ -21,7 +21,8 @@ export default function DeprecateActivo(props) {
 
     const deprecatedValue = activo.costoInicial * (await getCurrentCoe(activo) / 100);
     const valueByMonth = (deprecatedValue / 12) * dataFromForm['deprecateMonths'];
-    const finalValue = activo.costoInicial - valueByMonth;
+    let finalValue = activo.costoInicial - valueByMonth;
+    finalValue = Number(finalValue).toFixed(2);
 
     await modifyActivo({
       ...activo,

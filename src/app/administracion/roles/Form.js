@@ -87,6 +87,7 @@ function FormRole({ data }) {
       }
 
       await createRoleView(newRoleView);
+      window.location.reload();
     })
   }
 

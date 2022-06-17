@@ -5,8 +5,6 @@ import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } f
 function ItemRole({ data, onEdit, permissions }) {
   const { name, status } = data;
 
-  console.log(permissions);
-
   return (
     <>
       <tr>
