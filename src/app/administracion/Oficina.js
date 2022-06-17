@@ -87,7 +87,6 @@ export class Oficina extends Component {
 
   handleReset(event) {
     document.getElementById('inputNombre').value = ''
-    document.getElementById('inputCodigo').value = ''
     event.preventDefault()
   }
 

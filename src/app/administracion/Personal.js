@@ -211,7 +211,7 @@ export class Personal extends Component {
 
   handleReset(event) {
     document.getElementById('inputRole').value = ''
-    document.getElementById('inputCargo').value = ''
+    // document.getElementById('inputCargo').value = ''
     document.getElementById('inputNombre').value = ''
     document.getElementById('inputPassword').value = ''
     document.getElementById('inputUsername').value = ''

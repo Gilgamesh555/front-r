@@ -14,6 +14,8 @@ class ActivoReturn   extends Component {
       oficinas: null,
       auxiliares: null,
       responsible: null,
+      cargoRecibe: null,
+      cargoEntrega: null,
     }
   }
 
@@ -71,6 +73,32 @@ class ActivoReturn   extends Component {
     const response = async () => {
       await axios.get(nodeapi + `users/${id}`)
         .then(res => this.setState({ responsible: res.data }))
+        .then(() => {
+          this.getCargo();
+          this.getCargoE();
+        })
+        .catch(err => console.log(err))
+    }
+    response()
+  }
+
+  getCargo() {
+    const response = async () => {
+      await axios.get(nodeapi + `cargos/${this.state.responsible.cargo}`)
+        .then(res => {
+          this.setState({ cargoRecibe: res.data })
+        })
+        .catch(err => console.log(err))
+    }
+    response()
+  }
+
+  getCargoE() {
+    const response = async () => {
+      await axios.get(nodeapi + `cargos/${this.props.data.cargo}`)
+        .then(res => {
+          this.setState({ cargoEntrega: res.data })
+        })
         .catch(err => console.log(err))
     }
     response()
@@ -208,17 +236,17 @@ class ActivoReturn   extends Component {
             }
           </View>
           {
-            this.state.responsible !== null ? (
+            this.state.responsible !== null && this.state.cargoRecibe !== null && this.state.cargoEntrega !== null ? (
               <View style={styles.row}>
                 <View style={[styles.rowChildren, { flex: 2 }]}>
                   <Text style={{ textAlign: 'center' }}> {'\n'} {'\n'} {'\n'}_____________________________________</Text>
                   <Text style={{ textAlign: 'center' }}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>
-                  <Text style={{ textAlign: 'center' }}>{`${this.props.data.cargo} - Entrega`}</Text>
+                  <Text style={{ textAlign: 'center' }}>{`${this.state.cargoEntrega.name} - Entrega`}</Text>
                 </View>
                 <View style={[styles.rowChildren, { flex: 2 }]}>
                   <Text style={{ textAlign: 'center' }}> {'\n'} {'\n'} {'\n'}_____________________________________</Text>
                   <Text style={{ textAlign: 'center' }}>{`${this.state.responsible.nombre} ${this.state.responsible.apPaterno} ${this.state.responsible.apMaterno}`}</Text>
-                  <Text style={{ textAlign: 'center' }}>{`${this.state.responsible.cargo} - Recibe`}</Text>
+                  <Text style={{ textAlign: 'center' }}>{`${this.state.cargoRecibe.name} - Recibe`}</Text>
                 </View>
               </View>
             ) : null
