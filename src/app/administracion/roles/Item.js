@@ -2,7 +2,7 @@ import React from 'react';
 import './style.css';
 import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
-function ItemRole({ data, onEdit, permissions }) {
+function ItemRole({ data, onEdit, onDelete, permissions }) {
   const { name, status } = data;
 
   return (
@@ -26,13 +26,6 @@ function ItemRole({ data, onEdit, permissions }) {
             && permissions.isEditable
             && (
               <>
-                {/*<a
-                  href="!#"
-                  className="badge badge-info"
-                  style={{ marginRight: '3px' }}
-                >
-                  Mod Estado
-            </a>*/}
                 <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
                   <a
                     href="!#"
@@ -43,6 +36,29 @@ function ItemRole({ data, onEdit, permissions }) {
                     Modificar
                   </a>
                 </Link>
+              </>
+            )
+          }
+          {
+            (permissions !== undefined && permissions !== null)
+            && permissions.isDeletable
+            && (
+              <>
+                {/*<a
+                  href="!#"
+                  className="badge badge-info"
+                  style={{ marginRight: '3px' }}
+                >
+                  Mod Estado
+            </a>*/}
+                <a
+                  href="!#"
+                  onClick={(e) => onDelete(e, data)}
+                  className="badge badge-danger"
+                  style={{ marginRight: '3px' }}
+                >
+                  Eliminar
+                </a>
               </>
             )
           }

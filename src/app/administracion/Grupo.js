@@ -422,24 +422,32 @@ export class Grupo extends Component {
                                           </PDFDownloadLink> */}
                                       </td>
                                       <td>
-                                        <PDFDownloadLink document={<GrupoReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{ marginRight: '3px' }}>
-                                          Rept. Grupal
-                                          {/* {({ blob, url, loading, error }) =>
-                                            loading ? 'Cargando...' : 'Reporte'
-                                          } */}
-                                        </PDFDownloadLink>
-                                        <PDFDownloadLink document={<ActualizacionReport data={index} />} fileName={`reporte-activo-actualizacion`} className="badge badge-success" style={{ marginRight: '3px' }}>
-                                          Rept. Actualizacion
-                                          {/* {({ blob, url, loading, error }) =>
-                                            loading ? 'Cargando...' : 'Reporte Actualizacion'
-                                          } */}
-                                        </PDFDownloadLink>
-                                        <PDFDownloadLink document={<DepreciacionReport data={index} />} fileName={`reporte-activo-depreciacion`} className="badge badge-danger" style={{ marginRight: '3px' }}>
-                                          Rept. Depreciacion
-                                          {/* {({ blob, url, loading, error }) =>
-                                            loading ? 'Cargando...' : 'Reporte Depreciacion'
-                                          } */}
-                                        </PDFDownloadLink>
+                                        {
+                                          this.state.permissions !== undefined &&
+                                          this.state.permissions.isEditable &&
+                                          (
+                                            <>
+                                            <PDFDownloadLink document={<GrupoReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{ marginRight: '3px' }}>
+                                              Rept. Grupal
+                                              {/* {({ blob, url, loading, error }) =>
+                                                loading ? 'Cargando...' : 'Reporte'
+                                              } */}
+                                            </PDFDownloadLink>
+                                            <PDFDownloadLink document={<ActualizacionReport data={index} />} fileName={`reporte-activo-actualizacion`} className="badge badge-success" style={{ marginRight: '3px' }}>
+                                              Rept. Actualizacion
+                                              {/* {({ blob, url, loading, error }) =>
+                                                loading ? 'Cargando...' : 'Reporte Actualizacion'
+                                              } */}
+                                            </PDFDownloadLink>
+                                            <PDFDownloadLink document={<DepreciacionReport data={index} />} fileName={`reporte-activo-depreciacion`} className="badge badge-danger" style={{ marginRight: '3px' }}>
+                                              Rept. Depreciacion
+                                              {/* {({ blob, url, loading, error }) =>
+                                                loading ? 'Cargando...' : 'Reporte Depreciacion'
+                                              } */}
+                                            </PDFDownloadLink> 
+                                            </>
+                                          )
+                                        }
                                       </td>
                                     </tr>
                                   ))

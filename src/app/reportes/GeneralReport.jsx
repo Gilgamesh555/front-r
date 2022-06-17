@@ -185,7 +185,7 @@ class GeneralReport extends Component {
                                     this.state.auxiliares.find(item => item._id === index.auxiliarId).nombre :
                                     null}
                                     </Text>
-                                    <Text style={[styles.rowChildren, {flex: 2}]}>{Number((index.costoInicial)).toFixed(3)}</Text>
+                                    <Text style={[styles.rowChildren, {flex: 2}]}>{Number((index.costoInicial)).toFixed(2)}</Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>{index.estadoActivo}</Text>
                                     <Text style={styles.rowChildren}>
                                     {this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ? 

@@ -105,6 +105,16 @@ function Personal({ history }) {
     setDataToEdit(data);
   }
 
+  const onClickDeleteButton = async(e, data) => {
+    e.preventDefault();
+    const deleteRol = async () => {
+      await axios.delete(`${nodeapi}roles/${data._id}`)
+    }
+
+    await deleteRol();
+    window.location.reload();
+  }
+
   const response = async () => {
     await axios.get(`${nodeapi}roles`)
       .then(res => {
@@ -194,6 +204,7 @@ function Personal({ history }) {
                           key={item._id}
                           data={item}
                           onEdit={onClickEditButton}
+                          onDelete={onClickDeleteButton}
                           permissions={permissions}
                         />
                       ))}
