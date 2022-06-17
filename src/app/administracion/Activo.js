@@ -1111,8 +1111,9 @@ export class Personal extends Component {
                 <div className="col-lg-12 grid-margin stretch-card">
                   <div className="card">
                     <div className="card-body">
-                      <a href="!#" onClick={evt => this.deprecateActivo(evt, this.state.actualItemReevaluate)} className="badge badge-dark" style={{ marginRight: '3px' }}>Depreciar</a>
                       <a href="!#" onClick={evt => this.updateAcivo(evt, this.state.actualItemReevaluate)} className="badge badge-info" style={{ marginRight: '3px' }} >Actualizar</a>
+                      <a href="!#" onClick={evt => this.deprecateActivo(evt, this.state.actualItemReevaluate)} className="badge badge-dark" style={{ marginRight: '3px' }}>Depreciar</a>
+                      
                       {
                         this.state.isDeprecate === true ?
                           <DeprecateActivo activo={this.state.activoDeprecate} /> :

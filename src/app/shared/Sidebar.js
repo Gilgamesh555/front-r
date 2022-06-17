@@ -109,6 +109,17 @@ class Sidebar extends Component {
             this.setState({ username: this.decodeToken(data.token).username })
             await this.getRole(roleId);
             const viewsPermissions = [
+              
+              {
+                name: 'roles',
+                viewId: Views.roles,
+                isVisible: await this.getPermissions(roleId, Views.roles),
+              },
+              {
+                name: 'cargos',
+                viewId: Views.cargos,
+                isVisible: await this.getPermissions(roleId, Views.cargos), 
+              },
               {
                 name: 'departamentos',
                 viewId: Views.departamentos,
@@ -139,16 +150,7 @@ class Sidebar extends Component {
                 viewId: Views.activos,
                 isVisible: await this.getPermissions(roleId, Views.activos),
               },
-              {
-                name: 'roles',
-                viewId: Views.roles,
-                isVisible: await this.getPermissions(roleId, Views.roles),
-              },
-              {
-                name: 'cargos',
-                viewId: Views.cargos,
-                isVisible: await this.getPermissions(roleId, Views.cargos), 
-              }
+              
             ]
             this.setState({ views: viewsPermissions })
           } else {
