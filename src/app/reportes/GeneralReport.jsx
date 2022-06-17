@@ -175,12 +175,7 @@ class GeneralReport extends Component {
                         </View>
                         {
                             this.state.data !== null && this.state.oficinas !== null && this.state.users !== null && this.state.auxiliares !== null ?
-                            this.state.data.filter(index => {
-                                if(index.grupoId === this.props.data._id){
-                                    return index
-                                }
-                                return null
-                            })
+                            this.state.data
                             .map((index,key) => (
                                 <View style={styles.row} key={key}>
                                     <Text style={[styles.rowChildren, {flex: 1}]}>{key + 1}</Text>
@@ -190,7 +185,7 @@ class GeneralReport extends Component {
                                     this.state.auxiliares.find(item => item._id === index.auxiliarId).nombre :
                                     null}
                                     </Text>
-                                    <Text style={[styles.rowChildren, {flex: 2}]}>{index.costoInicial}</Text>
+                                    <Text style={[styles.rowChildren, {flex: 2}]}>{Number((index.costoInicial)).toFixed(3)}</Text>
                                     <Text style={[styles.rowChildren, {flex: 2}]}>{index.estadoActivo}</Text>
                                     <Text style={styles.rowChildren}>
                                     {this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ? 
