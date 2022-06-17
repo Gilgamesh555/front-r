@@ -358,24 +358,8 @@ export class Grupo extends Component {
                               <th>Vida Útil</th>
                               <th>Cantidad</th>
                               {/*<th>Estado</th>*/}
-                              {
-                                this.state.permissions !== undefined &&
-                                this.state.permissions.isEditable && (
-                                  <>
-                                  <th>Acciones</th>
-                                  <th>Reportes</th>
-                                  </>
-                                )
-                              }
-                              {
-                                this.state.permissions !== undefined &&
-                                this.state.permissions.isDeletable && this.state.permissions.isEditable (
-                                  <>
-                                  <th>Acciones</th>
-                                  <th>Reportes</th>
-                                  </>
-                                )
-                              }
+                              <th>Acciones</th>
+                              <th>Reportes</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -443,24 +427,24 @@ export class Grupo extends Component {
                                           this.state.permissions.isEditable &&
                                           (
                                             <>
-                                            <PDFDownloadLink document={<GrupoReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{ marginRight: '3px' }}>
-                                              Rept. Grupal
-                                              {/* {({ blob, url, loading, error }) =>
+                                              <PDFDownloadLink document={<GrupoReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{ marginRight: '3px' }}>
+                                                Rept. Grupal
+                                                {/* {({ blob, url, loading, error }) =>
                                                 loading ? 'Cargando...' : 'Reporte'
                                               } */}
-                                            </PDFDownloadLink>
-                                            <PDFDownloadLink document={<ActualizacionReport data={index} />} fileName={`reporte-activo-actualizacion`} className="badge badge-success" style={{ marginRight: '3px' }}>
-                                              Rept. Actualizacion
-                                              {/* {({ blob, url, loading, error }) =>
+                                              </PDFDownloadLink>
+                                              <PDFDownloadLink document={<ActualizacionReport data={index} />} fileName={`reporte-activo-actualizacion`} className="badge badge-success" style={{ marginRight: '3px' }}>
+                                                Rept. Actualizacion
+                                                {/* {({ blob, url, loading, error }) =>
                                                 loading ? 'Cargando...' : 'Reporte Actualizacion'
                                               } */}
-                                            </PDFDownloadLink>
-                                            <PDFDownloadLink document={<DepreciacionReport data={index} />} fileName={`reporte-activo-depreciacion`} className="badge badge-danger" style={{ marginRight: '3px' }}>
-                                              Rept. Depreciacion
-                                              {/* {({ blob, url, loading, error }) =>
+                                              </PDFDownloadLink>
+                                              <PDFDownloadLink document={<DepreciacionReport data={index} />} fileName={`reporte-activo-depreciacion`} className="badge badge-danger" style={{ marginRight: '3px' }}>
+                                                Rept. Depreciacion
+                                                {/* {({ blob, url, loading, error }) =>
                                                 loading ? 'Cargando...' : 'Reporte Depreciacion'
                                               } */}
-                                            </PDFDownloadLink> 
+                                              </PDFDownloadLink>
                                             </>
                                           )
                                         }
