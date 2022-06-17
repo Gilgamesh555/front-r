@@ -878,7 +878,9 @@ export class Personal extends Component {
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                     </td>
                                     <td>
+                                      <Link to="Reevaluar" spy={true} smooth={true} duration={250} containerId="containerElement">
                                       <a href="!#" onClick={evt => this.reevaluateActivo(evt, index)} className="badge badge-dark" style={{ marginRight: '3px' }}>Reevaluar</a>
+                                      </Link>
                                       {
                                         index.estado === 'inactivo' ?
                                           <PDFDownloadLink 
@@ -1100,6 +1102,10 @@ export class Personal extends Component {
                       </Button> */}
               </Modal.Footer>
             </Modal>
+
+            <Element
+              name="Reevaluar"
+            >
             {
               this.state.isReevaluate ?
                 <div className="col-lg-12 grid-margin stretch-card">
@@ -1120,6 +1126,7 @@ export class Personal extends Component {
                   </div>
                 </div> : null
             }
+            </Element>
             {
               this.state.qrCode !== '' ?
                 <div className="col-lg-4 grid-margin stretch-card">

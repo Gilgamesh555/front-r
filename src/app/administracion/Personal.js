@@ -44,7 +44,7 @@ export class Personal extends Component {
       changeToEdit: false,
       roles: null,
       cargos: null,
-      isWillBeTransfer: false,
+      isWillBeTransfer: true,
     }
     // Register User
     this.handleNombre = this.handleNombre.bind(this)
@@ -644,9 +644,11 @@ export class Personal extends Component {
                 </div>
               </div>
             </div>
+            <Element name="TransferirActivo">
             {
-              !this.state.isWillBeTransfer ? <Element name="TransferirActivo"><TransferActives /></Element> : null
+              !this.state.isWillBeTransfer ? <TransferActives /> : null
             }
+            </Element>
             {
               (this.state.changeToEdit || this.state.permissions.isAddble) &&
               (
