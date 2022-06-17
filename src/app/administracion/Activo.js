@@ -917,13 +917,13 @@ export class Personal extends Component {
                                           </>
                                         )
                                       }
-                                      {
+                                      {/*{
                                         this.state.permissions !== undefined &&
                                         this.state.permissions.isDeletable &&
                                         (
                                           <a href="!#" onClick={evt => this.deleteActivo(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>
                                         )
-                                      }
+                                      }*/}
                                       <a href="!#" onClick={evt => this.setModalLogInfo(evt, index)} className="badge badge-success" style={{ marginRight: '3px', color: 'white' }}>Logs</a>
                                     </td>
                                   </tr>
