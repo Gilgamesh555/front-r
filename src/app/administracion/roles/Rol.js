@@ -8,7 +8,7 @@ import FormRole from './Form';
 import { useForm } from 'react-hook-form';
 import './style.css';
 import { Views } from '../../../views/Views';
-import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import { Modal } from 'react-bootstrap';
 
 function Personal({ history }) {
   const { register, getValues } = useForm();
@@ -19,6 +19,7 @@ function Personal({ history }) {
   const [searchValue, setSearchValue] = useState('');
   const [isAuth, setIsAuth] = useState(true);
   const [permissions, setPermissions] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     response();
@@ -97,11 +98,13 @@ function Personal({ history }) {
 
   const onClickFormButton = (e) => {
     e.preventDefault();
+    setShowModal(true);
     setDataToEdit(null);
   }
 
   const onClickEditButton = (e, data) => {
     e.preventDefault();
+    setShowModal(true);
     setDataToEdit(data);
   }
 
@@ -126,13 +129,6 @@ function Personal({ history }) {
   }
 
   return (
-    <Element
-      id="containerElement"
-      style={{
-        height: "800px",
-        overflow: "scroll",
-      }}
-    >
     <div>
       <div className="page-header">
         <h3 className="page-title"> {ViewName} </h3>
@@ -210,7 +206,6 @@ function Personal({ history }) {
                       ))}
                     <tr>
                       <td colSpan={3}>
-                        <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
                         <a
                           href="!#"
                           onClick={(e) => onClickFormButton(e)}
@@ -218,7 +213,6 @@ function Personal({ history }) {
                           style={{ marginRight: '3px', color: 'whitesmoke' }}>
                           Registrar Nuevo
                         </a>
-                        </Link>
                       </td>
                     </tr>
                   </tbody>
@@ -228,11 +222,16 @@ function Personal({ history }) {
           </div>
         </div>
       </div>
-      <FormRole
-        data={dataToEdit}
-      />
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        centered
+      >
+        <FormRole
+          data={dataToEdit}
+        />
+      </Modal>
     </div>
-    </Element>
   )
 }
 

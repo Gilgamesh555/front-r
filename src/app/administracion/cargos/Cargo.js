@@ -7,7 +7,7 @@ import ItemCargo from './Item';
 import FormCargo from './Form';
 import { useForm } from 'react-hook-form';
 import { Views } from '../../../views/Views';
-import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import { Modal } from 'react-bootstrap';
 
 export default function CargoView({ history }) {
   const { register, getValues } = useForm();
@@ -18,6 +18,7 @@ export default function CargoView({ history }) {
   const [searchValue, setSearchValue] = useState('');
   const [isAuth, setIsAuth] = useState(true);
   const [permissions, setPermissions] = useState(null);
+  const [ showModal, setShowModal ] = useState(false);
 
   useEffect(() => {
     response();
@@ -96,11 +97,13 @@ export default function CargoView({ history }) {
 
   const onClickFormButton = (e) => {
     e.preventDefault();
+    setShowModal(true);
     setDataToEdit(null);
   }
 
   const onClickEditButton = (e, data) => {
     e.preventDefault();
+    setShowModal(true);
     setDataToEdit(data);
   }
 
@@ -123,95 +126,91 @@ export default function CargoView({ history }) {
   }
 
   return (
-    <Element
-      id="containerElement"
-      style={{
-        height: "800px",
-        overflow: "scroll",
-      }}
-    >
-      <div>
-        <div className="page-header">
-          <h3 className="page-title"> {ViewName} </h3>
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
-              <li className="breadcrumb-item active" aria-current="page">{ViewName}</li>
-            </ol>
-          </nav>
-        </div>
-        <div className="row">
-          <div className="col-lg-12 grid-margin stretch-card">
-            <div className="card">
-              <div className="card-body">
-                <h4 className="card-title">Lista de {ViewName}</h4>
-                <div className="table-responsive">
-                  <table className="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>Nombre</th>
-                        <th>Codigo</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody className='table-body-notFound'>
-                      {cargos === null || permissions === null ?
-                        <th colSpan={3} className='table-body-notFound'>No existen roles</th> :
-                        (
-                          cargos.filter((item) => {
-                            if (searchValue !== '') {
-                              const nameFixed = item.name.toLowerCase();
-                              const checkIfNameExists = nameFixed.includes(searchValue.toLocaleLowerCase());
+    <div>
+      <div className="page-header">
+        <h3 className="page-title"> {ViewName} </h3>
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
+            <li className="breadcrumb-item active" aria-current="page">{ViewName}</li>
+          </ol>
+        </nav>
+      </div>
+      <div className="row">
+        <div className="col-lg-12 grid-margin stretch-card">
+          <div className="card">
+            <div className="card-body">
+              <h4 className="card-title">Lista de {ViewName}</h4>
+              <div className="table-responsive">
+                <table className="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Codigo</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody className='table-body-notFound'>
+                    {cargos === null || permissions === null ?
+                      <th colSpan={3} className='table-body-notFound'>No existen roles</th> :
+                      (
+                        cargos.filter((item) => {
+                          if (searchValue !== '') {
+                            const nameFixed = item.name.toLowerCase();
+                            const checkIfNameExists = nameFixed.includes(searchValue.toLocaleLowerCase());
 
-                              if (checkIfNameExists) {
-                                return item;
-                              } else {
-                                return null;
-                              }
+                            if (checkIfNameExists) {
+                              return item;
                             } else {
-                              if (searchValue === '') {
-                                return item;
-                              } else {
-                                return null;
-                              }
+                              return null;
                             }
-                          })
-                        ).map((item) => (
-                          <ItemCargo
-                            key={item._id}
-                            data={item}
-                            onEdit={onClickEditButton}
-                            onDelete={onClickDeleteButton}
-                            permissions={permissions}
-                          />
-                        ))}
-                      <tr>
-                        <td colSpan={3}>
-                          {
-                            permissions !== null && permissions.isAddble ?
-                              <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
-                              <a
-                                href="!#"
-                                onClick={(e) => onClickFormButton(e)}
-                                className="badge badge-success"
-                                style={{ marginRight: '3px', color: 'whitesmoke' }}>
-                                Registrar Nuevo
-                              </a>
-                              </Link> : null
+                          } else {
+                            if (searchValue === '') {
+                              return item;
+                            } else {
+                              return null;
+                            }
                           }
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                        })
+                      ).map((item) => (
+                        <ItemCargo
+                          key={item._id}
+                          data={item}
+                          onEdit={onClickEditButton}
+                          onDelete={onClickDeleteButton}
+                          permissions={permissions}
+                        />
+                      ))}
+                    <tr>
+                      <td colSpan={3}>
+                        {
+                          permissions !== null && permissions.isAddble ?
+                            <a
+                              href="!#"
+                              onClick={(e) => onClickFormButton(e)}
+                              className="badge badge-success"
+                              style={{ marginRight: '3px', color: 'whitesmoke' }}>
+                              Registrar Nuevo
+                            </a> : null
+                        }
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
+        centered
+      >
         <FormCargo
           data={dataToEdit}
         />
-      </div>
-    </Element>
+      </Modal>
+    </div>
   )
 };

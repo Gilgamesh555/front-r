@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Dropdown } from 'react-bootstrap';
+import { Form, Dropdown, Modal } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import { Views } from '../../views/Views';
 
@@ -22,6 +22,8 @@ export class Ufv extends Component {
       viewId: Views.ufv,
       permissions: null,
       changeToEdit: false,
+      showRegisterModal: false,
+      showModifyModal: false,
     }
     // Register User
     this.handleFecha = this.handleFecha.bind(this)
@@ -202,6 +204,7 @@ export class Ufv extends Component {
       nombre: data.nombre,
       codigo: data.codigo,
       changeToEdit: !this.state.changeToEdit,
+      showModifyModal: true,
     }, () => {
       document.getElementById('inputFecha').value = data.fecha
       document.getElementById('inputValor').value = data.valor
@@ -247,11 +250,7 @@ export class Ufv extends Component {
   }
 
   registerUfv(event) {
-    document.getElementById('inputValor').value = ''
-    document.getElementById('inputFecha').value = this.state.fecha
-
-    document.getElementById('card-title-ufv').innerHTML = 'Registrar Ufv'
-    document.getElementById('card-title-ufv').style = 'color: black'
+    this.setState({ showRegisterModal: true })
     event.preventDefault()
   }
 
@@ -297,7 +296,7 @@ export class Ufv extends Component {
               </div>
             </div>
             <div className="row">
-              <div className="col-lg-6 grid-margin stretch-card">
+              <div className="col-lg-12 grid-margin stretch-card">
                 <div className="card">
                   <div className="card-body">
                     <h4 className="card-title">Lista de UFV's</h4>
@@ -387,34 +386,74 @@ export class Ufv extends Component {
                   </div>
                 </div>
               </div>
-              {
-                (this.state.changeToEdit || this.state.permissions.isAddble) &&
-                (
-                  <div className="col-md-6 grid-margin stretch-card">
-                    <div className="card">
-                      <div className="card-body">
-                        <h4 className="card-title" id="card-title-ufv">Registrar UFV</h4>
-                        <p className="card-description">Todos los campos son requeridos</p>
-                        <form className="forms-sample">
-                          <Form.Group>
-                            <label htmlFor="exampleInputUsername1">Fecha</label>
-                            <Form.Control onChange={this.handleFecha} type="date" id="inputFecha" defaultValue={this.state.fecha} placeholder="Nombre de Oficina" size="lg" required />
-                          </Form.Group>
-                          <Form.Group>
-                            <label htmlFor="exampleInputEmail1">Valor</label>
-                            <Form.Control onChange={this.handleValor} type="number" className="form-control" id="inputValor" placeholder="0.0000" steps="any" required />
-                          </Form.Group>
-                          <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
-                          <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
-                          {
-                            this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
-                          }
-                        </form>
+              <Modal
+                show={this.state.showRegisterModal}
+                onHide={() => this.setState({showRegisterModal: false})}
+                centered
+              >
+                {
+                  (this.state.changeToEdit || this.state.permissions.isAddble) &&
+                  (
+                    <div className="col-md-12 grid-margin stretch-card">
+                      <div className="card">
+                        <div className="card-body">
+                          <h4 className="card-title" id="card-title-ufv">Registrar UFV</h4>
+                          <p className="card-description">Todos los campos son requeridos</p>
+                          <form className="forms-sample">
+                            <Form.Group>
+                              <label htmlFor="exampleInputUsername1">Fecha</label>
+                              <Form.Control onChange={this.handleFecha} type="date" id="inputFecha" defaultValue={this.state.fecha} placeholder="Nombre de Oficina" size="lg" required />
+                            </Form.Group>
+                            <Form.Group>
+                              <label htmlFor="exampleInputEmail1">Valor</label>
+                              <Form.Control onChange={this.handleValor} type="number" className="form-control" id="inputValor" placeholder="0.0000" steps="any" required />
+                            </Form.Group>
+                            <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
+                            <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
+                            {
+                              this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
+                            }
+                          </form>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )
-              }
+                  )
+                }
+              </Modal>
+              <Modal
+                show={this.state.showModifyModal}
+                onHide={() => this.setState({showModifyModal: false})}
+                centered
+              >
+                {
+                  (this.state.changeToEdit || this.state.permissions.isAddble) &&
+                  (
+                    <div className="col-md-12 grid-margin stretch-card">
+                      <div className="card">
+                        <div className="card-body">
+                          <h4 className="card-title" id="card-title-ufv">Registrar UFV</h4>
+                          <p className="card-description">Todos los campos son requeridos</p>
+                          <form className="forms-sample">
+                            <Form.Group>
+                              <label htmlFor="exampleInputUsername1">Fecha</label>
+                              <Form.Control onChange={this.handleFecha} type="date" id="inputFecha" defaultValue={this.state.fecha} placeholder="Nombre de Oficina" size="lg" required />
+                            </Form.Group>
+                            <Form.Group>
+                              <label htmlFor="exampleInputEmail1">Valor</label>
+                              <Form.Control onChange={this.handleValor} type="number" className="form-control" id="inputValor" placeholder="0.0000" steps="any" required />
+                            </Form.Group>
+                            <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
+                            <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
+                            {
+                              this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
+                            }
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+              </Modal>
             </div>
 
           </div>

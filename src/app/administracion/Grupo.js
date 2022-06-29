@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
-import { ProgressBar, Dropdown } from 'react-bootstrap'
+import { ProgressBar, Dropdown, Modal } from 'react-bootstrap'
 // import DatePicker from "react-datepicker";
 
 import axios from 'axios'
@@ -14,7 +14,6 @@ import GeneralReport from '../reportes/GeneralReport'
 import DepreciacionReport from '../reportes/DepreciacionReport'
 import ActualizacionReport from '../reportes/ActualizacionReport'
 import { Views } from '../../views/Views';
-import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 export class Grupo extends Component {
   constructor(props) {
@@ -35,6 +34,8 @@ export class Grupo extends Component {
       viewId: Views.grupos,
       permissions: null,
       changeToEdit: false,
+      showRegisterModal: false,
+      showModifyModal: false,
     }
     // Register User
     this.handleNombre = this.handleNombre.bind(this)
@@ -233,6 +234,7 @@ export class Grupo extends Component {
       vida: data.vida,
       coe: data.coe,
       changeToEdit: !this.state.changeToEdit,
+      showModifyModal: true,
     }, () => {
       document.getElementById('inputNombre').value = data.nombre
       document.getElementById('inputVida').value = data.vida
@@ -278,13 +280,7 @@ export class Grupo extends Component {
   }
 
   registerGrupo(event) {
-    document.getElementById('inputNombre').value = ''
-    document.getElementById('inputVida').value = ''
-    document.getElementById('inputCoe').value = ''
-    // document.getElementById('inputCodigo').value = ''
-
-    document.getElementById('card-title-grupo').innerHTML = 'Registrar Grupo'
-    document.getElementById('card-title-grupo').style = 'color: black'
+    this.setState({ showRegisterModal: true });
     event.preventDefault()
   }
 
@@ -318,255 +314,301 @@ export class Grupo extends Component {
       }
       else {
         return (
-          <Element
-            id="containerElement"
-            style={{
-              height: "1000px",
-              overflow: "scroll",
-            }}
-          >
-            <div>
-              <div className="page-header">
-                <h3 className="page-title"> Grupos </h3>
-                <nav aria-label="breadcrumb">
-                  <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
-                    <li className="breadcrumb-item active" aria-current="page">Grupos</li>
-                  </ol>
-                </nav>
-              </div>
-              <div className="row">
-                <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
-                  <div className="form-group" style={{ width: '100%' }}>
-                    <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchGrupo: event.target.value })} />
-                  </div>
+          <div>
+            <div className="page-header">
+              <h3 className="page-title"> Grupos </h3>
+              <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
+                  <li className="breadcrumb-item active" aria-current="page">Grupos</li>
+                </ol>
+              </nav>
+            </div>
+            <div className="row">
+              <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
+                <div className="form-group" style={{ width: '100%' }}>
+                  <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchGrupo: event.target.value })} />
                 </div>
               </div>
-              <div className="row">
-                <div className="col-lg-12 grid-margin stretch-card">
-                  <div className="card">
-                    <div className="card-body">
-                      <h4 className="card-title">Lista de Grupos</h4>
-                      {/* <p className="card-description"> Add className <code>.table-hover</code>
+            </div>
+            <div className="row">
+              <div className="col-lg-12 grid-margin stretch-card">
+                <div className="card">
+                  <div className="card-body">
+                    <h4 className="card-title">Lista de Grupos</h4>
+                    {/* <p className="card-description"> Add className <code>.table-hover</code>
                           </p> */}
-                      <div className="table-responsive">
-                        <table className="table table-hover">
-                          <thead>
-                            <tr>
-                              <th>Nombre</th>
-                              <th>Codigo</th>
-                              <th>Vida Útil</th>
-                              <th>Cantidad</th>
-                              {/*<th>Estado</th>*/}
-                              <th>Acciones</th>
-                              <th>Reportes</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {
-                              this.state.data !== null ?
-                                this.state.data
-                                  .filter((index) => {
-                                    if (this.state.searchGrupo === '') {
+                    <div className="table-responsive">
+                      <table className="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Nombre</th>
+                            <th>Codigo</th>
+                            <th>Vida Útil</th>
+                            <th>Cantidad</th>
+                            {/*<th>Estado</th>*/}
+                            <th>Acciones</th>
+                            <th>Reportes</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {
+                            this.state.data !== null ?
+                              this.state.data
+                                .filter((index) => {
+                                  if (this.state.searchGrupo === '') {
+                                    return index
+                                  } else {
+                                    if (index.nombre.toLowerCase().includes(this.state.searchGrupo.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchGrupo.toLocaleLowerCase())) {
                                       return index
-                                    } else {
-                                      if (index.nombre.toLowerCase().includes(this.state.searchGrupo.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchGrupo.toLocaleLowerCase())) {
-                                        return index
-                                      }
                                     }
-                                    return null
-                                  })
-                                  .map((index, key) => (
-                                    <tr key={key}>
-                                      <td>{index.nombre}</td>
-                                      <td>{index.codigo}</td>
-                                      <td>{index.vida}</td>
-                                      <td>
-                                        {
-                                          this.state.auxiliares !== null && this.state.auxiliares.filter(item => item.grupoId === index._id).length !== undefined ?
-                                            <>
-                                              <ProgressBar variant="success" max={50} style={{ minWidth: '100px' }} now={this.state.auxiliares.filter(item => item.grupoId === index._id).length} />
-                                              <label style={{ float: 'right', color: '#19d895', fontSize: '13px' }}>{this.state.auxiliares.filter(item => item.grupoId === index._id).length}</label>
-                                            </>
-                                            :
-                                            null
-                                        }
-                                      </td>
-                                      {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                  }
+                                  return null
+                                })
+                                .map((index, key) => (
+                                  <tr key={key}>
+                                    <td>{index.nombre}</td>
+                                    <td>{index.codigo}</td>
+                                    <td>{index.vida}</td>
+                                    <td>
+                                      {
+                                        this.state.auxiliares !== null && this.state.auxiliares.filter(item => item.grupoId === index._id).length !== undefined ?
+                                          <>
+                                            <ProgressBar variant="success" max={50} style={{ minWidth: '100px' }} now={this.state.auxiliares.filter(item => item.grupoId === index._id).length} />
+                                            <label style={{ float: 'right', color: '#19d895', fontSize: '13px' }}>{this.state.auxiliares.filter(item => item.grupoId === index._id).length}</label>
+                                          </>
+                                          :
+                                          null
+                                      }
+                                    </td>
+                                    {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                     </td>*/}
-                                      <td>
-                                        <Dropdown>
-                                          <Dropdown.Toggle variant="warning" id="dropdown-basic"></Dropdown.Toggle>
-                                          <Dropdown.Menu>
-                                            {
-                                              this.state.permissions !== undefined &&
-                                              this.state.permissions.isEditable &&
-                                              (
-                                                <Dropdown.Item
-                                                  href="#/action-1"
-                                                  onClick={evt => this.modifyGrupo(evt, index)}>
-                                                  <span
+                                    <td>
+                                      <Dropdown>
+                                        <Dropdown.Toggle variant="warning" id="dropdown-basic"></Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                          {
+                                            this.state.permissions !== undefined &&
+                                            this.state.permissions.isEditable &&
+                                            (
+                                              <Dropdown.Item
+                                                href="#/action-1"
+                                                onClick={evt => this.modifyGrupo(evt, index)}>
+                                                <span
+                                                  style={{
+                                                    fontSize: '14px',
+                                                  }}
+                                                >Modificar</span>
+                                              </Dropdown.Item>
+                                            )
+                                          }
+                                          {
+                                            this.state.permissions !== undefined &&
+                                            this.state.permissions.isDeletable &&
+                                            (
+                                              <Dropdown.Item
+                                                href="#/action-1"
+                                                onClick={evt => this.deleteGrupo(evt, index)}>
+                                                <span
+                                                  style={{
+                                                    fontSize: '14px',
+                                                  }}
+                                                >Eliminar</span>
+                                              </Dropdown.Item>
+                                            )
+                                          }
+                                        </Dropdown.Menu>
+                                      </Dropdown>
+                                    </td>
+                                    <td>
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isEditable &&
+                                        (
+                                          <Dropdown>
+                                            <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                              <Dropdown.Item href="#/action-3">
+                                                <a>
+                                                  <PDFDownloadLink
+                                                    document={<GrupoReport data={index} />}
+                                                    fileName={`reporte-grupo-${index.nombre}`}
                                                     style={{
-                                                      fontSize: '14px',
-                                                    }}
-                                                  >Modificar</span>
-                                                </Dropdown.Item>
-                                              )
-                                            }
-                                            {
-                                              this.state.permissions !== undefined &&
-                                              this.state.permissions.isDeletable &&
-                                              (
-                                                <Dropdown.Item
-                                                  href="#/action-1"
-                                                  onClick={evt => this.deleteGrupo(evt, index)}>
-                                                  <span
+                                                      color: '#000',
+                                                      backgroundColor: 'transparent'
+                                                    }}>
+                                                    Rept. Grupal
+                                                  </PDFDownloadLink>
+                                                </a>
+                                              </Dropdown.Item>
+                                              <Dropdown.Item href="#/action-3">
+                                                <a>
+                                                  <PDFDownloadLink
+                                                    document={<ActualizacionReport data={index} />}
+                                                    fileName={`reporte-activo-actualizacion`}
                                                     style={{
-                                                      fontSize: '14px',
-                                                    }}
-                                                  >Eliminar</span>
-                                                </Dropdown.Item>
-                                              )
-                                            }
-                                          </Dropdown.Menu>
-                                        </Dropdown>
-                                      </td>
-                                      <td>
-                                        {
-                                          this.state.permissions !== undefined &&
-                                          this.state.permissions.isEditable &&
-                                          (
-                                            <Dropdown>
-                                              <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
-                                              <Dropdown.Menu>
-                                                <Dropdown.Item href="#/action-3">
-                                                  <a>
-                                                    <PDFDownloadLink
-                                                      document={<GrupoReport data={index} />}
-                                                      fileName={`reporte-grupo-${index.nombre}`}
-                                                      style={{
-                                                        color: '#000',
-                                                        backgroundColor: 'transparent'
-                                                      }}>
-                                                      Rept. Grupal
-                                                    </PDFDownloadLink>
-                                                  </a>
-                                                </Dropdown.Item>
-                                                <Dropdown.Item href="#/action-3">
-                                                  <a>
-                                                    <PDFDownloadLink
-                                                      document={<ActualizacionReport data={index} />}
-                                                      fileName={`reporte-activo-actualizacion`}
-                                                      style={{
-                                                        color: '#000',
-                                                        backgroundColor: 'transparent'
-                                                      }}>
-                                                      Rept. Actualizacion
-                                                    </PDFDownloadLink>
-                                                  </a>
-                                                </Dropdown.Item>
-                                                <Dropdown.Item href="#/action-3">
-                                                  <a>
-                                                    <PDFDownloadLink
-                                                      document={<DepreciacionReport data={index} />}
-                                                      fileName={`reporte-activo-depreciacion`}
-                                                      style={{
-                                                        color: '#000',
-                                                        backgroundColor: 'transparent'
-                                                      }}>
-                                                      Rept. Depreciacion
-                                                    </PDFDownloadLink>
-                                                  </a>
-                                                </Dropdown.Item>
-                                              </Dropdown.Menu>
-                                            </Dropdown>
-                                          )
-                                        }
-                                      </td>
-                                    </tr>
-                                  ))
-                                : null
-                            }
-                            {/* <PDFDownloadLink document={<GrupoReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{ marginRight: '3px' }}>
+                                                      color: '#000',
+                                                      backgroundColor: 'transparent'
+                                                    }}>
+                                                    Rept. Actualizacion
+                                                  </PDFDownloadLink>
+                                                </a>
+                                              </Dropdown.Item>
+                                              <Dropdown.Item href="#/action-3">
+                                                <a>
+                                                  <PDFDownloadLink
+                                                    document={<DepreciacionReport data={index} />}
+                                                    fileName={`reporte-activo-depreciacion`}
+                                                    style={{
+                                                      color: '#000',
+                                                      backgroundColor: 'transparent'
+                                                    }}>
+                                                    Rept. Depreciacion
+                                                  </PDFDownloadLink>
+                                                </a>
+                                              </Dropdown.Item>
+                                            </Dropdown.Menu>
+                                          </Dropdown>
+                                        )
+                                      }
+                                    </td>
+                                  </tr>
+                                ))
+                              : null
+                          }
+                          {/* <PDFDownloadLink document={<GrupoReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{ marginRight: '3px' }}>
                               Rept. Grupal
                               {({ blob, url, loading, error }) =>
                                                 loading ? 'Cargando...' : 'Reporte'
                                               }
                             </PDFDownloadLink> */}
-                            <tr>
-                              {
-                                this.state.permissions !== undefined &&
-                                this.state.permissions.isAddble &&
-                                (
-                                  <td>
-                                    <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
-                                      <a href="!#" onClick={evt => this.registerGrupo(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
-                                    </Link>
-                                    <PDFDownloadLink document={<GeneralReport />} fileName={`reporte-general-grupos`} className="badge badge-warning" style={{ marginRight: '3px' }}>
-                                      Rept. General
-                                    </PDFDownloadLink>
-                                  </td>
-                                )
-                              }
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
+                          <tr>
+                            {
+                              this.state.permissions !== undefined &&
+                              this.state.permissions.isAddble &&
+                              (
+                                <td>
+                                  <a href="!#" onClick={evt => this.registerGrupo(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
+                                  <PDFDownloadLink document={<GeneralReport />} fileName={`reporte-general-grupos`} className="badge badge-warning" style={{ marginRight: '3px' }}>
+                                    Rept. General
+                                  </PDFDownloadLink>
+                                </td>
+                              )
+                            }
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <Modal
+              show={this.state.showRegisterModal}
+              onHide={() => this.setState({ showRegisterModal: false })}
+              centered
+            >
               {
                 (this.state.changeToEdit || this.state.permissions.isAddble) &&
                 (
-                  <Element name="FormActivo">
-                    <div className="col-md-12 grid-margin stretch-card">
-                      <div className="card">
-                        <div className="card-body">
-                          <h4 className="card-title" id="card-title-grupo">Registrar Grupo</h4>
-                          <p className="card-description">Todos los campos son requeridos</p>
-                          <form className="forms-sample">
-                            <Form.Group>
-                              <label htmlFor="exampleInputUsername1">Nombre de Grupo</label>
-                              <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre del Grupo" size="lg" required />
-                            </Form.Group>
-                            <div className="row">
-                              <div className="col-md-6">
-                                <Form.Group className="row">
-                                  <label className="col-sm-3 col-form-label">VIDA</label>
-                                  <div className="col-sm-9">
-                                    <Form.Control type="number" placeholder="En años" step="any" id="inputVida" required onChange={this.handleVida} />
-                                  </div>
-                                </Form.Group>
-                              </div>
-                              <div className="col-md-6">
-                                <Form.Group className="row">
-                                  <label className="col-sm-3 col-form-label">COE</label>
-                                  <div className="col-sm-9">
-                                    <Form.Control type="number" placeholder="0% - 100%" step="1" min={1} max={100} id="inputCoe" required onChange={this.handleCoe} />
-                                  </div>
-                                </Form.Group>
-                              </div>
+                  <div className="col-md-12 grid-margin stretch-card">
+                    <div className="card">
+                      <div className="card-body">
+                        <h4 className="card-title" id="card-title-grupo">Registrar Grupo</h4>
+                        <p className="card-description">Todos los campos son requeridos</p>
+                        <form className="forms-sample">
+                          <Form.Group>
+                            <label htmlFor="exampleInputUsername1">Nombre de Grupo</label>
+                            <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre del Grupo" size="lg" required />
+                          </Form.Group>
+                          <div className="row">
+                            <div className="col-md-6">
+                              <Form.Group className="row">
+                                <label className="col-sm-3 col-form-label">VIDA</label>
+                                <div className="col-sm-9">
+                                  <Form.Control type="number" placeholder="En años" step="any" id="inputVida" required onChange={this.handleVida} />
+                                </div>
+                              </Form.Group>
                             </div>
-                            {/* <Form.Group>
+                            <div className="col-md-6">
+                              <Form.Group className="row">
+                                <label className="col-sm-3 col-form-label">COE</label>
+                                <div className="col-sm-9">
+                                  <Form.Control type="number" placeholder="0% - 100%" step="1" min={1} max={100} id="inputCoe" required onChange={this.handleCoe} />
+                                </div>
+                              </Form.Group>
+                            </div>
+                          </div>
+                          {/* <Form.Group>
                               <label htmlFor="exampleInputEmail1">Codigo</label>
                               <Form.Control onChange={this.handleCodigo} type="Codigo" className="form-control" id="inputCodigo" placeholder="Codigo" required/>
                             </Form.Group> */}
-                            <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
-                            <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
-                            {
-                              this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
-                            }
-                          </form>
-                        </div>
+                          <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
+                          <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
+                          {
+                            this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
+                          }
+                        </form>
                       </div>
                     </div>
-                  </Element>
+                  </div>
                 )
               }
-            </div>
-          </Element>
+            </Modal>
+            <Modal
+              show={this.state.showModifyModal}
+              onHide={() => this.setState({ showModifyModal: false })}
+              centered
+            >
+              {
+                (this.state.changeToEdit || this.state.permissions.isAddble) &&
+                (
+                  <div className="col-md-12 grid-margin stretch-card">
+                    <div className="card">
+                      <div className="card-body">
+                        <h4 className="card-title" id="card-title-grupo">Registrar Grupo</h4>
+                        <p className="card-description">Todos los campos son requeridos</p>
+                        <form className="forms-sample">
+                          <Form.Group>
+                            <label htmlFor="exampleInputUsername1">Nombre de Grupo</label>
+                            <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre del Grupo" size="lg" required />
+                          </Form.Group>
+                          <div className="row">
+                            <div className="col-md-6">
+                              <Form.Group className="row">
+                                <label className="col-sm-3 col-form-label">VIDA</label>
+                                <div className="col-sm-9">
+                                  <Form.Control type="number" placeholder="En años" step="any" id="inputVida" required onChange={this.handleVida} />
+                                </div>
+                              </Form.Group>
+                            </div>
+                            <div className="col-md-6">
+                              <Form.Group className="row">
+                                <label className="col-sm-3 col-form-label">COE</label>
+                                <div className="col-sm-9">
+                                  <Form.Control type="number" placeholder="0% - 100%" step="1" min={1} max={100} id="inputCoe" required onChange={this.handleCoe} />
+                                </div>
+                              </Form.Group>
+                            </div>
+                          </div>
+                          {/* <Form.Group>
+                              <label htmlFor="exampleInputEmail1">Codigo</label>
+                              <Form.Control onChange={this.handleCodigo} type="Codigo" className="form-control" id="inputCodigo" placeholder="Codigo" required/>
+                            </Form.Group> */}
+                          <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
+                          <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
+                          {
+                            this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
+                          }
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+            </Modal>
+          </div>
         )
       }
     }

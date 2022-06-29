@@ -70,7 +70,7 @@ function FormRole({ data }) {
       await axios.post(`${nodeapi}roleviews`, data);
     }
 
-    let role ={
+    let role = {
       name: dataFromForm['roleName'],
     }
 
@@ -92,7 +92,7 @@ function FormRole({ data }) {
   }
 
   const onSubmitUpdate = async (dataFromForm) => {
-    const updatePermissions = async(data, permissions) => {
+    const updatePermissions = async (data, permissions) => {
       await axios.put(`${nodeapi}roleviews/${data._id}`, permissions);
     }
 
@@ -101,12 +101,12 @@ function FormRole({ data }) {
       console.log('aa');
     }
 
-    let role ={
+    let role = {
       name: dataFromForm['roleName'],
     }
 
     if (dataFromForm['roleName'] === '') {
-        role.name = data.name;
+      role.name = data.name;
     }
 
     await updateRole(role);
@@ -125,97 +125,94 @@ function FormRole({ data }) {
   }
 
   return (
-    <Element name="FormActivo">
-    <div className="row">
-      <div className="col-md-9 grid-margin stretch-card">
-        <div className="card">
-          <div className="card-body">
-            <h4 className="card-title" id="card-title-user">{values.title}</h4>
-            <form className="form-sample" onSubmit={handleSubmit(onSubmit)}>
-              <p className="card-description">{values.title}</p>
-              <div className="row">
-                <div className="col-md-6">
-                  <Form.Group className="row">
-                    <label className="col-sm-3 col-form-label">Nombre Rol</label>
-                    <div className="col-sm-9">
-                      <Form.Control 
-                        type="text" 
-                        placeholder="Nombre de Rol" 
-                        id="inputRolName" 
-                        required 
-                        {...register(`roleName`)}
-                        defaultValue={
-                          data !== null ? data.name : ''
-                        }  
-                      />
-                    </div>
-                  </Form.Group>
+    <div className="card">
+      <div className="card-body">
+        <h4 className="card-title" id="card-title-user">{values.title}</h4>
+        <form className="form-sample" onSubmit={handleSubmit(onSubmit)}>
+          <p className="card-description">{values.title}</p>
+          <div className="row">
+            <div className="col-md-6">
+              <Form.Group className="row">
+                <label className="col-sm-3 col-form-label">Nombre Rol</label>
+                <div className="col-sm-9">
+                  <Form.Control
+                    type="text"
+                    placeholder="Nombre de Rol"
+                    id="inputRolName"
+                    required
+                    {...register(`roleName`)}
+                    defaultValue={
+                      data !== null ? data.name : ''
+                    }
+                  />
                 </div>
-              </div>
-              <div className='row'>
-                <div className="col-lg-12 grid-margin stretch-card">
-                  <table className="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>Vista</th>
-                        <th>Ver</th>
-                        <th>Editar</th>
-                        <th>Eliminar</th>
-                        <th>Añadir</th>
+              </Form.Group>
+            </div>
+          </div>
+          <div className='row'>
+            <div className="col-lg-12 grid-margin stretch-card">
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Vista</th>
+                    <th>Ver</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                    <th>Añadir</th>
+                  </tr>
+                </thead>
+                <tbody className='table-body-notFound'>
+                  {
+                    views !== null &&
+                    views.map((item) => (
+                      <tr key={item._id}>
+                        <td>
+                          {
+                            data === null ? item.name : item.viewName
+                          }
+                        </td>
+                        <td>
+                          <label className="form-check-label">
+                            <input type="checkbox"
+                              defaultChecked={item.isVisible}
+                              {...register(`isVisible-${item._id}`)}
+                            />
+                            <i className="input-helper"></i>
+                          </label>
+                        </td>
+                        <td>
+                          <label className="form-check-label">
+                            <input type="checkbox"
+                              defaultChecked={item.isEditable}
+                              {...register(`isEditable-${item._id}`)}
+                            />
+                            <i className="input-helper"></i>
+                          </label>
+                        </td>
+                        <td>
+                          <label className="form-check-label">
+                            <input type="checkbox"
+                              defaultChecked={item.isDeletable}
+                              {...register(`isDeletable-${item._id}`)}
+                            />
+                            <i className="input-helper"></i>
+                          </label>
+                        </td>
+                        <td>
+                          <label className="form-check-label">
+                            <input type="checkbox"
+                              defaultChecked={item.isAddble}
+                              {...register(`isAddble-${item._id}`)}
+                            />
+                            <i className="input-helper"></i>
+                          </label>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody className='table-body-notFound'>
-                      {
-                        views !== null &&
-                        views.map((item) => (
-                          <tr key={item._id}>
-                            <td>
-                              {
-                                data === null ? item.name : item.viewName
-                              }
-                            </td>
-                            <td>
-                              <label className="form-check-label">
-                                <input type="checkbox"
-                                  defaultChecked={item.isVisible}
-                                  {...register(`isVisible-${item._id}`)}
-                                />
-                                <i className="input-helper"></i>
-                              </label>
-                            </td>
-                            <td>
-                              <label className="form-check-label">
-                                <input type="checkbox"
-                                  defaultChecked={item.isEditable}
-                                  {...register(`isEditable-${item._id}`)}
-                                />
-                                <i className="input-helper"></i>
-                              </label>
-                            </td>
-                            <td>
-                              <label className="form-check-label">
-                                <input type="checkbox"
-                                  defaultChecked={item.isDeletable}
-                                  {...register(`isDeletable-${item._id}`)}
-                                />
-                                <i className="input-helper"></i>
-                              </label>
-                            </td>
-                            <td>
-                              <label className="form-check-label">
-                                <input type="checkbox"
-                                  defaultChecked={item.isAddble}
-                                  {...register(`isAddble-${item._id}`)}
-                                />
-                                <i className="input-helper"></i>
-                              </label>
-                            </td>
-                          </tr>
-                        ))
-                      }
-                    </tbody>
-                  </table>
-                  {/* <div className="form-check">
+                    ))
+                  }
+                </tbody>
+              </table>
+              {/* <div className="form-check">
                         <label className="form-check-label">
                           <input type="checkbox" defaultChecked className="form-check-input" />
                           <i className="input-helper"></i>
@@ -229,23 +226,20 @@ function FormRole({ data }) {
                           Disabled
                         </label>
                       </div> */}
-                </div>
-              </div>
-              <div className='row'>
-                <div className='col-md-12'>
-                  <button type="submit" className="btn btn-primary mr-2">Enviar</button>
-                  <button type='reset' className="btn btn-light">Borrar Datos</button>
-                  {/* {
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-md-12'>
+              <button type="submit" className="btn btn-primary mr-2">Enviar</button>
+              <button type='reset' className="btn btn-light">Borrar Datos</button>
+              {/* {
                     this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
                   } */}
-                </div>
-              </div>
-            </form>
+            </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
-    </Element>
   )
 }
 

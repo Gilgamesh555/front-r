@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Form, Dropdown } from 'react-bootstrap';
+import { Form, Dropdown, Modal } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 // import DatePicker from "react-datepicker";
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 import { Views } from '../../views/Views';
-import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 export class Auxiliar extends Component {
   constructor(props) {
@@ -27,6 +26,8 @@ export class Auxiliar extends Component {
       viewId: Views.auxiliares,
       permissions: null,
       changeToEdit: false,
+      showRegisterModal: false,
+      showModifyModal: false,
     }
     // Register User
     this.handleNombre = this.handleNombre.bind(this)
@@ -217,15 +218,22 @@ export class Auxiliar extends Component {
 
   //crud
   modifyAuxiliar(event, data) {
-    // document.getElementById('inputCodigo').value = data.codigo
-    document.getElementById('inputNombre').value = data.nombre
-    // document.getElementById('inputDescripcion').value = data.nombre
-    document.getElementById('inputGrupoId').value = data.grupoId
+    this.setState({
+      id: data._id,
+      estado: data.estado,
+      nombre: data.nombre,
+      codigo: data.codigo,
+      grupoId: data.grupoId,
+      showModifyModal: true,
+    }, () => {
+      // document.getElementById('inputCodigo').value = data.codigo
+      document.getElementById('inputNombre').value = data.nombre
+      // document.getElementById('inputDescripcion').value = data.nombre
+      document.getElementById('inputGrupoId').value = data.grupoId
+      document.getElementById('card-title-auxiliar').innerHTML = 'Modificar Auxiliar'
+      document.getElementById('card-title-auxiliar').style = 'color: red'
+    })
 
-    document.getElementById('card-title-auxiliar').innerHTML = 'Modificar Auxiliar'
-    document.getElementById('card-title-auxiliar').style = 'color: red'
-
-    this.setState({ id: data._id, estado: data.estado, nombre: data.nombre, codigo: data.codigo, grupoId: data.grupoId })
     event.preventDefault()
   }
 
@@ -263,13 +271,7 @@ export class Auxiliar extends Component {
   }
 
   registerAuxiliar(event) {
-    document.getElementById('inputNombre').value = ''
-    // document.getElementById('inputCodigo').value = ''
-    // document.getElementById('inputDescripcion').value = ''
-    document.getElementById('inputGrupoId').value = ''
-
-    document.getElementById('card-title-auxiliar').innerHTML = 'Registrar Auxiliar'
-    document.getElementById('card-title-auxiliar').style = 'color: black'
+    this.setState({ showRegisterModal: true })
     event.preventDefault()
   }
   getGrupos() {
@@ -298,191 +300,238 @@ export class Auxiliar extends Component {
       }
       else {
         return (
-          <Element
-            id="containerElement"
-            style={{
-              height: "1000px",
-              overflow: "scroll",
-            }}
-          >
-            <div>
-              <div className="page-header">
-                <h3 className="page-title"> Auxiliares </h3>
-                <nav aria-label="breadcrumb">
-                  <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
-                    <li className="breadcrumb-item active" aria-current="page">Auxiliares</li>
-                  </ol>
-                </nav>
-              </div>
-              <div className="row">
-                <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
-                  <div className="form-group" style={{ width: '100%' }}>
-                    <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchAuxiliar: event.target.value })} />
-                  </div>
+          <div>
+            <div className="page-header">
+              <h3 className="page-title"> Auxiliares </h3>
+              <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
+                  <li className="breadcrumb-item active" aria-current="page">Auxiliares</li>
+                </ol>
+              </nav>
+            </div>
+            <div className="row">
+              <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
+                <div className="form-group" style={{ width: '100%' }}>
+                  <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchAuxiliar: event.target.value })} />
                 </div>
               </div>
-              <div className="row">
-                <div className="col-lg-12 grid-margin stretch-card">
-                  <div className="card">
-                    <div className="card-body">
-                      <h4 className="card-title">Lista de Auxiliares</h4>
-                      {/* <p className="card-description"> Add className <code>.table-hover</code>
+            </div>
+            <div className="row">
+              <div className="col-lg-12 grid-margin stretch-card">
+                <div className="card">
+                  <div className="card-body">
+                    <h4 className="card-title">Lista de Auxiliares</h4>
+                    {/* <p className="card-description"> Add className <code>.table-hover</code>
                           </p> */}
-                      <div className="table-responsive">
-                        <table className="table table-hover">
-                          <thead>
-                            <tr>
-                              <th>Nombre</th>
-                              <th>Codigo</th>
-                              <th>Grupo</th>
-                              {/* <th>Descripcion</th> */}
-                              {/*<th>Estado</th>*/}
-                              <th>Acciones</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {
-                              this.state.data !== null ?
-                                this.state.data
-                                  .filter((index) => {
-                                    if (this.state.searchAuxiliar === '') {
+                    <div className="table-responsive">
+                      <table className="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>Nombre</th>
+                            <th>Codigo</th>
+                            <th>Grupo</th>
+                            {/* <th>Descripcion</th> */}
+                            {/*<th>Estado</th>*/}
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {
+                            this.state.data !== null ?
+                              this.state.data
+                                .filter((index) => {
+                                  if (this.state.searchAuxiliar === '') {
+                                    return index
+                                  } else {
+                                    if (index.nombre.toLowerCase().includes(this.state.searchAuxiliar.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchAuxiliar.toLocaleLowerCase())) {
                                       return index
-                                    } else {
-                                      if (index.nombre.toLowerCase().includes(this.state.searchAuxiliar.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchAuxiliar.toLocaleLowerCase())) {
-                                        return index
-                                      }
                                     }
-                                    return null
-                                  })
-                                  .map((index, key) => (
-                                    <tr key={key}>
-                                      <td>{index.nombre}</td>
-                                      <td>{index.codigo}</td>
-                                      <td>
-                                        {
-                                          this.state.grupos !== null && this.state.grupos.find(item => item._id === index.grupoId) !== undefined ?
-                                            this.state.grupos.find(item => item._id === index.grupoId).nombre :
-                                            null
-                                        }
-                                      </td>
-                                      {/* <td style={{whiteSpace: 'normal',maxWidth: '300px'}}>{index.descripcion}</td> */}
-                                      {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                  }
+                                  return null
+                                })
+                                .map((index, key) => (
+                                  <tr key={key}>
+                                    <td>{index.nombre}</td>
+                                    <td>{index.codigo}</td>
+                                    <td>
+                                      {
+                                        this.state.grupos !== null && this.state.grupos.find(item => item._id === index.grupoId) !== undefined ?
+                                          this.state.grupos.find(item => item._id === index.grupoId).nombre :
+                                          null
+                                      }
+                                    </td>
+                                    {/* <td style={{whiteSpace: 'normal',maxWidth: '300px'}}>{index.descripcion}</td> */}
+                                    {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                     </td>*/}
-                                      <td>
-                                        <Dropdown>
-                                          <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
-                                          <Dropdown.Menu>
-                                            {
-                                              this.state.permissions !== undefined &&
-                                              this.state.permissions.isEditable &&
-                                              (
-                                                <Dropdown.Item
-                                                  href="#/action-1"
-                                                  onClick={evt => this.modifyAuxiliar(evt, index)}>
-                                                  <span
-                                                    style={{
-                                                      fontSize: '14px',
-                                                    }}
-                                                  >Modificar</span>
-                                                </Dropdown.Item>
-                                              )
-                                            }
-                                            {
-                                              this.state.permissions !== undefined &&
-                                              this.state.permissions.isDeletable &&
-                                              (
-                                                <Dropdown.Item
-                                                  href="#/action-2"
-                                                  onClick={evt => this.deleteAuxiliar(evt, index)}
-                                                >
-                                                  <span
+                                    <td>
+                                      <Dropdown>
+                                        <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                          {
+                                            this.state.permissions !== undefined &&
+                                            this.state.permissions.isEditable &&
+                                            (
+                                              <Dropdown.Item
+                                                href="#/action-1"
+                                                onClick={evt => this.modifyAuxiliar(evt, index)}>
+                                                <span
+                                                  style={{
+                                                    fontSize: '14px',
+                                                  }}
+                                                >Modificar</span>
+                                              </Dropdown.Item>
+                                            )
+                                          }
+                                          {
+                                            this.state.permissions !== undefined &&
+                                            this.state.permissions.isDeletable &&
+                                            (
+                                              <Dropdown.Item
+                                                href="#/action-2"
+                                                onClick={evt => this.deleteAuxiliar(evt, index)}
+                                              >
+                                                <span
 
-                                                    style={{
-                                                      fontSize: '14px',
-                                                    }}>Eliminar</span>
-                                                </Dropdown.Item>
-                                              )
-                                            }
-                                          </Dropdown.Menu>
-                                        </Dropdown>
-                                      </td>
-                                    </tr>
-                                  ))
-                                : null
+                                                  style={{
+                                                    fontSize: '14px',
+                                                  }}>Eliminar</span>
+                                              </Dropdown.Item>
+                                            )
+                                          }
+                                        </Dropdown.Menu>
+                                      </Dropdown>
+                                    </td>
+                                  </tr>
+                                ))
+                              : null
+                          }
+                          <tr>
+                            {
+                              this.state.permissions !== undefined &&
+                              this.state.permissions.isAddble &&
+                              (
+                                <td>
+                                  <a href="!#" onClick={evt => this.registerAuxiliar(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
+                                </td>
+                              )
                             }
-                            <tr>
-                              {
-                                this.state.permissions !== undefined &&
-                                this.state.permissions.isAddble &&
-                                (
-                                  <td>
-                                    <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
-                                      <a href="!#" onClick={evt => this.registerAuxiliar(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
-                                    </Link>
-                                  </td>
-                                )
-                              }
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <Modal
+              show={this.state.showRegisterModal}
+              onHide={() => this.setState({ showRegisterModal: false })}
+              centered
+            >
               {
                 (this.state.changeToEdit || this.state.permissions.isAddble) &&
                 (
-                  <Element name="FormActivo">
-                    <div className="row">
-                      <div className="col-md-6 grid-margin stretch-card">
-                        <div className="card">
-                          <div className="card-body">
-                            <h4 className="card-title" id="card-title-auxiliar">Registrar Auxiliar</h4>
-                            <p className="card-description">Todos los campos son requeridos</p>
-                            <form className="forms-sample">
-                              <Form.Group>
-                                <label htmlFor="exampleInputUsername1">Nombre de Auxiliar</label>
-                                <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Auxiliar" size="lg" required />
-                              </Form.Group>
-                              {/* <Form.Group>
+                  <div className="row">
+                    <div className="col-md-12 grid-margin stretch-card">
+                      <div className="card">
+                        <div className="card-body">
+                          <h4 className="card-title" id="card-title-auxiliar">Registrar Auxiliar</h4>
+                          <p className="card-description">Todos los campos son requeridos</p>
+                          <form className="forms-sample">
+                            <Form.Group>
+                              <label htmlFor="exampleInputUsername1">Nombre de Auxiliar</label>
+                              <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Auxiliar" size="lg" required />
+                            </Form.Group>
+                            {/* <Form.Group>
                               <label htmlFor="exampleInputEmail1">Codigo</label>
                               <Form.Control onChange={this.handleCodigo} type="Codigo" className="form-control" id="inputCodigo" placeholder="Codigo" required/>
                             </Form.Group> */}
-                              <Form.Group>
-                                <label>Grupo</label>
-                                <select className="form-control" required id="inputGrupoId" onChange={this.handleGrupoId}>
-                                  <option hidden value=''>Escoga una Opcion</option>
-                                  {
-                                    this.state.grupos !== null ?
-                                      this.state.grupos.map((index, key) => (
-                                        <option value={index._id} key={key}>{index.nombre}</option>
-                                      ))
-                                      : <option>Cargando...</option>
-                                  }
-                                </select>
-                              </Form.Group>
-                              {/* <Form.Group>
+                            <Form.Group>
+                              <label>Grupo</label>
+                              <select className="form-control" required id="inputGrupoId" onChange={this.handleGrupoId}>
+                                <option hidden value=''>Escoga una Opcion</option>
+                                {
+                                  this.state.grupos !== null ?
+                                    this.state.grupos.map((index, key) => (
+                                      <option value={index._id} key={key}>{index.nombre}</option>
+                                    ))
+                                    : <option>Cargando...</option>
+                                }
+                              </select>
+                            </Form.Group>
+                            {/* <Form.Group>
                               <label htmlFor="exampleTextarea1">Descripcion</label>
                               <textarea className="form-control" id="inputDescripcion" onChange={this.handleDescripcion} rows="4" placeholder="Descripcion Corta del Auxiliar" required></textarea>
                             </Form.Group> */}
-                              <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
-                              <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
-                              {
-                                this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
-                              }
-                            </form>
-                          </div>
+                            <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
+                            <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
+                            {
+                              this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
+                            }
+                          </form>
                         </div>
                       </div>
                     </div>
-                  </Element>
+                  </div>
                 )
               }
-            </div>
-          </Element>
+            </Modal>
+            <Modal
+              show={this.state.showModifyModal}
+              onHide={() => this.setState({ showModifyModal: false })}
+              centered
+            >
+              {
+                (this.state.changeToEdit || this.state.permissions.isAddble) &&
+                (
+                  <div className="row">
+                    <div className="col-md-12 grid-margin stretch-card">
+                      <div className="card">
+                        <div className="card-body">
+                          <h4 className="card-title" id="card-title-auxiliar">Registrar Auxiliar</h4>
+                          <p className="card-description">Todos los campos son requeridos</p>
+                          <form className="forms-sample">
+                            <Form.Group>
+                              <label htmlFor="exampleInputUsername1">Nombre de Auxiliar</label>
+                              <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Auxiliar" size="lg" required />
+                            </Form.Group>
+                            {/* <Form.Group>
+                              <label htmlFor="exampleInputEmail1">Codigo</label>
+                              <Form.Control onChange={this.handleCodigo} type="Codigo" className="form-control" id="inputCodigo" placeholder="Codigo" required/>
+                            </Form.Group> */}
+                            <Form.Group>
+                              <label>Grupo</label>
+                              <select className="form-control" required id="inputGrupoId" onChange={this.handleGrupoId}>
+                                <option hidden value=''>Escoga una Opcion</option>
+                                {
+                                  this.state.grupos !== null ?
+                                    this.state.grupos.map((index, key) => (
+                                      <option value={index._id} key={key}>{index.nombre}</option>
+                                    ))
+                                    : <option>Cargando...</option>
+                                }
+                              </select>
+                            </Form.Group>
+                            {/* <Form.Group>
+                              <label htmlFor="exampleTextarea1">Descripcion</label>
+                              <textarea className="form-control" id="inputDescripcion" onChange={this.handleDescripcion} rows="4" placeholder="Descripcion Corta del Auxiliar" required></textarea>
+                            </Form.Group> */}
+                            <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
+                            <button className="btn btn-light" onClick={evt => this.handleReset(evt)}>Borrar Datos</button>
+                            {
+                              this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
+                            }
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+            </Modal>
+          </div>
         )
       }
     }

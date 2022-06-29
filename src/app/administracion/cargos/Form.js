@@ -66,7 +66,7 @@ function FormRole({ data }) {
       return await axios.post(`${nodeapi}cargos`, data);
     }
 
-    let cargo ={
+    let cargo = {
       name: dataFromForm['cargoName'],
     }
 
@@ -80,12 +80,12 @@ function FormRole({ data }) {
       await axios.put(`${nodeapi}cargos/${data._id}`, cargo);
     }
 
-    let cargo ={
+    let cargo = {
       name: dataFromForm['cargoName'],
     }
 
     if (dataFromForm['roleName'] === '') {
-        cargo.name = data.name;
+      cargo.name = data.name;
     }
 
     await updateCargo(cargo);
@@ -94,45 +94,39 @@ function FormRole({ data }) {
   }
 
   return (
-    <Element name="FormActivo">
-    <div className="row">
-      <div className="col-md-9 grid-margin stretch-card">
-        <div className="card">
-          <div className="card-body">
-            <h4 className="card-title" id="card-title-user">{values.title}</h4>
-            <form className="form-sample" onSubmit={handleSubmit(onSubmit)}>
-              <p className="card-description">{values.title}</p>
-              <div className="row">
-                <div className="col-md-6">
-                  <Form.Group className="row">
-                    <label className="col-sm-3 col-form-label">Nombre Cargo</label>
-                    <div className="col-sm-9">
-                      <Form.Control 
-                        type="text" 
-                        placeholder="Nombre de Cargo" 
-                        id="inputCargoName" 
-                        required 
-                        {...register(`cargoName`)}
-                        defaultValue={
-                          data !== null ? data.name : ''
-                        }  
-                      />
-                    </div>
-                  </Form.Group>
+    <div className="card">
+      <div className="card-body">
+        <h4 className="card-title" id="card-title-user">{values.title}</h4>
+        <form className="form-sample" onSubmit={handleSubmit(onSubmit)}>
+          <p className="card-description">{values.title}</p>
+          <div className="row">
+            <div className="col-md-12">
+              <Form.Group className="row">
+                <label className="col-sm-3 col-form-label">Nombre Cargo</label>
+                <div className="col-sm-9">
+                  <Form.Control
+                    type="text"
+                    placeholder="Nombre de Cargo"
+                    id="inputCargoName"
+                    required
+                    {...register(`cargoName`)}
+                    defaultValue={
+                      data !== null ? data.name : ''
+                    }
+                  />
                 </div>
-              </div>
-              <div className='row'>
-                <div className='col-md-12'>
-                  <button type="submit" className="btn btn-primary mr-2">Enviar</button>
-                  <button type='reset' className="btn btn-light">Borrar Datos</button>
-                </div>
-              </div>
-            </form>
+              </Form.Group>
+            </div>
           </div>
-        </div>
+          <div className='row'>
+            <div className='col-md-12'>
+              <button type="submit" className="btn btn-primary mr-2">Enviar</button>
+              <button type='reset' className="btn btn-light">Borrar Datos</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
-    </Element>
   )
 }
 
