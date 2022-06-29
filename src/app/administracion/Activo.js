@@ -21,7 +21,7 @@ import LogActivo from './activo/Log'
 import { Views } from '../../views/Views';
 import { passphrase } from '../../views/Passphrase';
 import CryptoJS, { enc } from 'crypto-js';
-import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import { ItemPagination } from './ItemPagination';
 
 export class Personal extends Component {
   constructor(props) {
@@ -845,176 +845,165 @@ export class Personal extends Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {
-                            this.state.data !== null ?
-                              this.state.data
-                                .filter((index) => {
-                                  if (this.state.searchUser === '') {
-                                    return index
-                                  } else {
-                                    if (index.codigo.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.costoInicial.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase())) {
-                                      return index
-                                    }
-                                  }
-                                  return null
-                                })
-                                .map((index, key) => (
-                                  <tr key={key}>
-                                    <td>{index.codigo}</td>
-                                    {/* <td>{index.fechaIncorporacion}</td>
+                          <ItemPagination
+                            url={`activos/all`}
+                            ItemComponent={({item}) => (
+                              <tr>
+                                <td>{item.codigo}</td>
+                                {/* <td>{index.fechaIncorporacion}</td>
                                         <td>{index.fechaRegistro}</td> */}
-                                    {/* <td>{
+                                {/* <td>{
                                           this.state.ufvs !== null && this.state.ufvs.find(item => item._id === index.ufvId) !== undefined ? 
                                           this.state.ufvs.find(item => item._id === index.ufvId).valor :
                                           null
                                         }</td> */}
-                                    {/*<td>{
+                                {/*<td>{
                                           this.state.grupos !== null && this.state.grupos.find(item => item._id === index.grupoId) !== undefined ? 
                                           this.state.grupos.find(item => item._id === index.grupoId).nombre :
                                           null
                                         }</td>*/}
-                                    <td>{
-                                      this.state.auxiliares !== null && this.state.auxiliares.find(item => item._id === index.auxiliarId) !== undefined ?
-                                        this.state.auxiliares.find(item => item._id === index.auxiliarId).nombre :
-                                        null
-                                    }</td>
-                                    <td>{
-                                      this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ?
-                                        this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
-                                        null
-                                    }</td>
-                                    <td>{
-                                      this.state.responsables !== null && this.state.responsables.find(item => item._id === index.usuarioId) !== undefined ?
-                                        this.state.responsables.find(item => item._id === index.usuarioId).nombre :
-                                        null
-                                    }</td>
-                                    {/*<td>{index.estadoActivo}</td>*/}
-                                    <td>{index.costoInicial}</td>
-                                    <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
-                                      {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
-                                    </td>
-                                    <td>
-                                      <Dropdown>
-                                        <Dropdown.Toggle variant="dark" id="dropdown-basic"></Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isEditable &&
-                                            (
-                                              <Dropdown.Item
-                                                href="#/action-2"
-                                                onClick={evt => this.reevaluateActivo(evt, index)}
-                                              >
-                                                <span
-
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}>Reevaluar</span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
-                                          {
-                                            index.estado === 'inactivo' &&
-                                            <Dropdown.Item href="#/action-3">
-                                              <a>
-                                                {
-                                                  <PDFDownloadLink
-                                                    document={
-                                                      <ActivoBajaReport
-                                                        data={index}
-                                                      />}
-                                                    fileName={`reporte-activo-baja`}
-                                                    style={{
-                                                      color: '#000',
-                                                      backgroundColor: 'transparent'
-                                                    }}
-                                                  >
-                                                    Reporte Baja
-                                                  </PDFDownloadLink>}
-                                              </a>
-                                            </Dropdown.Item>
-                                          }
-                                        </Dropdown.Menu>
-                                      </Dropdown>
-                                    </td>
-                                    <td>
-                                      <Dropdown>
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                          {
-                                            <Dropdown.Item
-                                              href="#/action-2"
-                                              onClick={evt => this.setModalInfo(evt, index)}
-                                            >
-                                              <span
-
-                                                style={{
-                                                  fontSize: '14px',
-                                                }}>+ Info</span>
-                                            </Dropdown.Item>
-                                          }
-                                          {
-                                            <Dropdown.Item
-                                              href="#/action-2"
-                                              onClick={evt => this.generateQR(evt, index)}
-                                            >
-                                              <span
-
-                                                style={{
-                                                  fontSize: '14px',
-                                                }}>QR</span>
-                                            </Dropdown.Item>
-                                          }
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isEditable &&
-                                            <>
-                                              <Dropdown.Item
-                                                href="#/action-2"
-                                                onClick={evt => this.modifyActivo(evt, index)}
-                                              >
-                                                <span
-
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}>Modificar</span>
-                                              </Dropdown.Item>
-                                              <Dropdown.Item
-                                                href="#/action-2"
-                                                onClick={evt => this.changeEstado(evt, index)}
-                                              >
-                                                <span
-
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}>Mod Estado</span>
-                                              </Dropdown.Item>
-                                            </>
-                                          }
+                                <td>{
+                                  this.state.auxiliares !== null && this.state.auxiliares.find(itemz => itemz._id === item.auxiliarId) !== undefined ?
+                                    this.state.auxiliares.find(itemz => itemz._id === item.auxiliarId).nombre :
+                                    null
+                                }</td>
+                                <td>{
+                                  this.state.oficinas !== null && this.state.oficinas.find(itemz => itemz._id === item.oficinaId) !== undefined ?
+                                    this.state.oficinas.find(itemz => itemz._id === item.oficinaId).nombre :
+                                    null
+                                }</td>
+                                <td>{
+                                  this.state.responsables !== null && this.state.responsables.find(itemz => itemz._id === item.usuarioId) !== undefined ?
+                                    this.state.responsables.find(itemz => itemz._id === item.usuarioId).nombre :
+                                    null
+                                }</td>
+                                {/*<td>{index.estadoActivo}</td>*/}
+                                <td>{item.costoInicial}</td>
+                                <td className={item.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                  {item.estado} <i className={item.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
+                                </td>
+                                <td>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="dark" id="dropdown-basic"></Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isEditable &&
+                                        (
                                           <Dropdown.Item
                                             href="#/action-2"
-                                            onClick={evt => this.setModalLogInfo(evt, index)}
+                                            onClick={evt => this.reevaluateActivo(evt, item)}
                                           >
                                             <span
 
                                               style={{
                                                 fontSize: '14px',
-                                              }}>Logs</span>
+                                              }}>Reevaluar</span>
                                           </Dropdown.Item>
-                                        </Dropdown.Menu>
-                                      </Dropdown>
-                                      {/*{
+                                        )
+                                      }
+                                      {
+                                        item.estado === 'inactivo' &&
+                                        <Dropdown.Item href="#/action-3">
+                                          <a>
+                                            {
+                                              <PDFDownloadLink
+                                                document={
+                                                  <ActivoBajaReport
+                                                    data={item}
+                                                  />}
+                                                fileName={`reporte-activo-baja`}
+                                                style={{
+                                                  color: '#000',
+                                                  backgroundColor: 'transparent'
+                                                }}
+                                              >
+                                                Reporte Baja
+                                              </PDFDownloadLink>}
+                                          </a>
+                                        </Dropdown.Item>
+                                      }
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </td>
+                                <td>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                      {
+                                        <Dropdown.Item
+                                          href="#/action-2"
+                                          onClick={evt => this.setModalInfo(evt, item)}
+                                        >
+                                          <span
+
+                                            style={{
+                                              fontSize: '14px',
+                                            }}>+ Info</span>
+                                        </Dropdown.Item>
+                                      }
+                                      {
+                                        <Dropdown.Item
+                                          href="#/action-2"
+                                          onClick={evt => this.generateQR(evt, item)}
+                                        >
+                                          <span
+
+                                            style={{
+                                              fontSize: '14px',
+                                            }}>QR</span>
+                                        </Dropdown.Item>
+                                      }
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isEditable &&
+                                        <>
+                                          <Dropdown.Item
+                                            href="#/action-2"
+                                            onClick={evt => this.modifyActivo(evt, item)}
+                                          >
+                                            <span
+
+                                              style={{
+                                                fontSize: '14px',
+                                              }}>Modificar</span>
+                                          </Dropdown.Item>
+                                          <Dropdown.Item
+                                            href="#/action-2"
+                                            onClick={evt => this.changeEstado(evt, item)}
+                                          >
+                                            <span
+
+                                              style={{
+                                                fontSize: '14px',
+                                              }}>Mod Estado</span>
+                                          </Dropdown.Item>
+                                        </>
+                                      }
+                                      <Dropdown.Item
+                                        href="#/action-2"
+                                        onClick={evt => this.setModalLogInfo(evt, item)}
+                                      >
+                                        <span
+
+                                          style={{
+                                            fontSize: '14px',
+                                          }}>Logs</span>
+                                      </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                  {/*{
                                         this.state.permissions !== undefined &&
                                         this.state.permissions.isDeletable &&
                                         (
                                           <a href="!#" onClick={evt => this.deleteActivo(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>
                                         )
                                       }*/}
-                                    </td>
-                                  </tr>
-                                ))
-                              : null
-                          }
+                                </td>
+                              </tr>
+                            )}
+                          />
+                          
                           {/* <tr>
                                   <td>Messsy</td>
                                   <td>Flash</td>

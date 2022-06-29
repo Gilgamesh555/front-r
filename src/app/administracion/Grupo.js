@@ -14,6 +14,7 @@ import GeneralReport from '../reportes/GeneralReport'
 import DepreciacionReport from '../reportes/DepreciacionReport'
 import ActualizacionReport from '../reportes/ActualizacionReport'
 import { Views } from '../../views/Views';
+import { ItemPagination } from './ItemPagination';
 
 export class Grupo extends Component {
   constructor(props) {
@@ -352,131 +353,119 @@ export class Grupo extends Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {
-                            this.state.data !== null ?
-                              this.state.data
-                                .filter((index) => {
-                                  if (this.state.searchGrupo === '') {
-                                    return index
-                                  } else {
-                                    if (index.nombre.toLowerCase().includes(this.state.searchGrupo.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchGrupo.toLocaleLowerCase())) {
-                                      return index
-                                    }
+                          <ItemPagination
+                            url={`grupos/all`}
+                            ItemComponent={({ item }) => (
+                              <tr>
+                                <td>{item.nombre}</td>
+                                <td>{item.codigo}</td>
+                                <td>{item.vida}</td>
+                                <td>
+                                  {
+                                    this.state.auxiliares !== null && this.state.auxiliares.filter(itemz => itemz.grupoId === item._id).length !== undefined ?
+                                      <>
+                                        <ProgressBar variant="success" max={50} style={{ minWidth: '100px' }} now={this.state.auxiliares.filter(itemz => item.grupoId === itemz._id).length} />
+                                        <label style={{ float: 'right', color: '#19d895', fontSize: '13px' }}>{this.state.auxiliares.filter(itemz => item.grupoId === itemz._id).length}</label>
+                                      </>
+                                      :
+                                      null
                                   }
-                                  return null
-                                })
-                                .map((index, key) => (
-                                  <tr key={key}>
-                                    <td>{index.nombre}</td>
-                                    <td>{index.codigo}</td>
-                                    <td>{index.vida}</td>
-                                    <td>
-                                      {
-                                        this.state.auxiliares !== null && this.state.auxiliares.filter(item => item.grupoId === index._id).length !== undefined ?
-                                          <>
-                                            <ProgressBar variant="success" max={50} style={{ minWidth: '100px' }} now={this.state.auxiliares.filter(item => item.grupoId === index._id).length} />
-                                            <label style={{ float: 'right', color: '#19d895', fontSize: '13px' }}>{this.state.auxiliares.filter(item => item.grupoId === index._id).length}</label>
-                                          </>
-                                          :
-                                          null
-                                      }
-                                    </td>
-                                    {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                </td>
+                                {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                     </td>*/}
-                                    <td>
-                                      <Dropdown>
-                                        <Dropdown.Toggle variant="warning" id="dropdown-basic"></Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isEditable &&
-                                            (
-                                              <Dropdown.Item
-                                                href="#/action-1"
-                                                onClick={evt => this.modifyGrupo(evt, index)}>
-                                                <span
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}
-                                                >Modificar</span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isDeletable &&
-                                            (
-                                              <Dropdown.Item
-                                                href="#/action-1"
-                                                onClick={evt => this.deleteGrupo(evt, index)}>
-                                                <span
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}
-                                                >Eliminar</span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
-                                        </Dropdown.Menu>
-                                      </Dropdown>
-                                    </td>
-                                    <td>
+                                <td>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="warning" id="dropdown-basic"></Dropdown.Toggle>
+                                    <Dropdown.Menu>
                                       {
                                         this.state.permissions !== undefined &&
                                         this.state.permissions.isEditable &&
                                         (
-                                          <Dropdown>
-                                            <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                              <Dropdown.Item href="#/action-3">
-                                                <a>
-                                                  <PDFDownloadLink
-                                                    document={<GrupoReport data={index} />}
-                                                    fileName={`reporte-grupo-${index.nombre}`}
-                                                    style={{
-                                                      color: '#000',
-                                                      backgroundColor: 'transparent'
-                                                    }}>
-                                                    Rept. Grupal
-                                                  </PDFDownloadLink>
-                                                </a>
-                                              </Dropdown.Item>
-                                              <Dropdown.Item href="#/action-3">
-                                                <a>
-                                                  <PDFDownloadLink
-                                                    document={<ActualizacionReport data={index} />}
-                                                    fileName={`reporte-activo-actualizacion`}
-                                                    style={{
-                                                      color: '#000',
-                                                      backgroundColor: 'transparent'
-                                                    }}>
-                                                    Rept. Actualizacion
-                                                  </PDFDownloadLink>
-                                                </a>
-                                              </Dropdown.Item>
-                                              <Dropdown.Item href="#/action-3">
-                                                <a>
-                                                  <PDFDownloadLink
-                                                    document={<DepreciacionReport data={index} />}
-                                                    fileName={`reporte-activo-depreciacion`}
-                                                    style={{
-                                                      color: '#000',
-                                                      backgroundColor: 'transparent'
-                                                    }}>
-                                                    Rept. Depreciacion
-                                                  </PDFDownloadLink>
-                                                </a>
-                                              </Dropdown.Item>
-                                            </Dropdown.Menu>
-                                          </Dropdown>
+                                          <Dropdown.Item
+                                            href="#/action-1"
+                                            onClick={evt => this.modifyGrupo(evt, item)}>
+                                            <span
+                                              style={{
+                                                fontSize: '14px',
+                                              }}
+                                            >Modificar</span>
+                                          </Dropdown.Item>
                                         )
                                       }
-                                    </td>
-                                  </tr>
-                                ))
-                              : null
-                          }
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isDeletable &&
+                                        (
+                                          <Dropdown.Item
+                                            href="#/action-1"
+                                            onClick={evt => this.deleteGrupo(evt, item)}>
+                                            <span
+                                              style={{
+                                                fontSize: '14px',
+                                              }}
+                                            >Eliminar</span>
+                                          </Dropdown.Item>
+                                        )
+                                      }
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </td>
+                                <td>
+                                  {
+                                    this.state.permissions !== undefined &&
+                                    this.state.permissions.isEditable &&
+                                    (
+                                      <Dropdown>
+                                        <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                          <Dropdown.Item href="#/action-3">
+                                            <a>
+                                              <PDFDownloadLink
+                                                document={<GrupoReport data={item} />}
+                                                fileName={`reporte-grupo-${item.nombre}`}
+                                                style={{
+                                                  color: '#000',
+                                                  backgroundColor: 'transparent'
+                                                }}>
+                                                Rept. Grupal
+                                              </PDFDownloadLink>
+                                            </a>
+                                          </Dropdown.Item>
+                                          <Dropdown.Item href="#/action-3">
+                                            <a>
+                                              <PDFDownloadLink
+                                                document={<ActualizacionReport data={item} />}
+                                                fileName={`reporte-activo-actualizacion`}
+                                                style={{
+                                                  color: '#000',
+                                                  backgroundColor: 'transparent'
+                                                }}>
+                                                Rept. Actualizacion
+                                              </PDFDownloadLink>
+                                            </a>
+                                          </Dropdown.Item>
+                                          <Dropdown.Item href="#/action-3">
+                                            <a>
+                                              <PDFDownloadLink
+                                                document={<DepreciacionReport data={item} />}
+                                                fileName={`reporte-activo-depreciacion`}
+                                                style={{
+                                                  color: '#000',
+                                                  backgroundColor: 'transparent'
+                                                }}>
+                                                Rept. Depreciacion
+                                              </PDFDownloadLink>
+                                            </a>
+                                          </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                      </Dropdown>
+                                    )
+                                  }
+                                </td>
+                              </tr>
+                            )}
+                          />
                           {/* <PDFDownloadLink document={<GrupoReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{ marginRight: '3px' }}>
                               Rept. Grupal
                               {({ blob, url, loading, error }) =>

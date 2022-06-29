@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import './style.css';
 import { Views } from '../../../views/Views';
 import { Modal } from 'react-bootstrap';
+import { ItemPagination } from '../ItemPagination';
 
 function Personal({ history }) {
   const { register, getValues } = useForm();
@@ -108,7 +109,7 @@ function Personal({ history }) {
     setDataToEdit(data);
   }
 
-  const onClickDeleteButton = async(e, data) => {
+  const onClickDeleteButton = async (e, data) => {
     e.preventDefault();
     const deleteRol = async () => {
       await axios.delete(`${nodeapi}roles/${data._id}`)
@@ -177,33 +178,19 @@ function Personal({ history }) {
                     {roles === null || permissions === null ?
                       <th colSpan={3} className='table-body-notFound'>No existen roles</th> :
                       (
-                        roles.filter((item) => {
-                          if (searchValue !== '') {
-                            const nameFixed = item.name.toLowerCase();
-                            const checkIfNameExists = nameFixed.includes(searchValue.toLocaleLowerCase());
-
-                            if (checkIfNameExists) {
-                              return item;
-                            } else {
-                              return null;
-                            }
-                          } else {
-                            if (searchValue === '') {
-                              return item;
-                            } else {
-                              return null;
-                            }
-                          }
-                        })
-                      ).map((item) => (
-                        <ItemRole
-                          key={item._id}
-                          data={item}
-                          onEdit={onClickEditButton}
-                          onDelete={onClickDeleteButton}
-                          permissions={permissions}
+                        <ItemPagination
+                          url={`roles/all`}
+                          ItemComponent={({ item }) => (
+                            <ItemRole
+                              key={item._id}
+                              data={item}
+                              onEdit={onClickEditButton}
+                              onDelete={onClickDeleteButton}
+                              permissions={permissions}
+                            />
+                          )}
                         />
-                      ))}
+                      )}
                     <tr>
                       <td colSpan={3}>
                         <a

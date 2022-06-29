@@ -1,13 +1,12 @@
-import React, { createRef, useEffect, useState } from "react";
+import React, { createRef, Fragment, useEffect, useState } from "react";
 import axios from "axios";
 import api from "../../apis/nodeapi";
 import ReactPaginate from 'react-paginate';
 
-export const ItemPagination = ({ url, ItemComponent }) => {
+export const ItemPagination = ({ url, ItemComponent, componentRef }) => {
   const [currentItems, setCurrentItems] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [pageOffset, setPageOffset] = useState(0);
-  const componentRef = createRef();
 
   useEffect(() => {
     fetchData();
@@ -33,39 +32,53 @@ export const ItemPagination = ({ url, ItemComponent }) => {
   const handlePageClick = (event) => {
     const pageNumber = event.selected + 1;
     setPageOffset(pageNumber);
-    componentRef.current.scrollIntoView();
+    if (componentRef) {
+      componentRef.current.scrollIntoView();
+    }
   }
 
   return (
-    <div
-      ref={componentRef} 
-    >
+    <>
       <ItemsOnPage
         currentItems={currentItems}
         ItemComponent={ItemComponent}
       />
-      <div className='paginateContainer'>
-        <ReactPaginate
-          nextLabel="> "
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          previousLabel="< "
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakLabel="..."
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          containerClassName="pagination"
-          activeClassName="active"
-          renderOnZeroPageCount={null}
-        />
-      </div>
-    </ div>
+      <tr>
+        <td colSpan={10}>
+          <div
+            className='paginateContainer'
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: componentRef ? '2em' : '0em'
+            }}
+          >
+            <ReactPaginate
+              nextLabel="> "
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel="< "
+              pageClassName="page-item"
+              pageLinkClassName="page-link"
+              previousClassName="page-item"
+              previousLinkClassName="page-link"
+              nextClassName="page-item"
+              nextLinkClassName="page-link"
+              breakLabel="..."
+              breakClassName="page-item"
+              breakLinkClassName="page-link"
+              containerClassName="pagination"
+              activeClassName="active"
+              renderOnZeroPageCount={null}
+              style={{
+                justifyContent: 'center'
+              }}
+            />
+          </div>
+        </td>
+      </tr>
+    </>
   );
 };
 

@@ -13,6 +13,7 @@ import ActivoReporte from '../reportes/ActivoReporte'
 import TransferActives from './activo/transferActives';
 import { Views } from '../../views/Views';
 import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import { ItemPagination } from './ItemPagination';
 
 export class Personal extends Component {
   constructor(props) {
@@ -488,132 +489,120 @@ export class Personal extends Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {
-                            this.state.data !== null ?
-                              this.state.data
-                                .filter((index) => {
-                                  if (this.state.searchUser === '') {
-                                    return index
-                                  } else {
-                                    if (index.nombre.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apPaterno?.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apMaterno.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.username.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.cargo.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase())) {
-                                      return index
-                                    }
-                                  }
-                                  return null
-                                })
-                                .map((index, key) => (
-                                  <tr key={key}>
-                                    <td>{index.nombre}</td>
-                                    <td>{index.apPaterno}</td>
-                                    <td>{index.apMaterno}</td>
-                                    {/* <td>{index.username}</td> */}
-                                    <td>{index.ci}</td>
-                                    <td>{
-                                      this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ?
-                                        this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
-                                        null
-                                    }</td>
-                                    <td>{
-                                      this.state.cargos !== null && this.state.cargos.find(item => item._id === index.cargo) !== undefined ?
-                                        this.state.cargos.find(item => item._id === index.cargo).name :
-                                        null
-                                    }</td>
-                                    {/*<td>{index.email}</td>*/}
-                                    <td>{index.celular}</td>
-                                    <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
-                                      {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
-                                    </td>
-                                    <td>
-                                      <Dropdown>
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isEditable &&
-                                            (
-                                              <Dropdown.Item
-                                                href="#/action-1"
-                                                onClick={evt => this.modifyUser(evt, index)}>
-                                                <span
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}
-                                                >Modificar</span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isDeletable &&
-                                            (
-                                              <Dropdown.Item
-                                                href="#/action-2"
-                                                onClick={evt => this.changeEstado(evt, index)}
-                                              >
-                                                <span
+                          <ItemPagination
+                            url={`users/all`}
+                            ItemComponent={({ item }) => (
+                              <tr>
+                                <td>{item.nombre}</td>
+                                <td>{item.apPaterno}</td>
+                                <td>{item.apMaterno}</td>
+                                {/* <td>{index.username}</td> */}
+                                <td>{item.ci}</td>
+                                <td>{
+                                  this.state.oficinas !== null && this.state.oficinas.find(itemz => itemz._id === item.oficinaId) !== undefined ?
+                                    this.state.oficinas.find(itemz => itemz._id === item.oficinaId).nombre :
+                                    null
+                                }</td>
+                                <td>{
+                                  this.state.cargos !== null && this.state.cargos.find(itemz => itemz._id === item.cargo) !== undefined ?
+                                    this.state.cargos.find(itemz => itemz._id === item.cargo).name :
+                                    null
+                                }</td>
+                                {/*<td>{index.email}</td>*/}
+                                <td>{item.celular}</td>
+                                <td className={item.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                  {item.estado} <i className={item.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
+                                </td>
+                                <td>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isEditable &&
+                                        (
+                                          <Dropdown.Item
+                                            href="#/action-1"
+                                            onClick={evt => this.modifyUser(evt, item)}>
+                                            <span
+                                              style={{
+                                                fontSize: '14px',
+                                              }}
+                                            >Modificar</span>
+                                          </Dropdown.Item>
+                                        )
+                                      }
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isDeletable &&
+                                        (
+                                          <Dropdown.Item
+                                            href="#/action-2"
+                                            onClick={evt => this.changeEstado(evt, item)}
+                                          >
+                                            <span
 
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}>Mod Estado</span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
-                                          <Dropdown.Item href="#/action-3">
-                                            <a>
-                                              <PDFDownloadLink
-                                                document={<ActivoReport
-                                                  data={index}
-                                                  token={window.localStorage.getItem('token')}
-                                                />}
-                                                style={{
-                                                  color: '#000',
-                                                  backgroundColor: 'transparent'
-                                                }}
-                                                fileName={`reporte-usuario-${index.username}`}
-                                              >
-                                                Ent. Activos
-                                              </PDFDownloadLink>
-                                            </a>
+                                              style={{
+                                                fontSize: '14px',
+                                              }}>Mod Estado</span>
                                           </Dropdown.Item>
-                                          <Dropdown.Item href="#/action-3">
-                                            <a>
-                                              <PDFDownloadLink
-                                                document={<ActivoReturn
-                                                  data={index}
-                                                  token={window.localStorage.getItem('token')}
-                                                />}
-                                                fileName={`reporte-usuario-${index.username}`}
-                                                style={{
-                                                  color: '#000',
-                                                  backgroundColor: 'transparent'
-                                                }}
-                                              >
-                                                Dev. Activos
-                                              </PDFDownloadLink>
-                                            </a>
-                                          </Dropdown.Item>
-                                          <Dropdown.Item href="#/action-3">
-                                            <a>
-                                              {<PDFDownloadLink
-                                                document={<ActivoReporte data={index} />}
-                                                fileName={`reporte-usuario-${index.username}`}
-                                                style={{
-                                                  color: '#000',
-                                                  backgroundColor: 'transparent'
-                                                }}
-                                              >
-                                                Verif. Est. de Activos
-                                              </PDFDownloadLink>}
-                                            </a>
-                                          </Dropdown.Item>
-                                        </Dropdown.Menu>
-                                      </Dropdown>
-                                      {/*{<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}*/}
-                                    </td>
-                                  </tr>
-                                ))
-                              : null
-                          }
+                                        )
+                                      }
+                                      <Dropdown.Item href="#/action-3">
+                                        <a>
+                                          <PDFDownloadLink
+                                            document={<ActivoReport
+                                              data={item}
+                                              token={window.localStorage.getItem('token')}
+                                            />}
+                                            style={{
+                                              color: '#000',
+                                              backgroundColor: 'transparent'
+                                            }}
+                                            fileName={`reporte-usuario-${item.username}`}
+                                          >
+                                            Ent. Activos
+                                          </PDFDownloadLink>
+                                        </a>
+                                      </Dropdown.Item>
+                                      <Dropdown.Item href="#/action-3">
+                                        <a>
+                                          <PDFDownloadLink
+                                            document={<ActivoReturn
+                                              data={item}
+                                              token={window.localStorage.getItem('token')}
+                                            />}
+                                            fileName={`reporte-usuario-${item.username}`}
+                                            style={{
+                                              color: '#000',
+                                              backgroundColor: 'transparent'
+                                            }}
+                                          >
+                                            Dev. Activos
+                                          </PDFDownloadLink>
+                                        </a>
+                                      </Dropdown.Item>
+                                      <Dropdown.Item href="#/action-3">
+                                        <a>
+                                          {<PDFDownloadLink
+                                            document={<ActivoReporte data={item} />}
+                                            fileName={`reporte-usuario-${item.username}`}
+                                            style={{
+                                              color: '#000',
+                                              backgroundColor: 'transparent'
+                                            }}
+                                          >
+                                            Verif. Est. de Activos
+                                          </PDFDownloadLink>}
+                                        </a>
+                                      </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                  {/*{<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}*/}
+                                </td>
+                              </tr>
+                            )}
+                          />
                           {/* <tr>
                                   <td>Messsy</td>
                                   <td>Flash</td>

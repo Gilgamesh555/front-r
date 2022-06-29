@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 import { Views } from '../../views/Views';
-import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+import { ItemPagination } from './ItemPagination';
 
 export class Oficina extends Component {
   constructor(props) {
@@ -269,77 +269,65 @@ export class Oficina extends Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {
-                            this.state.data !== null ?
-                              this.state.data
-                                .filter((index) => {
-                                  if (this.state.searchOficina === '') {
-                                    return index
-                                  } else {
-                                    if (index.nombre.toLowerCase().includes(this.state.searchOficina.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchOficina.toLocaleLowerCase())) {
-                                      return index
-                                    }
-                                  }
-                                  return null
-                                })
-                                .map((index, key) => (
-                                  <tr key={key}>
-                                    <td>{index.nombre}</td>
-                                    <td>{index.codigo}</td>
-                                    {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                          <ItemPagination
+                            url={`oficinas/all`}
+                            ItemComponent={({ item }) => (
+                              <tr>
+                                <td>{item.nombre}</td>
+                                <td>{item.codigo}</td>
+                                {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                     </td>*/}
-                                    <td>
-                                      <Dropdown>
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
-                                        <Dropdown.Menu>
+                                <td>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                    <Dropdown.Menu>
 
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isEditable &&
-                                            (
-                                              <Dropdown.Item
-                                                href="#/action-1"
-                                                onClick={evt => this.modifyOficina(evt, index)}>
-                                                <span
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isEditable &&
+                                        (
+                                          <Dropdown.Item
+                                            href="#/action-1"
+                                            onClick={evt => this.modifyOficina(evt, item)}>
+                                            <span
 
-                                                  style={{
-                                                    color: '#000',
-                                                    backgroundColor: 'transparent',
-                                                    fontSize: '14px'
-                                                  }}>
-                                                  Modificar
-                                                </span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isDeletable &&
-                                            (
-                                              <Dropdown.Item
-                                                href="#/action-2"
-                                                onClick={evt => this.deleteOficina(evt, index)}
-                                              >
-                                                <span
+                                              style={{
+                                                color: '#000',
+                                                backgroundColor: 'transparent',
+                                                fontSize: '14px'
+                                              }}>
+                                              Modificar
+                                            </span>
+                                          </Dropdown.Item>
+                                        )
+                                      }
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isDeletable &&
+                                        (
+                                          <Dropdown.Item
+                                            href="#/action-2"
+                                            onClick={evt => this.deleteOficina(evt, item)}
+                                          >
+                                            <span
 
-                                                  style={{
-                                                    color: '#000',
-                                                    backgroundColor: 'transparent',
-                                                    fontSize: '14px'
-                                                  }}>
-                                                  Eliminar
-                                                </span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
-                                        </Dropdown.Menu>
-                                      </Dropdown>
-                                    </td>
-                                  </tr>
-                                ))
-                              : null
-                          }
+                                              style={{
+                                                color: '#000',
+                                                backgroundColor: 'transparent',
+                                                fontSize: '14px'
+                                              }}>
+                                              Eliminar
+                                            </span>
+                                          </Dropdown.Item>
+                                        )
+                                      }
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </td>
+                              </tr>
+                            )}
+                          />
                           <tr>
                             {
                               this.state.permissions !== undefined &&

@@ -5,6 +5,7 @@ import { Views } from '../../views/Views';
 
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
+import { ItemPagination } from './ItemPagination';
 
 export class Ufv extends Component {
   constructor(props) {
@@ -312,63 +313,48 @@ export class Ufv extends Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {
-                            this.state.data !== null ?
-                              this.state.data
-                                .filter((index) => {
-                                  if (this.state.searchUfv === '') {
-                                    return index
-                                  } else {
-                                    if (index.fecha.toLowerCase().includes(this.state.searchUfv.toLocaleLowerCase()) || index.valor.toLowerCase().includes(this.state.searchUfv.toLocaleLowerCase())) {
-                                      return index
-                                    }
-                                  }
-                                  return null
-                                })
-                                .map((index, key) => (
-                                  <tr key={key}>
-                                    <td>{index.fecha}</td>
-                                    <td>{index.valor}</td>
-                                    <td>
-                                      <Dropdown>
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isEditable &&
-                                            (
-                                              <Dropdown.Item href="#/action-1" onClick={evt => this.modifyValor(evt, index)}>
-                                                <span
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}
-                                                >Modificar</span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
+                          <ItemPagination
+                            url={`ufv/all`}
+                            ItemComponent={({item}) => (
+                              <tr>
+                                <td>{item.fecha}</td>
+                                <td>{item.valor}</td>
+                                <td>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isEditable &&
+                                        (
+                                          <Dropdown.Item href="#/action-1" onClick={evt => this.modifyValor(evt, item)}>
+                                            <span
+                                              style={{
+                                                fontSize: '14px',
+                                              }}
+                                            >Modificar</span>
+                                          </Dropdown.Item>
+                                        )
+                                      }
 
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isDeletable &&
-                                            (
-                                              <Dropdown.Item href="#/action-2" onClick={evt => this.deleteUfv(evt, index)}>
-                                                <span
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}>Eliminar</span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
-                                        </Dropdown.Menu>
-                                      </Dropdown>
-
-
-                                      {/* <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Mod Estado</a> */}
-                                    </td>
-                                  </tr>
-                                ))
-                              : null
-                          }
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isDeletable &&
+                                        (
+                                          <Dropdown.Item href="#/action-2" onClick={evt => this.deleteUfv(evt, item)}>
+                                            <span
+                                              style={{
+                                                fontSize: '14px',
+                                              }}>Eliminar</span>
+                                          </Dropdown.Item>
+                                        )
+                                      }
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </td>
+                              </tr>
+                            )}
+                          />
                           <tr>
                             {
                               this.state.permissions !== undefined &&
@@ -388,7 +374,7 @@ export class Ufv extends Component {
               </div>
               <Modal
                 show={this.state.showRegisterModal}
-                onHide={() => this.setState({showRegisterModal: false})}
+                onHide={() => this.setState({ showRegisterModal: false })}
                 centered
               >
                 {
@@ -422,7 +408,7 @@ export class Ufv extends Component {
               </Modal>
               <Modal
                 show={this.state.showModifyModal}
-                onHide={() => this.setState({showModifyModal: false})}
+                onHide={() => this.setState({ showModifyModal: false })}
                 centered
               >
                 {

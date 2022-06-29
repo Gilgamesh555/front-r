@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom';
 import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 import { Views } from '../../views/Views';
+import { ItemPagination } from './ItemPagination';
 
 export class Auxiliar extends Component {
   constructor(props) {
@@ -337,76 +338,64 @@ export class Auxiliar extends Component {
                           </tr>
                         </thead>
                         <tbody>
-                          {
-                            this.state.data !== null ?
-                              this.state.data
-                                .filter((index) => {
-                                  if (this.state.searchAuxiliar === '') {
-                                    return index
-                                  } else {
-                                    if (index.nombre.toLowerCase().includes(this.state.searchAuxiliar.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchAuxiliar.toLocaleLowerCase())) {
-                                      return index
-                                    }
+                          <ItemPagination
+                            url={`auxiliares/all`}
+                            ItemComponent={({ item }) => (
+                              <tr>
+                                <td>{item.nombre}</td>
+                                <td>{item.codigo}</td>
+                                <td>
+                                  {
+                                    this.state.grupos !== null && this.state.grupos.find(itemz => itemz._id === item.grupoId) !== undefined ?
+                                      this.state.grupos.find(itemz => itemz._id === item.grupoId).nombre :
+                                      null
                                   }
-                                  return null
-                                })
-                                .map((index, key) => (
-                                  <tr key={key}>
-                                    <td>{index.nombre}</td>
-                                    <td>{index.codigo}</td>
-                                    <td>
-                                      {
-                                        this.state.grupos !== null && this.state.grupos.find(item => item._id === index.grupoId) !== undefined ?
-                                          this.state.grupos.find(item => item._id === index.grupoId).nombre :
-                                          null
-                                      }
-                                    </td>
-                                    {/* <td style={{whiteSpace: 'normal',maxWidth: '300px'}}>{index.descripcion}</td> */}
-                                    {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                </td>
+                                {/* <td style={{whiteSpace: 'normal',maxWidth: '300px'}}>{index.descripcion}</td> */}
+                                {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                     </td>*/}
-                                    <td>
-                                      <Dropdown>
-                                        <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isEditable &&
-                                            (
-                                              <Dropdown.Item
-                                                href="#/action-1"
-                                                onClick={evt => this.modifyAuxiliar(evt, index)}>
-                                                <span
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}
-                                                >Modificar</span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
-                                          {
-                                            this.state.permissions !== undefined &&
-                                            this.state.permissions.isDeletable &&
-                                            (
-                                              <Dropdown.Item
-                                                href="#/action-2"
-                                                onClick={evt => this.deleteAuxiliar(evt, index)}
-                                              >
-                                                <span
+                                <td>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isEditable &&
+                                        (
+                                          <Dropdown.Item
+                                            href="#/action-1"
+                                            onClick={evt => this.modifyAuxiliar(evt, item)}>
+                                            <span
+                                              style={{
+                                                fontSize: '14px',
+                                              }}
+                                            >Modificar</span>
+                                          </Dropdown.Item>
+                                        )
+                                      }
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isDeletable &&
+                                        (
+                                          <Dropdown.Item
+                                            href="#/action-2"
+                                            onClick={evt => this.deleteAuxiliar(evt, item)}
+                                          >
+                                            <span
 
-                                                  style={{
-                                                    fontSize: '14px',
-                                                  }}>Eliminar</span>
-                                              </Dropdown.Item>
-                                            )
-                                          }
-                                        </Dropdown.Menu>
-                                      </Dropdown>
-                                    </td>
-                                  </tr>
-                                ))
-                              : null
-                          }
+                                              style={{
+                                                fontSize: '14px',
+                                              }}>Eliminar</span>
+                                          </Dropdown.Item>
+                                        )
+                                      }
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </td>
+                              </tr>
+                            )}
+                          />
                           <tr>
                             {
                               this.state.permissions !== undefined &&

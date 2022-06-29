@@ -8,6 +8,7 @@ import FormCargo from './Form';
 import { useForm } from 'react-hook-form';
 import { Views } from '../../../views/Views';
 import { Modal } from 'react-bootstrap';
+import { ItemPagination } from '../ItemPagination';
 
 export default function CargoView({ history }) {
   const { register, getValues } = useForm();
@@ -18,7 +19,7 @@ export default function CargoView({ history }) {
   const [searchValue, setSearchValue] = useState('');
   const [isAuth, setIsAuth] = useState(true);
   const [permissions, setPermissions] = useState(null);
-  const [ showModal, setShowModal ] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     response();
@@ -154,33 +155,19 @@ export default function CargoView({ history }) {
                     {cargos === null || permissions === null ?
                       <th colSpan={3} className='table-body-notFound'>No existen roles</th> :
                       (
-                        cargos.filter((item) => {
-                          if (searchValue !== '') {
-                            const nameFixed = item.name.toLowerCase();
-                            const checkIfNameExists = nameFixed.includes(searchValue.toLocaleLowerCase());
-
-                            if (checkIfNameExists) {
-                              return item;
-                            } else {
-                              return null;
-                            }
-                          } else {
-                            if (searchValue === '') {
-                              return item;
-                            } else {
-                              return null;
-                            }
-                          }
-                        })
-                      ).map((item) => (
-                        <ItemCargo
-                          key={item._id}
-                          data={item}
-                          onEdit={onClickEditButton}
-                          onDelete={onClickDeleteButton}
-                          permissions={permissions}
+                        <ItemPagination
+                          url={`cargos/all`}
+                          ItemComponent={({ item }) => (
+                            <ItemCargo
+                              key={item._id}
+                              data={item}
+                              onEdit={onClickEditButton}
+                              onDelete={onClickDeleteButton}
+                              permissions={permissions}
+                            />
+                          )}
                         />
-                      ))}
+                      )}
                     <tr>
                       <td colSpan={3}>
                         {
