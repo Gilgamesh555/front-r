@@ -7,6 +7,7 @@ import nodeapi from '../../../apis/nodeapi';
 export default function TransferActives() {
   const [users, setUsers] = useState(null);
   const [firstUser, setFirstUser] = useState(null);
+  const [firstUserActives, setFirstUserActives] = useState(null);
   const [secondUser, setSecondUser] = useState(null);
   const { register, handleSubmit } = useForm();
 
@@ -20,7 +21,13 @@ export default function TransferActives() {
   }, [])
 
   const handleFirstUser = (event) => {
+    const getActives = async () => {
+      const res = await axios.get(`${nodeapi}activos/userId/${event.target.value}`)
+      setFirstUserActives(res.data);
+    }
+
     setFirstUser(event.target.value);
+    getActives();
   }
 
   const handleSecondUser = (event) => {
@@ -32,15 +39,25 @@ export default function TransferActives() {
       return await axios.put(`${nodeapi}activos/modify`, data);
     }
 
+    const actives = firstUserActives.map(item => {
+      if (dataFromForm[item._id]){
+        return {
+          _id: item._id,
+        };
+      }
+    })
+
     const data = {
       firstUserId: dataFromForm['firstUser'],
       secondUserId: dataFromForm['secondUser'],
-      usuarioId: getUser()
+      usuarioId: getUser(),
+      actives
     }
 
-    transferActive(data);
+    transferActive(data)
+    .then(item => window.location.reload());
 
-    window.location.reload();
+    // window.location.reload();
   }
 
   const getUser = () => {
@@ -77,8 +94,8 @@ export default function TransferActives() {
                     className="form-control"
                     required
                     id="inputRole"
-                    onChange={handleFirstUser}
                     {...register(`firstUser`)}
+                    onChange={handleFirstUser}
                   >
                     <option hidden value=''>Escoga un Usuario</option>
                     {
@@ -119,6 +136,41 @@ export default function TransferActives() {
                 </div>
               </Form.Group>
             </div>
+            {
+              firstUserActives !== null && (
+                <div className='col-md-6'>
+                  <Form.Group className='row'>
+                    <div className='col-sm-12'>
+                      <table className="table table-hover">
+                        <thead>
+                          <th>Codigo</th>
+                          <th>Costo</th>
+                          <th>Enviar</th>
+                        </thead>
+                        <tbody className='table-body-notFound'>
+                          {
+                            firstUserActives.map(item => (
+                              <tr key={item.codigo}>
+                                <td>{item.codigo}</td>
+                                <td>{item.costoInicial}</td>
+                                <td>
+                                  <label className="form-check-label">
+                                    <input type="checkbox"
+                                    {...register(`${item._id}`)}
+                                    />
+                                    <i className="input-helper"></i>
+                                  </label>
+                                </td>
+                              </tr>
+                            ))
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </Form.Group>
+                </div>
+              )
+            }
           </div>
           <div className="col-md-6">
             <button type="submit" className="btn btn-primary mr-2">Transferir</button>
