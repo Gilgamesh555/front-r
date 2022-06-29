@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, Dropdown } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import { Views } from '../../views/Views';
 
@@ -331,20 +331,39 @@ export class Ufv extends Component {
                                     <td>{index.fecha}</td>
                                     <td>{index.valor}</td>
                                     <td>
-                                      {
-                                        this.state.permissions !== undefined &&
-                                        this.state.permissions.isEditable &&
-                                        (
-                                          <a href="!#" onClick={evt => this.modifyValor(evt, index)} className="badge badge-warning" style={{ marginRight: '3px' }} >Modificar</a>
-                                        )
-                                      }
-                                      {
-                                        this.state.permissions !== undefined &&
-                                        this.state.permissions.isDeletable &&
-                                        (
-                                          <a href="!#" onClick={evt => this.deleteUfv(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>
-                                        )
-                                      }
+                                      <Dropdown>
+                                        <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                          {
+                                            this.state.permissions !== undefined &&
+                                            this.state.permissions.isEditable &&
+                                            (
+                                              <Dropdown.Item href="#/action-1" onClick={evt => this.modifyValor(evt, index)}>
+                                                <span
+                                                  style={{
+                                                    fontSize: '14px',
+                                                  }}
+                                                >Modificar</span>
+                                              </Dropdown.Item>
+                                            )
+                                          }
+
+                                          {
+                                            this.state.permissions !== undefined &&
+                                            this.state.permissions.isDeletable &&
+                                            (
+                                              <Dropdown.Item href="#/action-2" onClick={evt => this.deleteUfv(evt, index)}>
+                                                <span
+                                                  style={{
+                                                    fontSize: '14px',
+                                                  }}>Eliminar</span>
+                                              </Dropdown.Item>
+                                            )
+                                          }
+                                        </Dropdown.Menu>
+                                      </Dropdown>
+
+
                                       {/* <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{marginRight: '3px'}} >Mod Estado</a> */}
                                     </td>
                                   </tr>

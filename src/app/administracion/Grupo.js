@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
-import { ProgressBar } from 'react-bootstrap'
+import { ProgressBar, Dropdown } from 'react-bootstrap'
 // import DatePicker from "react-datepicker";
 
 import axios from 'axios'
@@ -396,56 +396,91 @@ export class Grupo extends Component {
                                       {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
                                     </td>*/}
                                       <td>
-                                        {
-                                          this.state.permissions !== undefined &&
-                                          this.state.permissions.isEditable &&
-                                          (
-                                            <>
-                                              <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
-                                                <a href="!#" onClick={evt => this.modifyGrupo(evt, index)} className="badge badge-warning" style={{ marginRight: '3px' }} >Modificar</a>
-                                                {/*<a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>*/}
-                                              </Link>
-                                            </>
-                                          )
-                                        }
-                                        {
-                                          this.state.permissions !== undefined &&
-                                          this.state.permissions.isDeletable &&
-                                          (
-                                            <a href="!#" onClick={evt => this.deleteGrupo(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>
-                                          )
-                                        }
-                                        {/* <PDFDownloadLink document={<GrupoReport data={index}/>} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{marginRight: '3px'}}>
-                                          {({ blob, url, loading, error }) =>
-                                            loading ? 'Cargando...' : 'Reporte'
-                                          }
-                                          </PDFDownloadLink> */}
+                                        <Dropdown>
+                                          <Dropdown.Toggle variant="warning" id="dropdown-basic"></Dropdown.Toggle>
+                                          <Dropdown.Menu>
+                                            {
+                                              this.state.permissions !== undefined &&
+                                              this.state.permissions.isEditable &&
+                                              (
+                                                <Dropdown.Item
+                                                  href="#/action-1"
+                                                  onClick={evt => this.modifyGrupo(evt, index)}>
+                                                  <span
+                                                    style={{
+                                                      fontSize: '14px',
+                                                    }}
+                                                  >Modificar</span>
+                                                </Dropdown.Item>
+                                              )
+                                            }
+                                            {
+                                              this.state.permissions !== undefined &&
+                                              this.state.permissions.isDeletable &&
+                                              (
+                                                <Dropdown.Item
+                                                  href="#/action-1"
+                                                  onClick={evt => this.deleteGrupo(evt, index)}>
+                                                  <span
+                                                    style={{
+                                                      fontSize: '14px',
+                                                    }}
+                                                  >Eliminar</span>
+                                                </Dropdown.Item>
+                                              )
+                                            }
+                                          </Dropdown.Menu>
+                                        </Dropdown>
                                       </td>
                                       <td>
                                         {
                                           this.state.permissions !== undefined &&
                                           this.state.permissions.isEditable &&
                                           (
-                                            <>
-                                              <PDFDownloadLink document={<GrupoReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{ marginRight: '3px' }}>
-                                                Rept. Grupal
-                                                {/* {({ blob, url, loading, error }) =>
-                                                loading ? 'Cargando...' : 'Reporte'
-                                              } */}
-                                              </PDFDownloadLink>
-                                              <PDFDownloadLink document={<ActualizacionReport data={index} />} fileName={`reporte-activo-actualizacion`} className="badge badge-success" style={{ marginRight: '3px' }}>
-                                                Rept. Actualizacion
-                                                {/* {({ blob, url, loading, error }) =>
-                                                loading ? 'Cargando...' : 'Reporte Actualizacion'
-                                              } */}
-                                              </PDFDownloadLink>
-                                              <PDFDownloadLink document={<DepreciacionReport data={index} />} fileName={`reporte-activo-depreciacion`} className="badge badge-danger" style={{ marginRight: '3px' }}>
-                                                Rept. Depreciacion
-                                                {/* {({ blob, url, loading, error }) =>
-                                                loading ? 'Cargando...' : 'Reporte Depreciacion'
-                                              } */}
-                                              </PDFDownloadLink>
-                                            </>
+                                            <Dropdown>
+                                              <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                              <Dropdown.Menu>
+                                                <Dropdown.Item href="#/action-3">
+                                                  <a>
+                                                    <PDFDownloadLink
+                                                      document={<GrupoReport data={index} />}
+                                                      fileName={`reporte-grupo-${index.nombre}`}
+                                                      style={{
+                                                        color: '#000',
+                                                        backgroundColor: 'transparent'
+                                                      }}>
+                                                      Rept. Grupal
+                                                    </PDFDownloadLink>
+                                                  </a>
+                                                </Dropdown.Item>
+                                                <Dropdown.Item href="#/action-3">
+                                                  <a>
+                                                    <PDFDownloadLink
+                                                      document={<ActualizacionReport data={index} />}
+                                                      fileName={`reporte-activo-actualizacion`}
+                                                      style={{
+                                                        color: '#000',
+                                                        backgroundColor: 'transparent'
+                                                      }}>
+                                                      Rept. Actualizacion
+                                                    </PDFDownloadLink>
+                                                  </a>
+                                                </Dropdown.Item>
+                                                <Dropdown.Item href="#/action-3">
+                                                  <a>
+                                                    <PDFDownloadLink
+                                                      document={<DepreciacionReport data={index} />}
+                                                      fileName={`reporte-activo-depreciacion`}
+                                                      style={{
+                                                        color: '#000',
+                                                        backgroundColor: 'transparent'
+                                                      }}>
+                                                      Rept. Depreciacion
+                                                    </PDFDownloadLink>
+                                                  </a>
+                                                </Dropdown.Item>
+                                              </Dropdown.Menu>
+                                            </Dropdown>
                                           )
                                         }
                                       </td>
@@ -453,6 +488,12 @@ export class Grupo extends Component {
                                   ))
                                 : null
                             }
+                            {/* <PDFDownloadLink document={<GrupoReport data={index} />} fileName={`reporte-grupo-${index.nombre}`} className="badge badge-info" style={{ marginRight: '3px' }}>
+                              Rept. Grupal
+                              {({ blob, url, loading, error }) =>
+                                                loading ? 'Cargando...' : 'Reporte'
+                                              }
+                            </PDFDownloadLink> */}
                             <tr>
                               {
                                 this.state.permissions !== undefined &&

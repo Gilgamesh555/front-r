@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, Dropdown } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 
 import axios from 'axios'
@@ -160,12 +160,12 @@ export class Oficina extends Component {
 
   //crud
   modifyOficina(event, data) {
-    this.setState({ 
-      id: data._id, 
-      estado: data.estado, 
-      nombre: data.nombre, 
-      codigo: data.codigo, 
-      changeToEdit: !this.state.changeToEdit, 
+    this.setState({
+      id: data._id,
+      estado: data.estado,
+      nombre: data.nombre,
+      codigo: data.codigo,
+      changeToEdit: !this.state.changeToEdit,
     }, () => {
       document.getElementById('inputNombre').value = data.nombre
       document.getElementById('card-title-oficina').innerHTML = 'Modificar Oficina'
@@ -240,167 +240,171 @@ export class Oficina extends Component {
               overflow: "scroll",
             }}
           >
-          <div>
-            <div className="page-header">
-              <h3 className="page-title"> Departamentos </h3>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
-                  <li className="breadcrumb-item active" aria-current="page">Departamentos</li>
-                </ol>
-              </nav>
-            </div>
-            <div className="row">
-              <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
-                <div className="form-group" style={{ width: '100%' }}>
-                  <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchOficina: event.target.value })} />
-                </div>
+            <div>
+              <div className="page-header">
+                <h3 className="page-title"> Departamentos </h3>
+                <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
+                    <li className="breadcrumb-item active" aria-current="page">Departamentos</li>
+                  </ol>
+                </nav>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-lg-6 grid-margin stretch-card">
-                <div className="card">
-                  <div className="card-body">
-                    <h4 className="card-title">INFORMACION</h4>
-                    {/* <p className="card-description"> Add className <code>.table-hover</code>
-                          </p> */}
-                    <div className="table-responsive">
-                      <table className="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>Nombre</th>
-                            <th>Codigo</th>
-                            {/*<th>Estado</th>*/}
-                            <th>Acciones</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            this.state.data !== null ?
-                              this.state.data
-                                .filter((index) => {
-                                  if (this.state.searchOficina === '') {
-                                    return index
-                                  } else {
-                                    if (index.nombre.toLowerCase().includes(this.state.searchOficina.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchOficina.toLocaleLowerCase())) {
-                                      return index
-                                    }
-                                  }
-                                  return null
-                                })
-                                .map((index, key) => (
-                                  <tr key={key}>
-                                    <td>{index.nombre}</td>
-                                    <td>{index.codigo}</td>
-                                    {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
-                                      {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
-                                    </td>*/}
-                                    <td>
-                                      {
-                                        this.state.permissions !== undefined &&
-                                        this.state.permissions.isEditable &&
-                                        (
-                                          <>
-                                            <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
-                                            <a href="!#" onClick={evt => this.modifyOficina(evt, index)} className="badge badge-warning" style={{ marginRight: '3px' }} >Modificar</a>
-                                            {/*<a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>*/}
-                                            </Link>
-                                          </>
-                                        )
-                                      }
-                                      {
-                                        this.state.permissions !== undefined &&
-                                        this.state.permissions.isDeletable &&
-                                        (
-                                          <a href="!#" onClick={evt => this.deleteOficina(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>
-                                        )
-                                      }
-                                    </td>
-                                  </tr>
-                                ))
-                              : null
-                          }
-                          {/* <tr>
-                                  <td>Messsy</td>
-                                  <td>Flash</td>
-                                  <td className="text-danger"> 21.06% <i className="mdi mdi-arrow-down"></i></td>
-                                  <td><label className="badge badge-warning">In progress</label></td>
-                                </tr>
-                                <tr>
-                                  <td>John</td>
-                                  <td>Premier</td>
-                                  <td className="text-danger"> 35.00% <i className="mdi mdi-arrow-down"></i></td>
-                                  <td><label className="badge badge-info">Fixed</label></td>
-                                </tr>
-                                <tr>
-                                  <td>Peter</td>
-                                  <td>After effects</td>
-                                  <td className="text-success"> 82.00% <i className="mdi mdi-arrow-up"></i></td>
-                                  <td><label className="badge badge-success">Completed</label></td>
-                                </tr>
-                                <tr>
-                                  <td>Dave</td>
-                                  <td>53275535</td>
-                                  <td className="text-success"> Activo <i className="mdi mdi-arrow-up"></i></td>
-                                  <td><label className="badge badge-warning">In progress</label></td>
-                                </tr> */}
-                          <tr>
-                            {
-                              this.state.permissions !== undefined &&
-                              this.state.permissions.isAddble &&
-                              (
-                                <td>
-                                  <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
-                                  <a href="!#" onClick={evt => this.registerOficina(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'white' }}>Registrar Nuevo</a>
-                                  </Link>
-                                </td>
-                              )
-                            }
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+              <div className="row">
+                <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
+                  <div className="form-group" style={{ width: '100%' }}>
+                    <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchOficina: event.target.value })} />
                   </div>
                 </div>
               </div>
-              {
-                (this.state.changeToEdit || this.state.permissions.isAddble) &&
-                (
-                  <div className="col-lg-6 grid-margin stretch-card">
-                    <div className="card">
-                      <div className="card-body">
-                        <h4 className="card-title" id="card-title-oficina">Registrar Departamentos</h4>
-                        <p className="card-description">Todos los campos son requeridos</p>
-                        <form className="forms-sample">
-                          <Form.Group>
-                            <label htmlFor="exampleInputUsername1">Nombre de Departamento</label>
-                            <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Departamento" size="lg" required />
-                          </Form.Group>
-                          {/* <Form.Group>
+              <div className="row">
+                <div className="col-lg-6 grid-margin stretch-card">
+                  <div className="card">
+                    <div className="card-body">
+                      <h4 className="card-title">INFORMACION</h4>
+                      {/* <p className="card-description"> Add className <code>.table-hover</code>
+                          </p> */}
+                      <div className="table-responsive">
+                        <table className="table table-hover">
+                          <thead>
+                            <tr>
+                              <th>Nombre</th>
+                              <th>Codigo</th>
+                              {/*<th>Estado</th>*/}
+                              <th>Acciones</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {
+                              this.state.data !== null ?
+                                this.state.data
+                                  .filter((index) => {
+                                    if (this.state.searchOficina === '') {
+                                      return index
+                                    } else {
+                                      if (index.nombre.toLowerCase().includes(this.state.searchOficina.toLocaleLowerCase()) || index.codigo.toLowerCase().includes(this.state.searchOficina.toLocaleLowerCase())) {
+                                        return index
+                                      }
+                                    }
+                                    return null
+                                  })
+                                  .map((index, key) => (
+                                    <tr key={key}>
+                                      <td>{index.nombre}</td>
+                                      <td>{index.codigo}</td>
+                                      {/*<td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                      {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
+                                    </td>*/}
+                                      <td>
+                                        <Dropdown>
+                                          <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                          <Dropdown.Menu>
+
+                                            {
+                                              this.state.permissions !== undefined &&
+                                              this.state.permissions.isEditable &&
+                                              (
+                                                <Dropdown.Item
+                                                  href="#/action-1"
+                                                  onClick={evt => this.modifyOficina(evt, index)}>
+                                                  <span
+
+                                                    style={{
+                                                      color: '#000',
+                                                      backgroundColor: 'transparent',
+                                                      fontSize: '14px'
+                                                    }}>
+                                                    Modificar
+                                                  </span>
+                                                </Dropdown.Item>
+                                              )
+                                            }
+
+                                            {
+                                              this.state.permissions !== undefined &&
+                                              this.state.permissions.isDeletable &&
+                                              (
+                                                <Dropdown.Item
+                                                  href="#/action-2"
+                                                  onClick={evt => this.deleteOficina(evt, index)}
+                                                >
+                                                  <span
+
+                                                    style={{
+                                                      color: '#000',
+                                                      backgroundColor: 'transparent',
+                                                      fontSize: '14px'
+                                                    }}>
+                                                    Eliminar
+                                                  </span>
+                                                </Dropdown.Item>
+                                              )
+                                            }
+
+                                          </Dropdown.Menu>
+                                        </Dropdown>
+                                      </td>
+                                    </tr>
+                                  ))
+                                : null
+                            }
+                            <tr>
+                              {
+                                this.state.permissions !== undefined &&
+                                this.state.permissions.isAddble &&
+                                (
+                                  <td>
+                                    <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
+                                      <a href="!#" onClick={evt => this.registerOficina(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'white' }}>Registrar Nuevo</a>
+                                    </Link>
+                                  </td>
+                                )
+                              }
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {
+                  (this.state.changeToEdit || this.state.permissions.isAddble) &&
+                  (
+                    <div className="col-lg-6 grid-margin stretch-card">
+                      <div className="card">
+                        <div className="card-body">
+                          <h4 className="card-title" id="card-title-oficina">Registrar Departamentos</h4>
+                          <p className="card-description">Todos los campos son requeridos</p>
+                          <form className="forms-sample">
+                            <Form.Group>
+                              <label htmlFor="exampleInputUsername1">Nombre de Departamento</label>
+                              <Form.Control onChange={this.handleNombre} type="text" id="inputNombre" placeholder="Nombre de Departamento" size="lg" required />
+                            </Form.Group>
+                            {/* <Form.Group>
                               <label htmlFor="exampleInputEmail1">Codigo</label>
                               <Form.Control onChange={this.handleCodigo} 
                               type="text" className="form-control" id="inputCodigo" placeholder="Ej. Ofi-001" required/>
                             </Form.Group> */}
-                          {/* <div className="form-check">
+                            {/* <div className="form-check">
                               <label className="form-check-label text-muted">
                                 <input type="checkbox" className="form-check-input"/>
                                 <i className="input-helper"></i>
                                 Remember me
                               </label>
                             </div> */}
-                          <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
-                          <button className="btn btn-light" onClick={this.handleReset}>Borrar Datos</button>
-                          {
-                            this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
-                          }
-                        </form>
+                            <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
+                            <button className="btn btn-light" onClick={this.handleReset}>Borrar Datos</button>
+                            {
+                              this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
+                            }
+                          </form>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )
-              }
+                  )
+                }
+              </div>
             </div>
-          </div>
           </Element>
         )
       }

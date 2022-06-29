@@ -1,62 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './logstyle.css';
 import { Modal } from 'react-bootstrap';
-import nodeapi from '../../../apis/nodeapi';
-
-import axios from 'axios';
+import { ItemPagination } from '../ItemPagination';
 
 export default function Log({ data }) {
   const { _id } = data;
-  const [logs, setLogs] = useState([]);
+  const url = `logs/getByActivo/${_id}`;
 
-  useEffect(() => {
-    getLogs();
-  }, [])
-
-  const getLogs = async () => {
-    let logsz = await axios.get(`${nodeapi}logs/getByActivo/${_id}`);
-    let logszz = logsz.data.map(async (item) => {
-      const date = new Date(item.date).toISOString().slice(0, 10)
-      let userName = 'Jhon Doe';
-
-      try {
-        let user = await axios.get(`${nodeapi}users/${item.userId}`);
-        user = user.data;
-        userName = `${user.nombre} ${user.apPaterno} ${user.apMaterno}`;
-      } catch (error) {
-        console.log(error)
-      }
-
-      return {
-        date,
-        description: `${userName} =>  ${item.description}`
-      }
-    });
-    logszz = await Promise.all(logszz);
-    setLogs(logszz);
-  }
+  const ItemComponet = ({ item }) => (
+      <div className='cardz'>
+        <div className='info'>
+          <h2 className='title'>{item.date}</h2>
+          {
+            item.description.split('\n').map(item => <p>{item}</p>)
+          }
+        </div>
+      </div>
+  )
 
   return (
-    <>
+    <div>
       <Modal.Header closeButton>
         <Modal.Title>Bitacora De Activo</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className='timeline'>
           <div className='outer'>
-            {
-              logs.map(item => (
-                <div className='cardz'>
-                  <div className='info'>
-                    <h2 className='title'>{item.date}</h2>
-                    <p>{item.description}</p>
-                  </div>
-                </div>
-              ))
-            }
+              <ItemPagination
+                url={url}
+                ItemComponent={ItemComponet}
+              />
           </div>
         </div>
       </Modal.Body>
-    </>
+    </div>
   )
 }

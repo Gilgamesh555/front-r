@@ -96,3 +96,9 @@
     max-height: 40vh;
     overflow-y: auto;
 }
+
+.paginateContainer {
+  margin-top: 2em;
+  display: flex;
+  justify-content: space-around;
+}

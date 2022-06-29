@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, Dropdown } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 // import DatePicker from "react-datepicker";
 
@@ -378,7 +378,7 @@ export class Personal extends Component {
 
   handleTransferActive(event) {
     this.setState({ isWillBeTransfer: !this.state.isWillBeTransfer });
-    
+
     event.preventDefault();
   }
 
@@ -463,138 +463,177 @@ export class Personal extends Component {
               overflow: "scroll",
             }}
           >
-          <div>
-            <div className="page-header">
-              <h3 className="page-title"> Personal </h3>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
-                  <li className="breadcrumb-item active" aria-current="page">Personal</li>
-                </ol>
-              </nav>
-            </div>
-            <div className="row">
-              <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
-                <div className="form-group" style={{ width: '100%' }}>
-                  <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchUser: event.target.value })} />
+            <div>
+              <div className="page-header">
+                <h3 className="page-title"> Personal </h3>
+                <nav aria-label="breadcrumb">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="!#" onClick={event => event.preventDefault()}>Administracion</a></li>
+                    <li className="breadcrumb-item active" aria-current="page">Personal</li>
+                  </ol>
+                </nav>
+              </div>
+              <div className="row">
+                <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
+                  <div className="form-group" style={{ width: '100%' }}>
+                    <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchUser: event.target.value })} />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="row">
-              <div className="col-lg-12 grid-margin stretch-card">
-                <div className="card">
-                  <div className="card-body">
-                    <h4 className="card-title">Lista de Personal - Usuarios</h4>
-                    {/* <p className="card-description"> Add className <code>.table-hover</code>
+              <div className="row">
+                <div className="col-lg-12 grid-margin stretch-card">
+                  <div className="card">
+                    <div className="card-body">
+                      <h4 className="card-title">Lista de Personal - Usuarios</h4>
+                      {/* <p className="card-description"> Add className <code>.table-hover</code>
                           </p> */}
-                    <div className="table-responsive">
-                      <table className="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>Nombre</th>
-                            <th>Ap. Paterno</th>
-                            <th>Ap. Materno</th>
-                            {/* <th>Usuario</th> */}
-                            <th>CI</th>
-                            <th>Departamento</th>
-                            <th>Cargo</th>
-                            {/*<th>Email</th>*/}
-                            <th>Nro Celular</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            this.state.data !== null ?
-                              this.state.data
-                                .filter((index) => {
-                                  if (this.state.searchUser === '') {
-                                    return index
-                                  } else {
-                                    if (index.nombre.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apPaterno?.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apMaterno.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.username.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.cargo.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase())) {
+                      <div className="table-responsive">
+                        <table className="table table-hover">
+                          <thead>
+                            <tr>
+                              <th>Nombre</th>
+                              <th>Ap. Paterno</th>
+                              <th>Ap. Materno</th>
+                              {/* <th>Usuario</th> */}
+                              <th>CI</th>
+                              <th>Departamento</th>
+                              <th>Cargo</th>
+                              {/*<th>Email</th>*/}
+                              <th>Nro Celular</th>
+                              <th>Estado</th>
+                              <th>Acciones</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {
+                              this.state.data !== null ?
+                                this.state.data
+                                  .filter((index) => {
+                                    if (this.state.searchUser === '') {
                                       return index
+                                    } else {
+                                      if (index.nombre.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apPaterno?.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.apMaterno.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.username.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase()) || index.cargo.toLowerCase().includes(this.state.searchUser.toLocaleLowerCase())) {
+                                        return index
+                                      }
                                     }
-                                  }
-                                  return null
-                                })
-                                .map((index, key) => (
-                                  <tr key={key}>
-                                    <td>{index.nombre}</td>
-                                    <td>{index.apPaterno}</td>
-                                    <td>{index.apMaterno}</td>
-                                    {/* <td>{index.username}</td> */}
-                                    <td>{index.ci}</td>
-                                    <td>{
-                                      this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ?
-                                        this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
-                                        null
-                                    }</td>
-                                    <td>{
-                                      this.state.cargos !== null && this.state.cargos.find(item => item._id === index.cargo) !== undefined ?
-                                        this.state.cargos.find(item => item._id === index.cargo).name :
-                                        null
-                                    }</td>
-                                    {/*<td>{index.email}</td>*/}
-                                    <td>{index.celular}</td>
-                                    <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
-                                      {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
-                                    </td>
-                                    <td>
-                                      {
-                                        this.state.permissions !== undefined &&
-                                        this.state.permissions.isEditable &&
-                                        (
-                                          <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
-                                          <a href="!#" onClick={evt => this.modifyUser(evt, index)} className="badge badge-warning" style={{ marginRight: '3px' }} >Modificar</a>
-                                          </Link>
-                                        )
-                                      }
-                                      {
-                                        this.state.permissions !== undefined &&
-                                        this.state.permissions.isDeletable &&
-                                        (
-                                          <a href="!#" onClick={evt => this.changeEstado(evt, index)} className="badge badge-info" style={{ marginRight: '3px' }} >Mod Estado</a>
-                                        )
-                                      }
-                                      {/*{<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}*/}
-                                      <PDFDownloadLink
-                                        document={<ActivoReport
-                                          data={index}
-                                          token={window.localStorage.getItem('token')}
-                                        />}
-                                        fileName={`reporte-usuario-${index.username}`}
-                                        className="badge badge-success"
-                                        style={{ marginRight: '3px' }}
-                                      >
-                                        {({ blob, url, loading, error }) =>
-                                          loading ? 'Cargando...' : 'Ent. Activos'
-                                        }
-                                      </PDFDownloadLink>
-                                      <PDFDownloadLink
-                                        document={<ActivoReturn
-                                          data={index}
-                                          token={window.localStorage.getItem('token')}
-                                        />}
-                                        fileName={`reporte-usuario-${index.username}`}
-                                        className="badge badge-danger"
-                                        style={{ marginRight: '3px' }}
-                                      >
-                                        {({ blob, url, loading, error }) =>
-                                          loading ? 'Cargando...' : 'Dev. Activos'
-                                        }
-                                      </PDFDownloadLink>
-                                      {<PDFDownloadLink document={<ActivoReporte data={index} />} fileName={`reporte-usuario-${index.username}`} className="badge badge-info" style={{ marginRight: '3px' }}>
-                                        {({ blob, url, loading, error }) =>
-                                          loading ? 'Cargando...' : 'Verif. Est. de Activos'
-                                        }
-                                      </PDFDownloadLink>}
-                                    </td>
-                                  </tr>
-                                ))
-                              : null
-                          }
-                          {/* <tr>
+                                    return null
+                                  })
+                                  .map((index, key) => (
+                                    <tr key={key}>
+                                      <td>{index.nombre}</td>
+                                      <td>{index.apPaterno}</td>
+                                      <td>{index.apMaterno}</td>
+                                      {/* <td>{index.username}</td> */}
+                                      <td>{index.ci}</td>
+                                      <td>{
+                                        this.state.oficinas !== null && this.state.oficinas.find(item => item._id === index.oficinaId) !== undefined ?
+                                          this.state.oficinas.find(item => item._id === index.oficinaId).nombre :
+                                          null
+                                      }</td>
+                                      <td>{
+                                        this.state.cargos !== null && this.state.cargos.find(item => item._id === index.cargo) !== undefined ?
+                                          this.state.cargos.find(item => item._id === index.cargo).name :
+                                          null
+                                      }</td>
+                                      {/*<td>{index.email}</td>*/}
+                                      <td>{index.celular}</td>
+                                      <td className={index.estado === 'activo' ? 'text-success' : 'text-danger'}>
+                                        {index.estado} <i className={index.estado === 'activo' ? 'mdi mdi-arrow-up' : 'mdi mdi-arrow-down'}></i>
+                                      </td>
+                                      <td>
+                                        <Dropdown>
+                                          <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                          <Dropdown.Menu>
+                                            {
+                                              this.state.permissions !== undefined &&
+                                              this.state.permissions.isEditable &&
+                                              (
+                                                <Dropdown.Item
+                                                  href="#/action-1"
+                                                  onClick={evt => this.modifyUser(evt, index)}>
+                                                  <span
+                                                    style={{
+                                                      fontSize: '14px',
+                                                    }}
+                                                  >Modificar</span>
+                                                </Dropdown.Item>
+                                              )
+                                            }
+
+
+                                            {
+                                              this.state.permissions !== undefined &&
+                                              this.state.permissions.isDeletable &&
+                                              (
+                                                <Dropdown.Item
+                                                  href="#/action-2"
+                                                  onClick={evt => this.changeEstado(evt, index)}
+                                                >
+                                                  <span
+
+                                                    style={{
+                                                      fontSize: '14px',
+                                                    }}>Mod Estado</span>
+                                                </Dropdown.Item>
+                                              )
+                                            }
+                                            <Dropdown.Item href="#/action-3">
+                                              <a>
+                                                <PDFDownloadLink
+                                                  document={<ActivoReport
+                                                    data={index}
+                                                    token={window.localStorage.getItem('token')}
+                                                  />}
+                                                  style={{
+                                                    color: '#000',
+                                                    backgroundColor: 'transparent'
+                                                  }}
+                                                  fileName={`reporte-usuario-${index.username}`}
+                                                >
+                                                  Ent. Activos
+                                                </PDFDownloadLink>
+                                              </a>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-3">
+                                              <a>
+                                                <PDFDownloadLink
+                                                  document={<ActivoReturn
+                                                    data={index}
+                                                    token={window.localStorage.getItem('token')}
+                                                  />}
+                                                  fileName={`reporte-usuario-${index.username}`}
+                                                  style={{
+                                                    color: '#000',
+                                                    backgroundColor: 'transparent'
+                                                  }}
+                                                >
+                                                  Dev. Activos
+                                                </PDFDownloadLink>
+                                              </a>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-3">
+                                              <a>
+                                                {<PDFDownloadLink
+                                                  document={<ActivoReporte data={index} />}
+                                                  fileName={`reporte-usuario-${index.username}`}
+                                                  style={{
+                                                    color: '#000',
+                                                    backgroundColor: 'transparent'
+                                                  }}
+                                                >
+                                                  Verif. Est. de Activos
+                                                </PDFDownloadLink>}
+                                              </a>
+                                            </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                        </Dropdown>
+                                        {/*{<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}*/}
+                                      </td>
+                                    </tr>
+                                  ))
+                                : null
+                            }
+                            {/* <tr>
                                   <td>Messsy</td>
                                   <td>Flash</td>
                                   <td className="text-danger"> 21.06% <i className="mdi mdi-arrow-down"></i></td>
@@ -617,138 +656,138 @@ export class Personal extends Component {
                                   <td className="text-success"> Activo <i className="mdi mdi-arrow-up"></i></td>
                                   <td><label className="badge badge-warning">In progress</label></td>
                                 </tr> */}
-                          <tr>
-                            {
-                              this.state.permissions !== undefined &&
-                              this.state.permissions.isAddble &&
-                              (
+                            <tr>
+                              {
+                                this.state.permissions !== undefined &&
+                                this.state.permissions.isAddble &&
+                                (
+                                  <td>
+                                    <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
+                                      <a href="!#" onClick={evt => this.registerUser(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
+                                    </Link>
+                                  </td>
+                                )
+                              }
+                              {
                                 <td>
-                                  <Link to="FormActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
-                                  <a href="!#" onClick={evt => this.registerUser(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
+                                  <Link to="TransferirActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
+                                    <a href="!#" onClick={evt => this.handleTransferActive(evt)} className="badge badge-warning" style={{ marginRight: '3px', color: 'whitesmoke' }}>Transferir Activos</a>
                                   </Link>
                                 </td>
-                              )
-                            }
-                            {
-                              <td>
-                                <Link to="TransferirActivo" spy={true} smooth={true} duration={250} containerId="containerElement">
-                                <a href="!#" onClick={evt => this.handleTransferActive(evt)} className="badge badge-warning" style={{ marginRight: '3px', color: 'whitesmoke' }}>Transferir Activos</a>
-                                </Link>
-                              </td>
-                            }
-                          </tr>
-                        </tbody>
-                      </table>
+                              }
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <Element name="TransferirActivo">
-            {
-              !this.state.isWillBeTransfer ? <TransferActives /> : null
-            }
-            </Element>
-            {
-              (this.state.changeToEdit || this.state.permissions.isAddble) &&
-              (
-                <Element name="FormActivo">
-                <div className="row">
-                  <div className="col-md-9 grid-margin stretch-card">
-                    <div className="card">
-                      <div className="card-body">
-                        <h4 className="card-title" id="card-title-user">Registrar Usuario</h4>
-                        <form className="form-sample">
-                          <p className="card-description"> Informacion Personal </p>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Nombre(s)</label>
-                                <div className="col-sm-9">
-                                  <Form.Control type="text" id="inputNombre" placeholder="Nombre" required onChange={this.handleNombre} />
+              <Element name="TransferirActivo">
+                {
+                  !this.state.isWillBeTransfer ? <TransferActives /> : null
+                }
+              </Element>
+              {
+                (this.state.changeToEdit || this.state.permissions.isAddble) &&
+                (
+                  <Element name="FormActivo">
+                    <div className="row">
+                      <div className="col-md-9 grid-margin stretch-card">
+                        <div className="card">
+                          <div className="card-body">
+                            <h4 className="card-title" id="card-title-user">Registrar Usuario</h4>
+                            <form className="form-sample">
+                              <p className="card-description"> Informacion Personal </p>
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Nombre(s)</label>
+                                    <div className="col-sm-9">
+                                      <Form.Control type="text" id="inputNombre" placeholder="Nombre" required onChange={this.handleNombre} />
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                              </Form.Group>
-                            </div>
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Apellido Paterno</label>
-                                <div className="col-sm-9">
-                                  <Form.Control type="text" id="inputApPaterno" placeholder="Ap. paterno" required onChange={this.handleApPaterno} />
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Apellido Paterno</label>
+                                    <div className="col-sm-9">
+                                      <Form.Control type="text" id="inputApPaterno" placeholder="Ap. paterno" required onChange={this.handleApPaterno} />
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                              </Form.Group>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Apellido Materno</label>
-                                <div className="col-sm-9">
-                                  <Form.Control type="text" id="inputApMaterno" placeholder="Ap Materno" required onChange={this.handleApMaterno} />
+                              </div>
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Apellido Materno</label>
+                                    <div className="col-sm-9">
+                                      <Form.Control type="text" id="inputApMaterno" placeholder="Ap Materno" required onChange={this.handleApMaterno} />
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                              </Form.Group>
-                            </div>
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">CI</label>
-                                <div className="col-sm-6">
-                                  <Form.Control type="text" placeholder="Ej: 123456pt" required id="inputCi" onChange={this.handleCi} />
-                                  {/* <select className="form-control">
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">CI</label>
+                                    <div className="col-sm-6">
+                                      <Form.Control type="text" placeholder="Ej: 123456pt" required id="inputCi" onChange={this.handleCi} />
+                                      {/* <select className="form-control">
                                       <option>Male</option>
                                       <option>Female</option>
                                     </select> */}
+                                    </div>
+                                    <div className="col-sm-3">
+                                      <select className="form-control" onChange={this.handleCityId} required>
+                                        <option value={"Lp"}>La Paz</option>
+                                        <option value={"Or"}>Oruro</option>
+                                        <option value={"Pt"}>Potosi</option>
+                                        <option value={"Tj"}>Tarija</option>
+                                        <option value={"Ch"}>Chuquisaca</option>
+                                        <option value={"Sc"}>Santa Cruz</option>
+                                        <option value={"Bn"}>Beni</option>
+                                        <option value={"Pa"}>Pando</option>
+                                        <option value={"Cb"}>Cochabamba</option>
+                                      </select>
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                                <div className="col-sm-3">
-                                  <select className="form-control" onChange={this.handleCityId} required>
-                                    <option value={"Lp"}>La Paz</option>
-                                    <option value={"Or"}>Oruro</option>
-                                    <option value={"Pt"}>Potosi</option>
-                                    <option value={"Tj"}>Tarija</option>
-                                    <option value={"Ch"}>Chuquisaca</option>
-                                    <option value={"Sc"}>Santa Cruz</option>
-                                    <option value={"Bn"}>Beni</option>
-                                    <option value={"Pa"}>Pando</option>
-                                    <option value={"Cb"}>Cochabamba</option>
-                                  </select>
+                              </div>
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Departamento</label>
+                                    <div className="col-sm-9">
+                                      <select className="form-control" required id="inputOficinaId" onChange={this.handleOficinaId}>
+                                        <option hidden value=''>Escoga una Opcion</option>
+                                        {
+                                          this.state.oficinas !== null ?
+                                            this.state.oficinas.map((index, key) => (
+                                              <option value={index._id} key={key}>{index.nombre}</option>
+                                            ))
+                                            : <option>Cargando...</option>
+                                        }
+                                      </select>
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                              </Form.Group>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Departamento</label>
-                                <div className="col-sm-9">
-                                  <select className="form-control" required id="inputOficinaId" onChange={this.handleOficinaId}>
-                                    <option hidden value=''>Escoga una Opcion</option>
-                                    {
-                                      this.state.oficinas !== null ?
-                                        this.state.oficinas.map((index, key) => (
-                                          <option value={index._id} key={key}>{index.nombre}</option>
-                                        ))
-                                        : <option>Cargando...</option>
-                                    }
-                                  </select>
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Cargo</label>
+                                    <div className="col-sm-9">
+                                      <select className="form-control" required id="inputOficinaId" onChange={this.handleCargo}>
+                                        <option hidden value=''>Escoga una Opcion</option>
+                                        {
+                                          this.state.cargos !== null ?
+                                            this.state.cargos.map((index, key) => (
+                                              <option value={index._id} key={key}>{index.name}</option>
+                                            ))
+                                            : <option>Cargando...</option>
+                                        }
+                                      </select>
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                              </Form.Group>
-                            </div>
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Cargo</label>
-                                <div className="col-sm-9">
-                                  <select className="form-control" required id="inputOficinaId" onChange={this.handleCargo}>
-                                    <option hidden value=''>Escoga una Opcion</option>
-                                    {
-                                      this.state.cargos !== null ?
-                                        this.state.cargos.map((index, key) => (
-                                          <option value={index._id} key={key}>{index.name}</option>
-                                        ))
-                                        : <option>Cargando...</option>
-                                    }
-                                  </select>
-                                </div>
-                              </Form.Group>
-                            </div>
-                            {/* <div className="col-md-6">
+                                {/* <div className="col-md-6">
                               <Form.Group className="row">
                                 <label className="col-sm-3 col-form-label">Cargo</label>
                                 <div className="col-sm-9">
@@ -756,9 +795,9 @@ export class Personal extends Component {
                                 </div>
                               </Form.Group>
                             </div> */}
-                          </div>
-                          <div className="row">
-                            {/* <div className="col-md-6">
+                              </div>
+                              <div className="row">
+                                {/* <div className="col-md-6">
                                 <Form.Group className="row" id="inputRole" onChange={this.handleRole}>
                                   <label className="col-sm-3 col-form-label">Rol en Sistema</label>
                                   <div className="col-sm-4">
@@ -779,93 +818,93 @@ export class Personal extends Component {
                                   </div>
                                 </Form.Group>
                               </div> */}
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Rol en Sistema</label>
-                                <div className="col-sm-9">
-                                  <select className="form-control" required id="inputRole" onChange={this.handleRole}>
-                                    <option hidden value=''>Escoga una Opcion</option>
-                                    {
-                                      this.state.roles !== null && (
-                                        this.state.roles.map((item) => (
-                                          <option value={item._id} key={item._id}>{item.name}</option>
-                                        ))
-                                      )
-                                    }
-                                  </select>
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Rol en Sistema</label>
+                                    <div className="col-sm-9">
+                                      <select className="form-control" required id="inputRole" onChange={this.handleRole}>
+                                        <option hidden value=''>Escoga una Opcion</option>
+                                        {
+                                          this.state.roles !== null && (
+                                            this.state.roles.map((item) => (
+                                              <option value={item._id} key={item._id}>{item.name}</option>
+                                            ))
+                                          )
+                                        }
+                                      </select>
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                              </Form.Group>
-                            </div>
-                          </div>
-                          <p className="card-description"> Datos de Usuario </p>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Email</label>
-                                <div className="col-sm-9">
-                                  <Form.Control type="email" placeholder="tuemail@example.com" id="inputEmail" required onChange={this.handleEmail} />
+                              </div>
+                              <p className="card-description"> Datos de Usuario </p>
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Email</label>
+                                    <div className="col-sm-9">
+                                      <Form.Control type="email" placeholder="tuemail@example.com" id="inputEmail" required onChange={this.handleEmail} />
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                              </Form.Group>
-                            </div>
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Nro de Celular</label>
-                                <div className="col-sm-9">
-                                  <Form.Control type="text" placeholder="1234-5678" required id="inputCelular" maxlength="8" onChange={this.handleCelular} />
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Nro de Celular</label>
+                                    <div className="col-sm-9">
+                                      <Form.Control type="text" placeholder="1234-5678" required id="inputCelular" maxlength="8" onChange={this.handleCelular} />
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                              </Form.Group>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Nombre de Usuario</label>
-                                <div className="col-sm-9">
-                                  <Form.Control type="text" placeholder="Nombre de Usuario" id="inputUsername" required onChange={this.handleUsername} />
+                              </div>
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Nombre de Usuario</label>
+                                    <div className="col-sm-9">
+                                      <Form.Control type="text" placeholder="Nombre de Usuario" id="inputUsername" required onChange={this.handleUsername} />
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                              </Form.Group>
-                            </div>
-                            <div className="col-md-6">
-                              {/* <Form.Group className="row">
+                                <div className="col-md-6">
+                                  {/* <Form.Group className="row">
                                   <label className="col-sm-3 col-form-label">Contraseña</label>
                                   <div className="col-sm-9">
                                   <Form.Control type="text"/>
                                   </div>
                                 </Form.Group> */}
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Contraseña</label>
-                                <div className="col-sm-9">
-                                  <Form.Control type="password" placeholder="Contraseña" id="inputPassword" required onChange={this.handlePassword} />
                                 </div>
-                              </Form.Group>
-                            </div>
-                            <div className="col-md-6">
-                              <Form.Group className="row">
-                                <label className="col-sm-3 col-form-label">Confirmar Contraseña</label>
-                                <div className="col-sm-9">
-                                  <Form.Control type="password" placeholder="Repite la contraseña" id="inputConfirmPassword" required onChange={this.handleConfirmPassword} />
+                              </div>
+                              <div className="row">
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Contraseña</label>
+                                    <div className="col-sm-9">
+                                      <Form.Control type="password" placeholder="Contraseña" id="inputPassword" required onChange={this.handlePassword} />
+                                    </div>
+                                  </Form.Group>
                                 </div>
-                              </Form.Group>
-                            </div>
-                            <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
-                            <button className="btn btn-light" onClick={this.handleReset}>Borrar Datos</button>
-                            {
-                              this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
-                            }
+                                <div className="col-md-6">
+                                  <Form.Group className="row">
+                                    <label className="col-sm-3 col-form-label">Confirmar Contraseña</label>
+                                    <div className="col-sm-9">
+                                      <Form.Control type="password" placeholder="Repite la contraseña" id="inputConfirmPassword" required onChange={this.handleConfirmPassword} />
+                                    </div>
+                                  </Form.Group>
+                                </div>
+                                <button type="submit" className="btn btn-primary mr-2" onClick={evt => this.handleRegisterSubmit(evt, this.state)}>Enviar</button>
+                                <button className="btn btn-light" onClick={this.handleReset}>Borrar Datos</button>
+                                {
+                                  this.state.error !== '' ? <label style={{ color: 'red', fontSize: '0.875rem' }}>{this.state.error}</label> : null
+                                }
+                              </div>
+                            </form>
                           </div>
-                        </form>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                </Element>
-              )
-            }
-          </div>
+                  </Element>
+                )
+              }
+            </div>
           </Element>
         )
       }
