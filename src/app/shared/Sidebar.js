@@ -111,42 +111,42 @@ class Sidebar extends Component {
             const viewsPermissions = [
               
               {
-                name: 'roles',
+                name: 'Roles',
                 viewId: Views.roles,
                 isVisible: await this.getPermissions(roleId, Views.roles),
               },
               {
-                name: 'cargos',
+                name: 'Cargos',
                 viewId: Views.cargos,
                 isVisible: await this.getPermissions(roleId, Views.cargos), 
               },
               {
-                name: 'departamentos',
+                name: 'Departamentos',
                 viewId: Views.departamentos,
                 isVisible: await this.getPermissions(roleId, Views.departamentos),
               },
               {
-                name: 'personal',
+                name: 'Personal',
                 viewId: Views.personal,
                 isVisible: await this.getPermissions(roleId, Views.personal),
               },
               {
-                name: 'grupos',
+                name: 'Grupos',
                 viewId: Views.grupos,
                 isVisible: await this.getPermissions(roleId, Views.grupos),
               },
               {
-                name: 'auxiliares',
+                name: 'Auxiliares',
                 viewId: Views.auxiliares,
                 isVisible: await this.getPermissions(roleId, Views.auxiliares),
               },
               {
-                name: 'ufv',
+                name: 'Ufv',
                 viewId: Views.ufv,
                 isVisible: await this.getPermissions(roleId, Views.ufv),
               },
               {
-                name: 'activos',
+                name: 'Activos',
                 viewId: Views.activos,
                 isVisible: await this.getPermissions(roleId, Views.activos),
               },

@@ -192,7 +192,7 @@ class ActivoReport extends Component {
             </View>
           </View>
           <View style={styles.titleContainer}>
-            <Text style={{ textAlign: 'center' }}>ENTREGA DE ACTIVOS</Text>
+            <Text style={{ textAlign: 'center' }}>ACTA DE ENTREGA DE ACTIVOS</Text>
             {/*<Text style={{ textAlign: 'center' }}>{`${this.props.data.nombre} ${this.props.data.apPaterno} ${this.props.data.apMaterno}`}</Text>*/}
           </View>
           <View style={styles.table}>

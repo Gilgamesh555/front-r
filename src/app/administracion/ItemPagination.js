@@ -56,7 +56,7 @@ export const ItemPagination = ({ url, ItemComponent, componentRef }) => {
             <ReactPaginate
               nextLabel="> "
               onPageChange={handlePageClick}
-              pageRangeDisplayed={5}
+              pageRangeDisplayed={10}
               pageCount={pageCount}
               previousLabel="< "
               pageClassName="page-item"
