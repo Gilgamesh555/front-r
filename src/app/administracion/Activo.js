@@ -812,9 +812,89 @@ export class Personal extends Component {
               </nav>
             </div>
             <div className="row">
-              <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
-                <div className="form-group" style={{ width: '100%' }}>
-                  <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchUser: event.target.value })} />
+              <div className="col-lg-9 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
+                <div className="row form-group" style={{ width: '100%', marginLeft: '0' }}>
+                  <input
+                    type="search"
+                    className="col-lg-5 form-control"
+                    placeholder="Buscar"
+                    onChange={(event) => this.setState({ searchUser: event.target.value })}
+                  />
+                  <button
+                    type="submit"
+                    className="col-lg-2 btn btn-primary mr-2"
+                  // onClick={onClickSearchButton}
+                  >
+                    Buscar
+                  </button>
+                  {
+                    this.state.permissions !== undefined &&
+                    this.state.permissions.isAddble &&
+                    (
+                      <button
+                        className='col-lg-2 btn badge-success mr-2'
+                        onClick={evt => this.registerActivo(evt)}
+                      >
+                        Registrar Nuevo
+                      </button>
+                    )
+                  }
+                  {
+                    this.state.permissions !== undefined &&
+                    this.state.permissions.isAddble &&
+                    (
+                      <Dropdown className='col-lg-2 btn badge-warning mr-2'>
+                        <Dropdown.Toggle className='badge-warning' variant="dark" id="dropdown-basic"></Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          {
+                            <Dropdown.Item
+                              href="../detailActivo"
+                            >
+                              <span
+
+                                style={{
+                                  fontSize: '14px',
+                                }}>Decifrar qr</span>
+                            </Dropdown.Item>
+                          }
+                          {
+                            this.state.permissions !== undefined &&
+                            this.state.permissions.isEditable &&
+                            <>
+                              <Dropdown.Item href="#/action-3">
+                                <a>
+                                  <PDFDownloadLink
+                                    document={<EstadoActivoReport />}
+                                    fileName={`reporte-activo-actualizacion`}
+                                    style={{
+                                      color: '#000',
+                                      backgroundColor: 'transparent'
+                                    }}
+                                  >
+                                    Reporte Estado Activos
+                                  </PDFDownloadLink>
+                                </a>
+                              </Dropdown.Item>
+                              <Dropdown.Item href="#/action-3">
+                                <a>
+                                  <PDFDownloadLink
+                                    document={<EstadoInactivosReport />}
+                                    fileName={`reporte-activo-actualizacion`}
+                                    style={{
+                                      color: '#000',
+                                      backgroundColor: 'transparent'
+                                    }}
+                                  >
+                                    Reporte Estado Inactivos
+                                  </PDFDownloadLink>
+                                </a>
+                              </Dropdown.Item>
+                            </>
+                          }
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    )
+                  }
                 </div>
               </div>
             </div>
@@ -842,12 +922,13 @@ export class Personal extends Component {
                             <th>Estado</th>
                             {/*<th>Operaciones</th>*/}
                             <th>Acciones</th>
+                            <th>Otros</th>
                           </tr>
                         </thead>
                         <tbody>
                           <ItemPagination
                             url={`activos/all`}
-                            ItemComponent={({item}) => (
+                            ItemComponent={({ item }) => (
                               <tr>
                                 <td>{item.codigo}</td>
                                 {/* <td>{index.fechaIncorporacion}</td>
@@ -887,6 +968,73 @@ export class Personal extends Component {
                                     <Dropdown.Toggle variant="dark" id="dropdown-basic"></Dropdown.Toggle>
                                     <Dropdown.Menu>
                                       {
+                                        <Dropdown.Item
+                                          href="#/action-2"
+                                          onClick={evt => this.setModalInfo(evt, item)}
+                                        >
+                                          <span
+
+                                            style={{
+                                              fontSize: '14px',
+                                            }}>+ Info</span>
+                                        </Dropdown.Item>
+                                      }
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isEditable &&
+                                        <>
+                                          <Dropdown.Item
+                                            href="#/action-2"
+                                            onClick={evt => this.modifyActivo(evt, item)}
+                                          >
+                                            <span
+
+                                              style={{
+                                                fontSize: '14px',
+                                              }}>Modificar</span>
+                                          </Dropdown.Item>
+                                          <Dropdown.Item
+                                            href="#/action-2"
+                                            onClick={evt => this.changeEstado(evt, item)}
+                                          >
+                                            <span
+
+                                              style={{
+                                                fontSize: '14px',
+                                              }}>Mod Estado</span>
+                                          </Dropdown.Item>
+                                        </>
+                                      }
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </td>
+                                <td>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                      {
+                                        <Dropdown.Item
+                                          href="#/action-2"
+                                          onClick={evt => this.generateQR(evt, item)}
+                                        >
+                                          <span
+
+                                            style={{
+                                              fontSize: '14px',
+                                            }}>QR</span>
+                                        </Dropdown.Item>
+                                      }
+                                      <Dropdown.Item
+                                        href="#/action-2"
+                                        onClick={evt => this.setModalLogInfo(evt, item)}
+                                      >
+                                        <span
+
+                                          style={{
+                                            fontSize: '14px',
+                                          }}>Logs</span>
+                                      </Dropdown.Item>
+                                      {
                                         this.state.permissions !== undefined &&
                                         this.state.permissions.isEditable &&
                                         (
@@ -925,73 +1073,6 @@ export class Personal extends Component {
                                       }
                                     </Dropdown.Menu>
                                   </Dropdown>
-                                </td>
-                                <td>
-                                  <Dropdown>
-                                    <Dropdown.Toggle variant="success" id="dropdown-basic"></Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                      {
-                                        <Dropdown.Item
-                                          href="#/action-2"
-                                          onClick={evt => this.setModalInfo(evt, item)}
-                                        >
-                                          <span
-
-                                            style={{
-                                              fontSize: '14px',
-                                            }}>+ Info</span>
-                                        </Dropdown.Item>
-                                      }
-                                      {
-                                        <Dropdown.Item
-                                          href="#/action-2"
-                                          onClick={evt => this.generateQR(evt, item)}
-                                        >
-                                          <span
-
-                                            style={{
-                                              fontSize: '14px',
-                                            }}>QR</span>
-                                        </Dropdown.Item>
-                                      }
-                                      {
-                                        this.state.permissions !== undefined &&
-                                        this.state.permissions.isEditable &&
-                                        <>
-                                          <Dropdown.Item
-                                            href="#/action-2"
-                                            onClick={evt => this.modifyActivo(evt, item)}
-                                          >
-                                            <span
-
-                                              style={{
-                                                fontSize: '14px',
-                                              }}>Modificar</span>
-                                          </Dropdown.Item>
-                                          <Dropdown.Item
-                                            href="#/action-2"
-                                            onClick={evt => this.changeEstado(evt, item)}
-                                          >
-                                            <span
-
-                                              style={{
-                                                fontSize: '14px',
-                                              }}>Mod Estado</span>
-                                          </Dropdown.Item>
-                                        </>
-                                      }
-                                      <Dropdown.Item
-                                        href="#/action-2"
-                                        onClick={evt => this.setModalLogInfo(evt, item)}
-                                      >
-                                        <span
-
-                                          style={{
-                                            fontSize: '14px',
-                                          }}>Logs</span>
-                                      </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                  </Dropdown>
                                   {/*{
                                         this.state.permissions !== undefined &&
                                         this.state.permissions.isDeletable &&
@@ -1003,7 +1084,7 @@ export class Personal extends Component {
                               </tr>
                             )}
                           />
-                          
+
                           {/* <tr>
                                   <td>Messsy</td>
                                   <td>Flash</td>
@@ -1028,36 +1109,6 @@ export class Personal extends Component {
                                   <td className="text-success"> Activo <i className="mdi mdi-arrow-up"></i></td>
                                   <td><label className="badge badge-warning">In progress</label></td>
                                 </tr> */}
-                          <tr>
-                            <td>
-                              {
-                                this.state.permissions !== undefined &&
-                                this.state.permissions.isAddble &&
-                                (
-                                  <a href="!#" onClick={evt => this.registerActivo(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
-                                )
-                              }
-                            </td>
-                            <td>
-                              <a href="../detailActivo" className="badge badge-warning" style={{ marginRight: '3px', color: 'whitesmoke' }}>Decifrar qr</a>
-                            </td>
-                            <td>
-                              <PDFDownloadLink document={<EstadoActivoReport />} fileName={`reporte-activo-actualizacion`} className="badge badge-info" style={{ marginRight: '3px' }}>
-                                Reporte Estado Activos
-                                {/* {({ blob, url, loading, error }) =>
-                                    loading ? 'Cargando...' : 'Reporte Actualizacion'
-                                  } */}
-                              </PDFDownloadLink>
-                            </td>
-                            <td>
-                              <PDFDownloadLink document={<EstadoInactivosReport />} fileName={`reporte-activo-actualizacion`} className="badge badge-danger" style={{ marginRight: '3px' }}>
-                                Reporte Estado Inactivos
-                                {/* {({ blob, url, loading, error }) =>
-                                    loading ? 'Cargando...' : 'Reporte Actualizacion'
-                                  } */}
-                              </PDFDownloadLink>
-                            </td>
-                          </tr>
                         </tbody>
                       </table>
                     </div>

@@ -458,9 +458,45 @@ export class Personal extends Component {
               </nav>
             </div>
             <div className="row">
-              <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
-                <div className="form-group" style={{ width: '100%' }}>
-                  <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchUser: event.target.value })} />
+              <div className="col-lg-9 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
+                <div className="row form-group" style={{ width: '100%', marginLeft: '0' }}>
+                  <input
+                    type="search"
+                    className="col-lg-5 form-control"
+                    placeholder="Buscar"
+                    onChange={(event) => this.setState({ searchUser: event.target.value })}
+                  />
+                  <button
+                    type="submit"
+                    className="col-lg-2 btn btn-primary mr-2"
+                  // onClick={onClickSearchButton}
+                  >
+                    Buscar
+                  </button>
+                  {
+                    this.state.permissions !== undefined &&
+                    this.state.permissions.isAddble &&
+                    (
+                      <button
+                        className='col-lg-2 btn badge-success mr-2'
+                        onClick={evt => this.registerUser(evt)}
+                      >
+                        Registrar Nuevo
+                      </button>
+                    )
+                  }
+                  {
+                    this.state.permissions !== undefined &&
+                    this.state.permissions.isEditable &&
+                    (
+                      <button
+                        className='col-lg-2 btn badge-warning mr-2'
+                        onClick={evt => this.handleTransferActive(evt)}
+                      >
+                        Transferir Activos
+                      </button>
+                    )
+                  }
                 </div>
               </div>
             </div>
@@ -486,6 +522,7 @@ export class Personal extends Component {
                             <th>Nro Celular</th>
                             <th>Estado</th>
                             <th>Acciones</th>
+                            <th>Reportes</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -548,6 +585,14 @@ export class Personal extends Component {
                                           </Dropdown.Item>
                                         )
                                       }
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                  {/*{<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}*/}
+                                </td>
+                                <td>
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="info" id="dropdown-basic"></Dropdown.Toggle>
+                                    <Dropdown.Menu>
                                       <Dropdown.Item href="#/action-3">
                                         <a>
                                           <PDFDownloadLink
@@ -627,20 +672,6 @@ export class Personal extends Component {
                                   <td><label className="badge badge-warning">In progress</label></td>
                                 </tr> */}
                           <tr>
-                            {
-                              this.state.permissions !== undefined &&
-                              this.state.permissions.isAddble &&
-                              (
-                                <td>
-                                  <a href="!#" onClick={evt => this.registerUser(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
-                                </td>
-                              )
-                            }
-                            {
-                              <td>
-                                <a href="!#" onClick={evt => this.handleTransferActive(evt)} className="badge badge-warning" style={{ marginRight: '3px', color: 'whitesmoke' }}>Transferir Activos</a>
-                              </td>
-                            }
                           </tr>
                         </tbody>
                       </table>

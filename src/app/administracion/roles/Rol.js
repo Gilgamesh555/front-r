@@ -141,11 +141,11 @@ function Personal({ history }) {
         </nav>
       </div>
       <div className="row">
-        <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
+        <div className="col-lg-9 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
           <div className="row form-group" style={{ width: '100%', marginLeft: '0' }}>
             <input
               type="search"
-              className="col-lg-8 form-control"
+              className="col-lg-5 form-control"
               placeholder="Buscar"
               onChange={(e) => setSearchValue(e.target.value)}
               {...register('search')}
@@ -157,6 +157,16 @@ function Personal({ history }) {
             >
               Buscar
             </button>
+            {
+              permissions && permissions.isAddble && (
+                <button
+                  className='col-lg-3 btn badge-success mr-2'
+                  onClick={(e) => onClickFormButton(e)}
+                >
+                  Registrar Nuevo
+                </button>
+              )
+            }
           </div>
         </div>
       </div>
@@ -191,17 +201,6 @@ function Personal({ history }) {
                           )}
                         />
                       )}
-                    <tr>
-                      <td colSpan={3}>
-                        <a
-                          href="!#"
-                          onClick={(e) => onClickFormButton(e)}
-                          className="badge badge-success"
-                          style={{ marginRight: '3px', color: 'whitesmoke' }}>
-                          Registrar Nuevo
-                        </a>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>

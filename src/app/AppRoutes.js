@@ -70,10 +70,10 @@ class AppRoutes extends Component {
           {/* ADMINISTRACION */}
           <Route path="/administracion/departamentos" component={ Oficina } />
           <Route path="/administracion/personal" component={ Personal } />
-          <Route path="/administracion/grupos" component={ Grupo } />
-          <Route path="/administracion/auxiliares" component={ Auxiliar } />
-          <Route path="/administracion/activos" component={ Activo } />
-          <Route path="/administracion/ufv" component={ Ufv } />
+          <Route path="/activosFijos/grupos" component={ Grupo } />
+          <Route path="/activosFijos/auxiliares" component={ Auxiliar } />
+          <Route path="/activosFijos/activos" component={ Activo } />
+          <Route path="/activosFijos/ufv" component={ Ufv } />
           <Route path="/administracion/roles" component={ Rol } />
           <Route path="/administracion/cargos" component={ Cargo } />
 

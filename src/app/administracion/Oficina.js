@@ -245,9 +245,33 @@ export class Oficina extends Component {
               </nav>
             </div>
             <div className="row">
-              <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
-                <div className="form-group" style={{ width: '100%' }}>
-                  <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchOficina: event.target.value })} />
+              <div className="col-lg-9 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
+                <div className="row form-group" style={{ width: '100%', marginLeft: '0' }}>
+                  <input
+                    type="search"
+                    className="col-lg-5 form-control"
+                    placeholder="Buscar"
+                    onChange={(event) => this.setState({ searchOficina: event.target.value })}
+                  />
+                  <button
+                    type="submit"
+                    className="col-lg-3 btn btn-primary mr-2"
+                  // onClick={onClickSearchButton}
+                  >
+                    Buscar
+                  </button>
+                  {
+                    this.state.permissions !== undefined &&
+                    this.state.permissions.isAddble &&
+                    (
+                      <button
+                        className='col-lg-3 btn badge-success mr-2'
+                        onClick={evt => this.registerOficina(evt)}
+                      >
+                        Registrar Nuevo
+                      </button>
+                    )
+                  }
                 </div>
               </div>
             </div>
@@ -328,17 +352,6 @@ export class Oficina extends Component {
                               </tr>
                             )}
                           />
-                          <tr>
-                            {
-                              this.state.permissions !== undefined &&
-                              this.state.permissions.isAddble &&
-                              (
-                                <td>
-                                  <a href="!#" onClick={evt => this.registerOficina(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'white' }}>Registrar Nuevo</a>
-                                </td>
-                              )
-                            }
-                          </tr>
                         </tbody>
                       </table>
                     </div>

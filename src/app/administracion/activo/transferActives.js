@@ -56,8 +56,6 @@ export default function TransferActives() {
 
     transferActive(data)
     .then(item => window.location.reload());
-
-    // window.location.reload();
   }
 
   const getUser = () => {

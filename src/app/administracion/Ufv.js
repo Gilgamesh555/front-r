@@ -290,9 +290,33 @@ export class Ufv extends Component {
               </nav>
             </div>
             <div className="row">
-              <div className="col-lg-6 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
-                <div className="form-group" style={{ width: '100%' }}>
-                  <input type="search" className="form-control" placeholder="Buscar" onChange={(event) => this.setState({ searchUfv: event.target.value })} />
+              <div className="col-lg-9 grid-margin stretch-card" style={{ marginBottom: '0px' }}>
+                <div className="row form-group" style={{ width: '100%', marginLeft: '0' }}>
+                  <input
+                    type="search"
+                    className="col-lg-5 form-control"
+                    placeholder="Buscar"
+                    onChange={(event) => this.setState({ searchUfv: event.target.value })}
+                  />
+                  <button
+                    type="submit"
+                    className="col-lg-3 btn btn-primary mr-2"
+                  // onClick={onClickSearchButton}
+                  >
+                    Buscar
+                  </button>
+                  {
+                    this.state.permissions !== undefined &&
+                    this.state.permissions.isAddble &&
+                    (
+                      <button
+                        className='col-lg-2 btn badge-success mr-2'
+                        onClick={evt => this.registerUfv(evt)}
+                      >
+                        Registrar Nuevo
+                      </button>
+                    )
+                  }
                 </div>
               </div>
             </div>
@@ -315,7 +339,7 @@ export class Ufv extends Component {
                         <tbody>
                           <ItemPagination
                             url={`ufv/all`}
-                            ItemComponent={({item}) => (
+                            ItemComponent={({ item }) => (
                               <tr>
                                 <td>{item.fecha}</td>
                                 <td>{item.valor}</td>
@@ -355,17 +379,6 @@ export class Ufv extends Component {
                               </tr>
                             )}
                           />
-                          <tr>
-                            {
-                              this.state.permissions !== undefined &&
-                              this.state.permissions.isAddble &&
-                              (
-                                <td>
-                                  <a href="!#" onClick={evt => this.registerUfv(evt)} className="badge badge-success" style={{ marginRight: '3px', color: 'whitesmoke' }}>Registrar Nuevo</a>
-                                </td>
-                              )
-                            }
-                          </tr>
                         </tbody>
                       </table>
                     </div>
