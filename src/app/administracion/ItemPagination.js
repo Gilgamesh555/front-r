@@ -23,7 +23,24 @@ export const ItemPagination = ({ url, ItemComponent, componentRef }) => {
           pageNumber: pageOffset,
         }
       });
-      setCurrentItems(res.data.docs);
+      if (url === 'activos/all') {
+        let newDocs = res.data.docs.map(async item => {
+          const getCurrentPdfReportBaja = async (id) => {
+            const res = await axios.get(`${api}activoBaja/byActivoId/${id}`)
+            try {
+              const { data } = res;
+              return data.pdfPath;
+            } catch (error) { }
+            return null;
+          }
+          item.pdfPath = await getCurrentPdfReportBaja(item._id)
+          return item;
+        });
+        newDocs = await Promise.all(newDocs)
+        setCurrentItems(newDocs)
+      } else {
+        setCurrentItems(res.data.docs);
+      }
       setPageCount(res.data.totalPages);
     }
     catch (error) { }

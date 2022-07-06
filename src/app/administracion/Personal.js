@@ -157,7 +157,10 @@ export class Personal extends Component {
                 if (res.data.errmsg.includes('email')) {
                   this.setState({ error: 'Email Ya en uso' })
                 } else {
-                  this.setState({ error: 'Nombre de Usuario Ya en uso' })
+                  if (res.data.errmsg.includes('celular')) {
+                    this.setState({ error: 'Celular no valido ya fue registrado un usario con el mismo celular' })
+                  }
+                  this.setState({error: 'Error Desconocido'})
                 }
               } else {
                 this.setState({ error: res.data.error })
@@ -193,7 +196,11 @@ export class Personal extends Component {
                 if (res.data.errmsg.includes('email')) {
                   this.setState({ error: 'Email Ya en uso' })
                 } else {
-                  this.setState({ error: 'Nombre de Usuario Ya en uso' })
+                  if (res.data.errmsg.includes('celular')) {
+                    this.setState({ error: 'Celular no valido ya fue registrado un usario con el mismo celular' })
+                  } else {
+                    this.setState({ error: 'Nombre de Usuario Ya en uso o Algun Error de Sistema' })
+                  }
                 }
               } else {
                 this.setState({ error: res.data.error })
@@ -222,7 +229,6 @@ export class Personal extends Component {
     document.getElementById('inputApPaterno').value = ''
     document.getElementById('inputApMaterno').value = ''
     document.getElementById('inputCi').value = ''
-    document.getElementById('inputCargo').value = ''
     document.getElementById('inputEmail').value = ''
     document.getElementById('inputCelular').value = ''
     document.getElementById('inputOficinaId').value = ''

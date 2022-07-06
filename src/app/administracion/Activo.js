@@ -80,6 +80,7 @@ export class Personal extends Component {
       showModifyModal: false,
       showQrModal: false,
       showReevaluateModal: false,
+      currentPdfReportBaja: null,
     }
     // Register User
     this.handleCodigo = this.handleCodigo.bind(this)
@@ -434,6 +435,16 @@ export class Personal extends Component {
         .catch(err => console.log(err))
     }
     response()
+  }
+
+  async getCurrentPdfReportBaja(id) {
+    const res = await axios.get(`${nodeapi}activoBaja/byActivoId/${id}`)
+    try {
+      const { data } = res
+      this.setState({ currentPdfReportBaja: data })
+    } catch (error) {
+
+    }
   }
 
   //crud
@@ -936,7 +947,8 @@ export class Personal extends Component {
                         <tbody>
                           <ItemPagination
                             url={`activos/all`}
-                            ItemComponent={({ item }) => (
+                            ItemComponent={({ item }) => {                              
+                              return (
                               <tr>
                                 <td>{item.codigo}</td>
                                 {/* <td>{index.fechaIncorporacion}</td>
@@ -1060,24 +1072,44 @@ export class Personal extends Component {
                                       }
                                       {
                                         item.estado === 'inactivo' &&
-                                        <Dropdown.Item href="#/action-3">
-                                          <a>
-                                            {
-                                              <PDFDownloadLink
-                                                document={
-                                                  <ActivoBajaReport
-                                                    data={item}
-                                                  />}
-                                                fileName={`reporte-activo-baja`}
-                                                style={{
-                                                  color: '#000',
-                                                  backgroundColor: 'transparent'
-                                                }}
-                                              >
-                                                Reporte Baja
-                                              </PDFDownloadLink>}
-                                          </a>
-                                        </Dropdown.Item>
+                                        <>
+                                          <Dropdown.Item href="#/action-3">
+                                            <a>
+                                              {
+                                                <PDFDownloadLink
+                                                  document={
+                                                    <ActivoBajaReport
+                                                      data={item}
+                                                    />}
+                                                  fileName={`reporte-activo-baja`}
+                                                  style={{
+                                                    color: '#000',
+                                                    backgroundColor: 'transparent'
+                                                  }}
+                                                >
+                                                  Reporte Baja
+                                                </PDFDownloadLink>}
+                                            </a>
+                                          </Dropdown.Item>
+                                          {
+                                            item.pdfPath && (
+                                              <Dropdown.Item href="#/action-3">
+                                                <a
+                                                  href={`${nodeimg}${item.pdfPath}`}
+                                                  download
+                                                  style={{
+                                                    color: '#000',
+                                                    backgroundColor: 'transparent',
+                                                    fontSize: '14px'
+                                                  }}
+                                                  target="_blank"
+                                                >
+                                                  Documento Respaldo
+                                                </a>
+                                              </Dropdown.Item>
+                                            )
+                                          }
+                                        </>
                                       }
                                     </Dropdown.Menu>
                                   </Dropdown>
@@ -1090,7 +1122,8 @@ export class Personal extends Component {
                                       }*/}
                                 </td>
                               </tr>
-                            )}
+                              )
+                          }}
                           />
 
                           {/* <tr>

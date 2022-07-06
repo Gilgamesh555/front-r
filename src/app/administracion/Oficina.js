@@ -6,6 +6,8 @@ import axios from 'axios'
 import nodeapi from '../../apis/nodeapi'
 import { Views } from '../../views/Views';
 import { ItemPagination } from './ItemPagination';
+import ActivesByDepartmentReport from './oficina/ActivesByDepartmentReport';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 export class Oficina extends Component {
   constructor(props) {
@@ -316,19 +318,34 @@ export class Oficina extends Component {
                                         this.state.permissions !== undefined &&
                                         this.state.permissions.isEditable &&
                                         (
-                                          <Dropdown.Item
-                                            href="#/action-1"
-                                            onClick={evt => this.modifyOficina(evt, item)}>
-                                            <span
+                                          <>
+                                            <Dropdown.Item
+                                              href="#/action-1"
+                                              onClick={evt => this.modifyOficina(evt, item)}>
+                                              <span
 
-                                              style={{
-                                                color: '#000',
-                                                backgroundColor: 'transparent',
-                                                fontSize: '14px'
-                                              }}>
-                                              Modificar
-                                            </span>
-                                          </Dropdown.Item>
+                                                style={{
+                                                  color: '#000',
+                                                  backgroundColor: 'transparent',
+                                                  fontSize: '14px'
+                                                }}>
+                                                Modificar
+                                              </span>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-3">
+                                              <a>
+                                                <PDFDownloadLink
+                                                  document={<ActivesByDepartmentReport data={item} />}
+                                                  fileName={`reporte-departamento-${item.nombre}`}
+                                                  style={{
+                                                    color: '#000',
+                                                    backgroundColor: 'transparent'
+                                                  }}>
+                                                  Rept. Activos
+                                                </PDFDownloadLink>
+                                              </a>
+                                            </Dropdown.Item>
+                                          </>
                                         )
                                       }
                                       {

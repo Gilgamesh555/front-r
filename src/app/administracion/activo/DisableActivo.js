@@ -9,6 +9,7 @@ export default function DisableActivo({ data }) {
   const { register, handleSubmit } = useForm();
   const [image, setImage] = useState(null);
   const [imagePath, setImagePath] = useState(null);
+  const [pdfPath, setPdfPath] = useState(null);
 
   const onSaveReport = async (dataFromForm) => {
     const response = async () => {
@@ -23,7 +24,8 @@ export default function DisableActivo({ data }) {
         activoId: data._id,
         description: dataFromForm['description'],
         date: new Date(),
-        imagePath: imagePath
+        imagePath: imagePath,
+        pdfPath: pdfPath,
       }
 
       var form_data = new FormData()
@@ -54,6 +56,13 @@ export default function DisableActivo({ data }) {
     reader.onloadend = function (e) {
       setImage([reader.result])
     }
+  }
+
+  const handlePdfPath = (event) => {
+    setPdfPath(event.target.files[0]);
+    var file = event.target.files[0]
+    var reader = new FileReader()
+    reader.readAsDataURL(file)
   }
 
   return (
@@ -94,6 +103,7 @@ export default function DisableActivo({ data }) {
                           className="form-control"
                           name="upload_file"
                           onChange={handleImagePath}
+                          accept="image/*"
                         />
                         <img
                           src={image}
@@ -103,6 +113,22 @@ export default function DisableActivo({ data }) {
                         />
                       </div>
                     </Form.Group>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-12">
+                      <Form.Group className="row">
+                        <label className="col-sm-3 col-form-label">Documento de Respaldo</label>
+                        <div className="col-sm-9">
+                          <input
+                            type="file"
+                            className="form-control"
+                            name="upload_file"
+                            onChange={handlePdfPath}
+                            accept="application/pdf"
+                          />
+                        </div>
+                      </Form.Group>
+                    </div>
                   </div>
                 </div>
                 <div className="col-md-12">
