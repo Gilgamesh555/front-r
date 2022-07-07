@@ -132,7 +132,7 @@ export default function DisableActivo({ data }) {
                   </div>
                 </div>
                 <div className="col-md-12">
-                  <button type="submit" className="btn btn-primary mr-2">Obtener Actualizacion</button>
+                  <button type="submit" className="btn btn-primary mr-2">Guardar datos</button>
                   <button className="btn btn-light" type='reset'>Borrar Datos</button>
                 </div>
               </form>
