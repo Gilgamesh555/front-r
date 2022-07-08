@@ -132,7 +132,6 @@ export class Personal extends Component {
 
   handleRegisterSubmit(event) {
     event.preventDefault();
-
     var text = document.getElementById('card-title-user').textContent
     if (text === 'Modificar Usuario') {
       const data = {
