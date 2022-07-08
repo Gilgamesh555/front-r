@@ -49,6 +49,7 @@ export class Personal extends Component {
       showRegisterModal: false,
       showModifyModal: false,
       showTransferModal: false,
+      userUrl: 'users/all',
     }
     // Register User
     this.handleNombre = this.handleNombre.bind(this)
@@ -147,7 +148,7 @@ export class Personal extends Component {
         celular: this.state.celular,
         oficinaId: this.state.oficinaId,
         estado: this.state.estado,
-        _id: this.state.id
+        _id: this.state.id,
       }
       const response = async () => {
         await axios.put(nodeapi + `users/${data._id}`, data)
@@ -160,7 +161,7 @@ export class Personal extends Component {
                   if (res.data.errmsg.includes('celular')) {
                     this.setState({ error: 'Celular no valido ya fue registrado un usario con el mismo celular' })
                   }
-                  this.setState({error: 'Error Desconocido'})
+                  this.setState({ error: 'Error Desconocido' })
                 }
               } else {
                 this.setState({ error: res.data.error })
@@ -436,6 +437,11 @@ export class Personal extends Component {
     response();
   }
 
+  onClickSearchButton(event) {
+    this.setState({userUrl: `users/search?searchInput=${this.state.searchUser}`})
+    event.preventDefault();
+  }
+
   render() {
     // const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
 
@@ -475,11 +481,11 @@ export class Personal extends Component {
                   <button
                     type="submit"
                     className="col-lg-2 btn btn-primary mr-2"
-                  // onClick={onClickSearchButton}
+                    onClick={(event) => this.onClickSearchButton(event)}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-</svg> Buscar
+                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                    </svg> Buscar
                   </button>
                   {
                     this.state.permissions !== undefined &&
@@ -489,10 +495,10 @@ export class Personal extends Component {
                         className='col-lg-2 btn badge-success mr-2'
                         onClick={evt => this.registerUser(evt)}
                       >
-                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
-  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-  <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
-</svg> Registrar Nuevo
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+                          <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                          <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z" />
+                        </svg> Registrar Nuevo
                       </button>
                     )
                   }
@@ -505,8 +511,8 @@ export class Personal extends Component {
                         onClick={evt => this.handleTransferActive(evt)}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z"/>
-</svg>Transferir Activos
+                          <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5zm14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5z" />
+                        </svg>Transferir Activos
                       </button>
                     )
                   }
@@ -540,7 +546,7 @@ export class Personal extends Component {
                         </thead>
                         <tbody>
                           <ItemPagination
-                            url={`users/all`}
+                            url={this.state.userUrl}
                             ItemComponent={({ item }) => (
                               <tr>
                                 <td>{item.nombre}</td>

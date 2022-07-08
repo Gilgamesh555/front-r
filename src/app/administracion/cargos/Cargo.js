@@ -16,7 +16,7 @@ export default function CargoView({ history }) {
   const viewId = Views.cargos;
   const [cargos, setCargos] = useState(null);
   const [dataToEdit, setDataToEdit] = useState(null);
-  const [searchValue, setSearchValue] = useState('');
+  const [cargoUrl, setCargoUrl] = useState('cargos/all');
   const [isAuth, setIsAuth] = useState(true);
   const [permissions, setPermissions] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -89,11 +89,12 @@ export default function CargoView({ history }) {
     checkToken();
   }, [history, isAuth]);
 
-  const onClickSearchButton = () => {
+  const onClickSearchButton = (event) => {
     const { search } = getValues();
-    if (search !== '') {
-      setSearchValue(search);
-    }
+
+    setCargoUrl(`cargos/search?searchInput=${search}`)
+
+    event.preventDefault();
   }
 
   const onClickFormButton = (e) => {
@@ -144,7 +145,6 @@ export default function CargoView({ history }) {
               type="search"
               className="col-lg-5 form-control"
               placeholder="Buscar"
-              onChange={(e) => setSearchValue(e.target.value)}
               {...register('search')}
             />
             <button
@@ -153,8 +153,8 @@ export default function CargoView({ history }) {
               onClick={onClickSearchButton}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-</svg>  Buscar
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+              </svg>  Buscar
             </button>
             {
               permissions && permissions.isAddble && (
@@ -163,9 +163,9 @@ export default function CargoView({ history }) {
                   onClick={(e) => onClickFormButton(e)}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-</svg>  Registrar Nuevo
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                  </svg>  Registrar Nuevo
                 </button>
               )
             }
@@ -191,7 +191,7 @@ export default function CargoView({ history }) {
                       <th colSpan={3} className='table-body-notFound'>No existen roles</th> :
                       (
                         <ItemPagination
-                          url={`cargos/all`}
+                          url={cargoUrl}
                           ItemComponent={({ item }) => (
                             <ItemCargo
                               key={item._id}

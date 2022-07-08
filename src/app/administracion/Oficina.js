@@ -26,6 +26,7 @@ export class Oficina extends Component {
       changeToEdit: false,
       showRegisterModal: false,
       showModifyModal: false,
+      oficinaUrl: 'oficinas/all'
     }
     this.handleNombre = this.handleNombre.bind(this)
     this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this)
@@ -223,6 +224,11 @@ export class Oficina extends Component {
     event.preventDefault()
   }
 
+  onClickSearchButton(event) {
+    this.setState({oficinaUrl: `oficinas/search?searchInput=${this.state.searchOficina}`})
+    event.preventDefault();
+  }
+
   render() {
     // const { from } = this.props.location.state || { from: { pathname: '/dashboard' } }
 
@@ -258,11 +264,11 @@ export class Oficina extends Component {
                   <button
                     type="submit"
                     className="col-lg-3 btn btn-primary mr-2"
-                  // onClick={onClickSearchButton}
+                    onClick={event => this.onClickSearchButton(event)}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-</svg>  Buscar
+                      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                    </svg>  Buscar
                   </button>
                   {
                     this.state.permissions !== undefined &&
@@ -273,9 +279,9 @@ export class Oficina extends Component {
                         onClick={evt => this.registerOficina(evt)}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-</svg>  Registrar Nuevo
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>  Registrar Nuevo
                       </button>
                     )
                   }
@@ -301,7 +307,7 @@ export class Oficina extends Component {
                         </thead>
                         <tbody>
                           <ItemPagination
-                            url={`oficinas/all`}
+                            url={this.state.oficinaUrl}
                             ItemComponent={({ item }) => (
                               <tr>
                                 <td>{item.nombre}</td>

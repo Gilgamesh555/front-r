@@ -6,7 +6,7 @@ import ReactPaginate from 'react-paginate';
 export const ItemPagination = ({ url, ItemComponent, componentRef }) => {
   const [currentItems, setCurrentItems] = useState(null);
   const [pageCount, setPageCount] = useState(0);
-  const [pageOffset, setPageOffset] = useState(0);
+  const [pageOffset, setPageOffset] = useState(1);
 
   useEffect(() => {
     fetchData();
@@ -14,7 +14,7 @@ export const ItemPagination = ({ url, ItemComponent, componentRef }) => {
 
   useEffect(() => {
     fetchData();
-  }, [pageOffset])
+  }, [pageOffset, url])
 
   const fetchData = async () => {
     try {
