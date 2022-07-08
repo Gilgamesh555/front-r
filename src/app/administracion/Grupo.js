@@ -300,7 +300,7 @@ export class Grupo extends Component {
   }
 
   onClickSearchButton(event) {
-    this.setState({grupoUrl: `grupos/search?searchInput=${this.state.searchGrupo}`})
+    this.setState({ grupoUrl: `grupos/search?searchInput=${this.state.searchGrupo}` })
     event.preventDefault();
   }
 
@@ -459,56 +459,58 @@ export class Grupo extends Component {
                                   </Dropdown>
                                 </td>
                                 <td>
-                                  {
-                                    this.state.permissions !== undefined &&
-                                    this.state.permissions.isEditable &&
-                                    (
-                                      <Dropdown>
-                                        <Dropdown.Toggle variant="info" id="dropdown-basic"></Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                          <Dropdown.Item href="#/action-3">
-                                            <a>
-                                              <PDFDownloadLink
-                                                document={<GrupoReport data={item} />}
-                                                fileName={`reporte-grupo-${item.nombre}`}
-                                                style={{
-                                                  color: '#000',
-                                                  backgroundColor: 'transparent'
-                                                }}>
-                                                Rept. Grupal
-                                              </PDFDownloadLink>
-                                            </a>
-                                          </Dropdown.Item>
-                                          <Dropdown.Item href="#/action-3">
-                                            <a>
-                                              <PDFDownloadLink
-                                                document={<ActualizacionReport data={item} />}
-                                                fileName={`reporte-activo-actualizacion`}
-                                                style={{
-                                                  color: '#000',
-                                                  backgroundColor: 'transparent'
-                                                }}>
-                                                Rept. Actualizacion
-                                              </PDFDownloadLink>
-                                            </a>
-                                          </Dropdown.Item>
-                                          <Dropdown.Item href="#/action-3">
-                                            <a>
-                                              <PDFDownloadLink
-                                                document={<DepreciacionReport data={item} />}
-                                                fileName={`reporte-activo-depreciacion`}
-                                                style={{
-                                                  color: '#000',
-                                                  backgroundColor: 'transparent'
-                                                }}>
-                                                Rept. Depreciacion
-                                              </PDFDownloadLink>
-                                            </a>
-                                          </Dropdown.Item>
-                                        </Dropdown.Menu>
-                                      </Dropdown>
-                                    )
-                                  }
+                                  <Dropdown>
+                                    <Dropdown.Toggle variant="info" id="dropdown-basic"></Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                      {
+                                        this.state.permissions !== undefined &&
+                                        this.state.permissions.isEditable &&
+                                        (
+                                          <>
+                                            <Dropdown.Item href="#/action-3">
+                                              <a>
+                                                <PDFDownloadLink
+                                                  document={<GrupoReport data={item} />}
+                                                  fileName={`reporte-grupo-${item.nombre}`}
+                                                  style={{
+                                                    color: '#000',
+                                                    backgroundColor: 'transparent'
+                                                  }}>
+                                                  Rept. Grupal
+                                                </PDFDownloadLink>
+                                              </a>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-3">
+                                              <a>
+                                                <PDFDownloadLink
+                                                  document={<ActualizacionReport data={item} />}
+                                                  fileName={`reporte-activo-actualizacion`}
+                                                  style={{
+                                                    color: '#000',
+                                                    backgroundColor: 'transparent'
+                                                  }}>
+                                                  Rept. Actualizacion
+                                                </PDFDownloadLink>
+                                              </a>
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#/action-3">
+                                              <a>
+                                                <PDFDownloadLink
+                                                  document={<DepreciacionReport data={item} />}
+                                                  fileName={`reporte-activo-depreciacion`}
+                                                  style={{
+                                                    color: '#000',
+                                                    backgroundColor: 'transparent'
+                                                  }}>
+                                                  Rept. Depreciacion
+                                                </PDFDownloadLink>
+                                              </a>
+                                            </Dropdown.Item>
+                                          </>
+                                        )
+                                      }
+                                    </Dropdown.Menu>
+                                  </Dropdown>
                                 </td>
                               </tr>
                             )}

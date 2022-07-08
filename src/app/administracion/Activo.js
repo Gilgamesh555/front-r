@@ -1079,6 +1079,8 @@ export class Personal extends Component {
                                         </Dropdown.Item>
                                         {
                                           item.estado === 'inactivo' &&
+                                          this.state.permissions !== undefined &&
+                                          this.state.permissions.isEditable &&
                                           <>
                                             <Dropdown.Item href="#/action-3">
                                               <a>
