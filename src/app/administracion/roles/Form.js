@@ -86,8 +86,7 @@ function FormRole({ data }) {
         isAddble: dataFromForm[`isAddble-${item._id}`],
       }
 
-      await createRoleView(newRoleView);
-      window.location.reload();
+      createRoleView(newRoleView).then(() => window.location.reload());
     })
   }
 
@@ -98,7 +97,6 @@ function FormRole({ data }) {
 
     const updateRole = async (role) => {
       await axios.put(`${nodeapi}roles/${data._id}`, role);
-      console.log('aa');
     }
 
     let role = {
@@ -111,7 +109,7 @@ function FormRole({ data }) {
 
     await updateRole(role);
 
-    views.map(async (item) => {
+    let changes = views.map(async (item) => {
       const permissions = {
         isVisible: dataFromForm[`isVisible-${item._id}`],
         isEditable: dataFromForm[`isEditable-${item._id}`],
@@ -121,7 +119,7 @@ function FormRole({ data }) {
       await updatePermissions(item, permissions);
     })
 
-    window.location.reload();
+    Promise.all(changes).then(() => window.location.reload())
   }
 
   return (

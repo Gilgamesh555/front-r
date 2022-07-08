@@ -866,7 +866,7 @@ export class Personal extends Component {
                   }
                   {
                     this.state.permissions !== undefined &&
-                    this.state.permissions.isAddble &&
+                    this.state.permissions.isEditable &&
                     (
                       <Dropdown className='col-lg-2 btn badge-warning mr-2'>
                         <Dropdown.Toggle className='badge-warning' variant="warning" id="dropdown-basic"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">

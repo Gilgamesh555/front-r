@@ -437,7 +437,7 @@ export class Personal extends Component {
   }
 
   onClickSearchButton(event) {
-    this.setState({userUrl: `users/search?searchInput=${this.state.searchUser}`})
+    this.setState({ userUrl: `users/search?searchInput=${this.state.searchUser}` })
     event.preventDefault();
   }
 
@@ -610,56 +610,62 @@ export class Personal extends Component {
                                 <td>
                                   <Dropdown>
                                     <Dropdown.Toggle variant="info" id="dropdown-basic"></Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                      <Dropdown.Item href="#/action-3">
-                                        <a>
-                                          <PDFDownloadLink
-                                            document={<ActivoReport
-                                              data={item}
-                                              token={window.localStorage.getItem('token')}
-                                            />}
-                                            style={{
-                                              color: '#000',
-                                              backgroundColor: 'transparent'
-                                            }}
-                                            fileName={`reporte-usuario-${item.username}`}
-                                          >
-                                            Ent. Activos
-                                          </PDFDownloadLink>
-                                        </a>
-                                      </Dropdown.Item>
-                                      <Dropdown.Item href="#/action-3">
-                                        <a>
-                                          <PDFDownloadLink
-                                            document={<ActivoReturn
-                                              data={item}
-                                              token={window.localStorage.getItem('token')}
-                                            />}
-                                            fileName={`reporte-usuario-${item.username}`}
-                                            style={{
-                                              color: '#000',
-                                              backgroundColor: 'transparent'
-                                            }}
-                                          >
-                                            Dev. Activos
-                                          </PDFDownloadLink>
-                                        </a>
-                                      </Dropdown.Item>
-                                      <Dropdown.Item href="#/action-3">
-                                        <a>
-                                          {<PDFDownloadLink
-                                            document={<ActivoReporte data={item} />}
-                                            fileName={`reporte-usuario-${item.username}`}
-                                            style={{
-                                              color: '#000',
-                                              backgroundColor: 'transparent'
-                                            }}
-                                          >
-                                            Verif. Est. de Activos
-                                          </PDFDownloadLink>}
-                                        </a>
-                                      </Dropdown.Item>
-                                    </Dropdown.Menu>
+                                    {
+                                      this.state.permissions &&
+                                      this.state.permissions.isEditable && (
+                                        <Dropdown.Menu>
+                                          <Dropdown.Item href="#/action-3">
+                                            <a>
+                                              <PDFDownloadLink
+                                                document={<ActivoReport
+                                                  data={item}
+                                                  token={window.localStorage.getItem('token')}
+                                                />}
+                                                style={{
+                                                  color: '#000',
+                                                  backgroundColor: 'transparent'
+                                                }}
+                                                fileName={`reporte-usuario-${item.username}`}
+                                              >
+                                                Ent. Activos
+                                              </PDFDownloadLink>
+                                            </a>
+                                          </Dropdown.Item>
+                                          <Dropdown.Item href="#/action-3">
+                                            <a>
+                                              <PDFDownloadLink
+                                                document={<ActivoReturn
+                                                  data={item}
+                                                  token={window.localStorage.getItem('token')}
+                                                />}
+                                                fileName={`reporte-usuario-${item.username}`}
+                                                style={{
+                                                  color: '#000',
+                                                  backgroundColor: 'transparent'
+                                                }}
+                                              >
+                                                Dev. Activos
+                                              </PDFDownloadLink>
+                                            </a>
+                                          </Dropdown.Item>
+                                          <Dropdown.Item href="#/action-3">
+                                            <a>
+                                              {<PDFDownloadLink
+                                                document={<ActivoReporte data={item} />}
+                                                fileName={`reporte-usuario-${item.username}`}
+                                                style={{
+                                                  color: '#000',
+                                                  backgroundColor: 'transparent'
+                                                }}
+                                              >
+                                                Verif. Est. de Activos
+                                              </PDFDownloadLink>}
+                                            </a>
+                                          </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                      )
+                                    }
+
                                   </Dropdown>
                                   {/*{<a href="!#" onClick={evt => this.deleteUser(evt, index)} className="badge badge-danger" style={{ marginRight: '3px' }}>Eliminar</a>}*/}
                                 </td>
