@@ -15,7 +15,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@tinymce/tinymce-react": "^3.3.2",
-    "axios": "^0.22.0",
+    "axios": "^1.6.3",
     "bootstrap": "^4.3.1",
     "bootstrap-icons": "^1.8.3",
     "bosket": "^0.2.3",
