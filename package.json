@@ -10,7 +10,7 @@
     "@fullcalendar/timegrid": "^4.3.0",
     "@lourenci/react-kanban": "^0.13.0",
     "@mdi/font": "^4.2.95",
-    "@react-pdf/renderer": "^2.0.20",
+    "@react-pdf/renderer": "^2.1.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
