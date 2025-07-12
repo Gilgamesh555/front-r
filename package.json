@@ -80,7 +80,7 @@
     "react-scroll": "^1.8.7",
     "react-select": "^3.0.8",
     "react-simple-maps": "^1.0.0-beta.0",
-    "react-simplemde-editor": "^4.1.0",
+    "react-simplemde-editor": "^5.0.0",
     "react-slick": "^0.25.2",
     "react-sparklines": "^1.7.0",
     "react-svg-gauge": "^1.0.10",
